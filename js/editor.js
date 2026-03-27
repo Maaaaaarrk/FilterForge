@@ -1404,6 +1404,7 @@
       lines.push('// --- Aliases ---');
       lines.push('Alias[RWBASE]: (NMAG !INF !RW SOCK=0)');
       lines.push('Alias[TOWN]: (MAPID=1 OR MAPID=40 OR MAPID=75 OR MAPID=103 OR MAPID=109)');
+      lines.push('Alias[THROWPOTS]: (opm OR gpm OR opl OR ops OR gps OR gpl OR tpfs OR tpgs OR tpcs OR tpls OR tpfm OR tpgm OR tpcm OR tplm OR tpfl OR tpgl OR tpcl OR tpll)');
       lines.push('');
 
       // ==========================
@@ -1412,6 +1413,11 @@
       lines.push('// ============================================================');
       lines.push('// %CONTINUE% CHAINS -- ETH / SOCKET / CORRUPTION DISPLAY');
       lines.push('// ============================================================');
+      // Corruption marker (always applied — from Kryszard/HiimFilter pattern)
+      lines.push('// Corruption marker');
+      lines.push('ItemDisplay[STAT360>0]: %NAME% %RED%[C]%CONTINUE%');
+      lines.push('');
+
       if (wantEthTag || wantSockets) {
         if (wantEthTag && wantSockets) {
           lines.push('// Magic+ items: Eth tag and socket count');
@@ -1540,9 +1546,23 @@
       lines.push('ItemDisplay[ubac]: %NAME%');
       lines.push('ItemDisplay[uba]: %NAME%');
 
+      // Craft Infusion Orbs
+      lines.push('// --- Craft Infusion Orbs ---');
+      lines.push('ItemDisplay[crfb]: %RED%Blood %GOLD%Craft Infusion');
+      lines.push('ItemDisplay[crfc]: %PURPLE%Caster %GOLD%Craft Infusion');
+      lines.push('ItemDisplay[crfs]: %GREEN%Safety %GOLD%Craft Infusion');
+      lines.push('ItemDisplay[crfh]: %BLUE%Hitpower %GOLD%Craft Infusion');
+      lines.push('ItemDisplay[crfv]: %GRAY%Vampiric %GOLD%Craft Infusion');
+      lines.push('ItemDisplay[crfu]: %YELLOW%Bountiful %GOLD%Craft Infusion');
+      lines.push('ItemDisplay[crfp]: %WHITE%Brilliant %GOLD%Craft Infusion');
+
       // Jewel Fragment
       lines.push('// --- Jewel Fragment ---');
       lines.push('ItemDisplay[jewf]: %NAME%');
+
+      // Ears & misc hidden items
+      lines.push('// --- Hidden ---');
+      lines.push('ItemDisplay[ear]:')
 
       // Map Orbs
       lines.push('// --- Map Orbs ---');
@@ -1595,6 +1615,11 @@
       lines.push('// --- Mid Runes (Lem - Mal) ---');
       lines.push('ItemDisplay[RUNE>19 RUNE<24]: %ORANGE%%RUNENAME% Rune (#%RUNENUM%)' + midRuneNotify);
 
+      // Rune stacking display (from Wolfie/HiimFilter)
+      lines.push('// --- Rune Stack Display ---');
+      lines.push('ItemDisplay[RUNE>0 QTY>1]: %NAME% %TAN%x%QTY%{%NAME%}%CONTINUE%');
+      lines.push('');
+
       // Tier 4: Low Runes (El #1 through Fal #19)
       lines.push('// --- Low Runes (El - Fal) ---');
       if (isStrict) {
@@ -1635,6 +1660,14 @@
       } else {
         lines.push('ItemDisplay[UNI]: %GOLD%%NAME%' + descStr + uniNotify);
       }
+
+      // Upgrade recipes on identified uniques (from Wolfie template)
+      lines.push('// --- Unique Upgrade Recipes (identified) ---');
+      lines.push('ItemDisplay[UNI ID NORM ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Tal, Shael,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+      lines.push('ItemDisplay[UNI ID EXC ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Ko, Lem,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+      lines.push('ItemDisplay[UNI ID NORM WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Ral, Sol,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+      lines.push('ItemDisplay[UNI ID EXC WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Lum, Pul,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+      lines.push('');
 
       lines.push('// --- Set Items ---');
       if (isStrict) {
@@ -1799,6 +1832,9 @@
         if (myClass === 'ZON') {
           lines.push('// Amazon javelins / bows');
           lines.push('ItemDisplay[NMAG !INF SOCK>0 (ama OR amb OR amc OR amd OR ame) ELT]: %GRAY%%SOCKETS%os %WHITE%%NAME%');
+          lines.push('// Amazon quivers');
+          lines.push('ItemDisplay[RARE QUIVER !ID]: %YELLOW%%NAME%' + descStr);
+          lines.push('ItemDisplay[MAG QUIVER !ID]: %BLUE%%NAME%');
         }
         if (myClass === 'SIN') {
           lines.push('// Assassin claws');
@@ -1806,6 +1842,153 @@
         }
         lines.push('');
       }
+
+      // ==========================
+      // 13b. NMAG ITEM ENRICHMENT (from HiimFilter)
+      // ==========================
+      lines.push('// ============================================================');
+      lines.push('// NMAG ITEM ENRICHMENT');
+      lines.push('// ============================================================');
+      // Base coloring: white for 0os, gray for socketed
+      lines.push('// Base item coloring');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON) NMAG SOCK=0]: %WHITE%%NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON) NMAG SOCK>0]: %GRAY%%NAME%%CONTINUE%{%NAME%}');
+      // SUP enhanced defense/damage display
+      lines.push('// Superior ED% display');
+      lines.push('ItemDisplay[!INF !RW NMAG SUP EDEF>0]: %BLUE%[%EDEF%%%] %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[!INF !RW NMAG SUP EDAM>0]: %RED%[%EDAM%%%] %NAME%{%NAME%}%CONTINUE%');
+      // Paladin shield all-res
+      if (!myClass || myClass === 'DIN') {
+        lines.push('// Paladin shield All Res');
+        lines.push('ItemDisplay[!INF !RW NMAG DIN RES>19]: %GREEN%[%RES%r] %NAME%{%NAME%}%CONTINUE%');
+        lines.push('ItemDisplay[!INF !RW NMAG DIN RES>0]: %TAN%[%RES%r] %NAME%{%NAME%}%CONTINUE%');
+      }
+      // High-defense chests
+      lines.push('// High defense chest armor');
+      lines.push('ItemDisplay[CHEST !INF !RW NMAG DEF>799]: %TAN%[%DEF% Def] %NAME%{%NAME%}%CONTINUE%' + (wantMapIcons ? '%DOT-D6%' : ''));
+      lines.push('');
+
+      // ==========================
+      // 13c. STAFFMOD DISPLAY (from HiimFilter/Kryszard)
+      // ==========================
+      lines.push('// ============================================================');
+      lines.push('// STAFFMOD DISPLAY -- skill bonuses on white/magic items');
+      lines.push('// ============================================================');
+
+      // Tab-based staffmods (all classes)
+      lines.push('// --- Skill Tab Display (all classes) ---');
+      // Amazon
+      lines.push('ItemDisplay[NMAG !RW TABSK0>2]: %GREEN%+3 Bow %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK1>2]: %GREEN%+3 PassMag %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK2>2]: %GREEN%+3 Java %NAME%{%NAME%}%CONTINUE%');
+      // Sorceress
+      lines.push('ItemDisplay[NMAG !RW TABSK8>2]: %GREEN%+3 Fire %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK9>2]: %GREEN%+3 Light %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK10>2]: %GREEN%+3 Cold %NAME%{%NAME%}%CONTINUE%');
+      // Necromancer
+      lines.push('ItemDisplay[NMAG !RW TABSK16>2]: %GREEN%+3 Curses %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK17>2]: %GREEN%+3 PnB %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK18>2]: %GREEN%+3 NecSum %NAME%{%NAME%}%CONTINUE%');
+      // Paladin
+      lines.push('ItemDisplay[NMAG !RW TABSK24>2]: %GREEN%+3 PalCmbt %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK25>2]: %GREEN%+3 OffAura %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK26>2]: %GREEN%+3 DefAura %NAME%{%NAME%}%CONTINUE%');
+      // Barbarian
+      lines.push('ItemDisplay[NMAG !RW TABSK32>2]: %GREEN%+3 BarCmbt %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK33>2]: %GREEN%+3 Masteries %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK34>2]: %GREEN%+3 Warcries %NAME%{%NAME%}%CONTINUE%');
+      // Druid
+      lines.push('ItemDisplay[NMAG !RW TABSK40>2]: %GREEN%+3 DruSum %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK41>2]: %GREEN%+3 Shape %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK42>2]: %GREEN%+3 Elem %NAME%{%NAME%}%CONTINUE%');
+      // Assassin
+      lines.push('ItemDisplay[NMAG !RW TABSK48>2]: %GREEN%+3 Traps %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK49>2]: %GREEN%+3 Shadow %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW TABSK50>2]: %GREEN%+3 MartArt %NAME%{%NAME%}%CONTINUE%');
+
+      // Key individual staffmods (valuable for runewords — always show)
+      lines.push('// --- Key Individual Staffmods (valuable for RW bases) ---');
+      // Assassin claws: Weapon Block, Burst of Speed, Blade Fury, Venom, Fade
+      lines.push('ItemDisplay[NMAG !RW SIN SK263>2]: %ORANGE%+3 WpnBlck %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SIN SK258>2]: %ORANGE%+3 BurstSpd %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SIN SK266>2]: %ORANGE%+3 BldFury %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SIN SK278>2]: %ORANGE%+3 Venom %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SIN SK267>2]: %ORANGE%+3 Fade %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SIN SK252>2]: %ORANGE%+3 ClwMast %NAME%{%NAME%}%CONTINUE%');
+      // Sorceress orbs: Energy Shield, Shiver Armor, Enchant Fire, Teleport
+      lines.push('ItemDisplay[NMAG !RW SOR SK58>2]: %ORANGE%+3 E.Shield %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SOR SK50>2]: %ORANGE%+3 ShivArm %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SOR SK52>2]: %ORANGE%+3 Enchant %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW SOR SK54>2]: %ORANGE%+3 Tele %NAME%{%NAME%}%CONTINUE%');
+      // Necromancer wands: Lower Resist, Corpse Explosion, Bone Spear, Revive
+      lines.push('ItemDisplay[NMAG !RW NEC SK91>2]: %ORANGE%+3 LwrRes %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW NEC SK74>2]: %ORANGE%+3 CorpExpl %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW NEC SK84>2]: %ORANGE%+3 BneSpr %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW NEC SK95>2]: %ORANGE%+3 Revive %NAME%{%NAME%}%CONTINUE%');
+      // Paladin scepters: Holy Shield, Conviction, Fanaticism, Blessed Hammer
+      lines.push('ItemDisplay[NMAG !RW DIN SK117>2]: %ORANGE%+3 HlyShld %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DIN SK123>2]: %ORANGE%+3 Convic %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DIN SK122>2]: %ORANGE%+3 Fanat %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DIN SK112>2]: %ORANGE%+3 BHammer %NAME%{%NAME%}%CONTINUE%');
+      // Barbarian helms: Battle Orders, Battle Command, Natural Resistance, War Cry
+      lines.push('ItemDisplay[NMAG !RW BAR SK149>2]: %ORANGE%+3 BO %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW BAR SK155>2]: %ORANGE%+3 BCmnd %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW BAR SK153>2]: %ORANGE%+3 NatRes %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW BAR SK154>2]: %ORANGE%+3 WarCry %NAME%{%NAME%}%CONTINUE%');
+      // Druid pelts: Tornado, Fissure, Volcano, Heart of Wolverine, Oak Sage, Grizzly
+      lines.push('ItemDisplay[NMAG !RW DRU SK245>2]: %ORANGE%+3 Tornado %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DRU SK234>2]: %ORANGE%+3 Fissure %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DRU SK244>2]: %ORANGE%+3 Volcano %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DRU SK236>2]: %ORANGE%+3 HOW %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DRU SK226>2]: %ORANGE%+3 OakSage %NAME%{%NAME%}%CONTINUE%');
+      lines.push('ItemDisplay[NMAG !RW DRU SK247>2]: %ORANGE%+3 Grizzly %NAME%{%NAME%}%CONTINUE%');
+      lines.push('');
+
+      // ==========================
+      // 13d. UNID MAGIC/RARE CLASS ITEM DISPLAY (from HiimFilter)
+      // ==========================
+      lines.push('// ============================================================');
+      lines.push('// UNID MAGIC & RARE CLASS ITEM DISPLAY');
+      lines.push('// ============================================================');
+      if (myClass) {
+        var classUpper = {ZON:'AMAZON',SOR:'SORCERESS',NEC:'NECROMANCER',DIN:'PALADIN',BAR:'BARBARIAN',DRU:'DRUID',SIN:'ASSASSIN'}[myClass];
+        var clNum = {ZON:'CL7',SOR:'CL6',NEC:'CL4',DIN:'CL3',BAR:'CL2',DRU:'CL1',SIN:'CL5'}[myClass];
+        // Your class magic items highlighted at low FILTLVL
+        lines.push('// Your class magic items get extra callout');
+        lines.push('ItemDisplay[' + classUpper + ' ' + clNum + ' FILTLVL<2 MAG !ID]: %BLUE%** %NAME% **');
+        lines.push('ItemDisplay[' + classUpper + ' ' + clNum + ' FILTLVL<5 RARE !ID]: %YELLOW%** %NAME% **');
+        // Class item rename on ground at strict levels
+        lines.push('// Class item shortnames on ground at strict levels');
+        if (myClass === 'NEC' || !myClass) lines.push('ItemDisplay[(MAG OR RARE) NEC !ID GROUND FILTLVL>4]: %CONTINUE%Nec Head');
+        if (myClass === 'SOR' || !myClass) lines.push('ItemDisplay[(MAG OR RARE) SOR !ID GROUND FILTLVL>4]: %CONTINUE%Sorc Orb');
+        if (myClass === 'BAR' || !myClass) lines.push('ItemDisplay[(MAG OR RARE) BAR !ID GROUND FILTLVL>4]: %CONTINUE%Barb Helm');
+        if (myClass === 'DRU' || !myClass) lines.push('ItemDisplay[(MAG OR RARE) DRU !ID GROUND FILTLVL>4]: %CONTINUE%Druid Pelt');
+        if (myClass === 'DIN' || !myClass) lines.push('ItemDisplay[(MAG OR RARE) DIN !ID GROUND FILTLVL>4]: %CONTINUE%Pala Shield');
+        if (myClass === 'SIN' || !myClass) lines.push('ItemDisplay[(MAG OR RARE) SIN !ID GROUND FILTLVL>4]: %CONTINUE%Asn Claw');
+        if (myClass === 'ZON' || !myClass) lines.push('ItemDisplay[(MAG OR RARE) ZON !ID GROUND FILTLVL>4]: %CONTINUE%Zon Weapon');
+      } else {
+        // All classes: show class item renames at strict
+        lines.push('// Class item shortnames on ground at strict levels');
+        lines.push('ItemDisplay[(MAG OR RARE) NEC !ID GROUND FILTLVL>4]: %CONTINUE%Nec Head');
+        lines.push('ItemDisplay[(MAG OR RARE) SOR !ID GROUND FILTLVL>4]: %CONTINUE%Sorc Orb');
+        lines.push('ItemDisplay[(MAG OR RARE) BAR !ID GROUND FILTLVL>4]: %CONTINUE%Barb Helm');
+        lines.push('ItemDisplay[(MAG OR RARE) DRU !ID GROUND FILTLVL>4]: %CONTINUE%Druid Pelt');
+        lines.push('ItemDisplay[(MAG OR RARE) DIN !ID GROUND FILTLVL>4]: %CONTINUE%Pala Shield');
+        lines.push('ItemDisplay[(MAG OR RARE) SIN !ID GROUND FILTLVL>4]: %CONTINUE%Asn Claw');
+        lines.push('ItemDisplay[(MAG OR RARE) ZON !ID GROUND FILTLVL>4]: %CONTINUE%Zon Weapon');
+      }
+      // General magic/rare unid display by slot (from HiimFilter FILTLVL-gated)
+      lines.push('// --- Unid magic/rare by slot ---');
+      lines.push('ItemDisplay[RARE (rin OR amu) !ID FILTLVL<5]: %YELLOW%%NAME%');
+      lines.push('ItemDisplay[RARE jew !ID]: %YELLOW%%NAME%');
+      lines.push('ItemDisplay[RARE (CIRC OR EQ7) !ID FILTLVL<5]: %YELLOW%%NAME%');
+      lines.push('ItemDisplay[RARE ELT !ID FILTLVL<5]: %YELLOW%%NAME%');
+      lines.push('ItemDisplay[RARE EXC !ID FILTLVL<3]: %YELLOW%%NAME%');
+      lines.push('ItemDisplay[MAG jew !ID ILVL>84]: %BLUE%%NAME%' + (wantMapIcons ? '%DOT-9A%' : ''));
+      lines.push('ItemDisplay[MAG jew !ID FILTLVL<5]: %BLUE%%NAME%');
+      lines.push('ItemDisplay[MAG (rin OR amu) !ID FILTLVL<3]: %BLUE%%NAME%');
+      lines.push('ItemDisplay[MAG (CIRC OR EQ7) !ID FILTLVL<5]: %BLUE%%NAME%');
+      lines.push('');
 
       // ==========================
       // 14. RUNEWORD BASES
@@ -1826,6 +2009,15 @@
             lines.push('ItemDisplay[NMAG !INF !RW !ETH SOCK=' + sockets + ' ' + cond + ']: %GRAY%' + baseLabel + ' %WHITE%%NAME%');
           }
         }
+
+        // Superior ED=15 bases (from Kryszard/Phyx10n — top-tier bases)
+        lines.push('// --- Superior ED=15 Bases (best-in-slot) ---');
+        if (showEthBases) {
+          lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=15 ELT CHEST (SOCK=0 OR SOCK>2)]: %GOLD%15ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+          lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=15 ELT POLEARM (SOCK=0 OR SOCK>3)]: %GOLD%15ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+        }
+        lines.push('ItemDisplay[NMAG !INF !RW SUP ED=15 ELT (CHEST OR SHIELD) (SOCK=0 OR SOCK>2)]: %GOLD%15ED %WHITE%%NAME%' + (wantMapIcons ? '%DOT-D6%' : ''));
+        lines.push('');
 
         // Elite armor bases
         lines.push('// --- Elite Armor Bases ---');
@@ -1920,13 +2112,32 @@
       lines.push('ItemDisplay[mp4]: %BLUE%+%WHITE%MP4');
       lines.push('ItemDisplay[mp5]: %BLUE%+%WHITE%MP5');
       // Rejuvenation potions
+      if (isStrict) {
+        lines.push('ItemDisplay[rvs FILTLVL>3]:');
+      }
       lines.push('ItemDisplay[rvs]: %PURPLE%+%WHITE%35%%');
       lines.push('ItemDisplay[rvl]: %PURPLE%+%WHITE%65%%');
+      // PvP mana potion
+      lines.push('ItemDisplay[pvpp]: %BLUE%+%WHITE%DMP');
       // Antidote and thawing
       lines.push('ItemDisplay[yps]: %GREEN%+%WHITE%Anti');
       lines.push('ItemDisplay[wms]: %GREEN%+%WHITE%Thaw');
       // Stamina potion
+      if (isMid || isStrict) {
+        lines.push('ItemDisplay[vps DIFF>1]:');
+      }
       lines.push('ItemDisplay[vps]: %WHITE%Stam');
+      // Throwing potions (hidden progressively — from Kryszard)
+      lines.push('// --- Throwing Potions ---');
+      lines.push('ItemDisplay[THROWPOTS CLVL>29]:');
+      lines.push('ItemDisplay[THROWPOTS]: %NAME%');
+
+      // Tomes (refill warning from Wolfie)
+      lines.push('// --- Tomes ---');
+      lines.push('ItemDisplay[ibk QTY<5]: %RED%! %WHITE%ID %RED%REFILL !');
+      lines.push('ItemDisplay[ibk]: %RED%!%WHITE%ID%RED%!');
+      lines.push('ItemDisplay[tbk QTY<5]: %BLUE%! %WHITE%TP %RED%REFILL %BLUE%!');
+      lines.push('ItemDisplay[tbk]: %BLUE%!%WHITE%TP%BLUE%!');
 
       // Scrolls and keys
       lines.push('// --- Scrolls & Keys ---');
