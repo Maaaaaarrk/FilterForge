@@ -1208,7 +1208,7 @@
     var stepLabel = document.getElementById('wizard-step-label');
     var summaryEl = document.getElementById('wizard-summary');
 
-    var totalSteps = 7;
+    var totalSteps = 8;
     var currentStep = 1;
     var choices = {
       'class': '',
@@ -1216,7 +1216,8 @@
       notifications: [],
       extras: [],
       rwbases: '',
-      consumables: []
+      consumables: [],
+      tooltips: []
     };
 
     function openWizard() {
@@ -1297,7 +1298,9 @@
         crafting: 'Crafting Info', eth: 'Ethereal Tag',
         'all-rw': 'All Good Bases', 'eth-rw': 'Eth Bases Only', 'none-rw': 'None',
         hidegold: 'Hide Low Gold', hidekeys: 'Hide Keys',
-        hidescrolls: 'Hide Scrolls', hidepots: 'Hide Small Potions'
+        hidescrolls: 'Hide Scrolls', hidepots: 'Hide Small Potions',
+        hideallhp: 'Hide ALL HP', hideallmp: 'Hide ALL MP',
+        socketrecipe: 'Socket Recipes', sellvalue: 'Sell Value $', upgraderecipe: 'Upgrade Recipes', imbue: 'Imbue/Slam Tips'
       };
       return labels[val] || val;
     }
@@ -1309,7 +1312,8 @@
         { l: 'Notifications', v: choices.notifications.length ? choices.notifications.map(function (x) { return label('', x); }).join(', ') : 'None' },
         { l: 'Extra Info', v: choices.extras.length ? choices.extras.map(function (x) { return label('', x); }).join(', ') : 'None' },
         { l: 'Runeword Bases', v: label('', choices.rwbases + '-rw') },
-        { l: 'Hide Consumables', v: choices.consumables.length ? choices.consumables.map(function (x) { return label('', x); }).join(', ') : 'None' }
+        { l: 'Hide Consumables', v: choices.consumables.length ? choices.consumables.map(function (x) { return label('', x); }).join(', ') : 'None' },
+        { l: 'Tooltips', v: choices.tooltips.length ? choices.tooltips.map(function (x) { return label('', x); }).join(', ') : 'None' }
       ];
       summaryEl.innerHTML = rows.map(function (r) {
         return '<div class="wizard-summary-row"><span class="wizard-summary-label">' + r.l + '</span><span class="wizard-summary-value">' + r.v + '</span></div>';
@@ -1335,6 +1339,10 @@
       var wantCrafting = c.extras.indexOf('crafting') !== -1;
       var wantEthTag = c.extras.indexOf('eth') !== -1;
       var rwBases = c.rwbases || 'none';
+      var wantSocketRecipe = c.tooltips.indexOf('socketrecipe') !== -1;
+      var wantSellValue = c.tooltips.indexOf('sellvalue') !== -1;
+      var wantUpgradeRecipe = c.tooltips.indexOf('upgraderecipe') !== -1;
+      var wantImbue = c.tooltips.indexOf('imbue') !== -1;
 
       // Class code mapping
       var classMap = {
@@ -1589,6 +1597,8 @@
       lines.push('ItemDisplay[MAPTIER=3]: %ORANGE%[T3] %NAME%');
       lines.push('ItemDisplay[MAPTIER=4]: %RED%[D] %NAME%');
       lines.push('ItemDisplay[MAPTIER=5]: %ORANGE%[T3] %NAME%');
+      // Unique maps (from Wolfie)
+      lines.push('ItemDisplay[UNI MAPTIER>0]: %GOLD%%NAME%' + (wantMapIcons ? '%MAP-53%' : ''));
       lines.push('');
 
       // ==========================
@@ -1660,14 +1670,6 @@
       } else {
         lines.push('ItemDisplay[UNI]: %GOLD%%NAME%' + descStr + uniNotify);
       }
-
-      // Upgrade recipes on identified uniques (from Wolfie template)
-      lines.push('// --- Unique Upgrade Recipes (identified) ---');
-      lines.push('ItemDisplay[UNI ID NORM ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Tal, Shael,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
-      lines.push('ItemDisplay[UNI ID EXC ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Ko, Lem,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
-      lines.push('ItemDisplay[UNI ID NORM WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Ral, Sol,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
-      lines.push('ItemDisplay[UNI ID EXC WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Lum, Pul,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
-      lines.push('');
 
       lines.push('// --- Set Items ---');
       if (isStrict) {
@@ -2019,7 +2021,38 @@
         lines.push('ItemDisplay[NMAG !INF !RW SUP ED=15 ELT (CHEST OR SHIELD) (SOCK=0 OR SOCK>2)]: %GOLD%15ED %WHITE%%NAME%' + (wantMapIcons ? '%DOT-D6%' : ''));
         lines.push('');
 
-        // Elite armor bases
+        // GG specific bases (from HiimFilter — high-value eth bases with DEF/skill checks)
+        lines.push('// --- GG Specific Bases (high demand) ---');
+        if (showEthBases) {
+          // Eth elite armors by DEF threshold (Archon Plate, Dusk Shroud, Wire Fleece, etc.)
+          lines.push('ItemDisplay[NMAG !INF !RW ETH ELT CHEST (SOCK=0 OR SOCK>2) DEF>849]: %GOLD%GG Base %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+          // Eth Berserker Axe (7wa) — top Grief/Beast base
+          lines.push('ItemDisplay[NMAG !INF !RW ETH (SOCK=0 OR SOCK>3) 7wa]: %GOLD%GG Base %GRAY%ETH %WHITE%Berserker Axe' + rwNotify);
+          // Eth Phase Blade (7cr) — cannot be eth, but include anyway for completeness
+          // Eth Colossus Blade/Sword for BotD/Death
+          lines.push('ItemDisplay[NMAG !INF !RW ETH (SOCK=0 OR SOCK>3) (7gd OR 7fb)]: %GOLD%GG Base %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+          // Eth Feral Claws (7xf) for Chaos — with skill checks
+          lines.push('ItemDisplay[NMAG !INF !RW ETH (SOCK=0 OR SOCK=3) 7xf SK263>2]: %GOLD%GG Chaos %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+        }
+        // Phase Blade (7cr) — always show, cannot be eth, fixed speed
+        lines.push('ItemDisplay[NMAG !INF !RW (SOCK=0 OR SOCK>3) 7cr]: %WHITE%Phase Blade %GRAY%[%SOCKETS%os]' + (wantMapIcons ? '%DOT-D6%' : ''));
+        // Monarch (uit) — Spirit base
+        lines.push('ItemDisplay[NMAG !INF !RW (SOCK=0 OR SOCK=4) uit]: %WHITE%Monarch %GRAY%[%SOCKETS%os]' + (wantMapIcons ? '%DOT-D6%' : ''));
+        // Diadem (ci3) — imbue/runeword base
+        lines.push('ItemDisplay[NMAG !INF !RW ci3]: %WHITE%Diadem %GRAY%[%SOCKETS%os]' + (wantMapIcons ? '%DOT-D6%' : ''));
+        // Crystal Sword (crs) — early Spirit base
+        if (!isStrict) {
+          lines.push('ItemDisplay[NMAG !INF !RW (SOCK=0 OR SOCK=4) crs FILTLVL<3]: %WHITE%Crystal Sword %GRAY%[%SOCKETS%os]');
+        }
+        // Flail (fla) — HotO base
+        lines.push('ItemDisplay[NMAG !INF !RW (SOCK=0 OR SOCK=4) fla]: %WHITE%Flail %GRAY%[%SOCKETS%os]');
+        // Caduceus (7ws) — HoJ/CTA scepter base with skill checks
+        lines.push('ItemDisplay[NMAG !INF !RW (SOCK=0 OR SOCK>3) 7ws]: %WHITE%Caduceus %GRAY%[%SOCKETS%os]');
+        // Archon Staff (6ws) — Infinity/Obsession staff base
+        lines.push('ItemDisplay[NMAG !INF !RW (SOCK=0 OR SOCK>3) 6ws]: %WHITE%Archon Staff %GRAY%[%SOCKETS%os]');
+        lines.push('');
+
+        // Elite armor bases (generic — catches remaining)
         lines.push('// --- Elite Armor Bases ---');
         pushBase('CHEST ELT', '4', '4os');
         pushBase('CHEST ELT', '3', '3os');
@@ -2033,7 +2066,9 @@
         pushBase('SWORD ELT', '6', '6os');
         pushBase('SWORD ELT', '4', '4os');
         pushBase('AXE ELT', '4', '4os');
+        pushBase('AXE ELT', '5', '5os');
         pushBase('MACE ELT', '5', '5os');
+        pushBase('MACE ELT', '4', '4os');
 
         // Shield bases (always show regardless of eth preference)
         lines.push('// --- Shield Bases ---');
@@ -2086,31 +2121,50 @@
 
       // Potions: hide by DIFF (Wolfie pattern)
       lines.push('// --- Potion Hiding ---');
-      if (c.consumables.indexOf('hidepots') !== -1) {
-        lines.push('ItemDisplay[hp1 DIFF>0]:');
-        lines.push('ItemDisplay[hp2 DIFF>0]:');
-        lines.push('ItemDisplay[hp3 DIFF>0]:');
-        if (isStrict || isMid) {
-          lines.push('ItemDisplay[hp4 DIFF>1]:');
+      // Health potions
+      if (c.consumables.indexOf('hideallhp') !== -1) {
+        lines.push('ItemDisplay[hp1]:');
+        lines.push('ItemDisplay[hp2]:');
+        lines.push('ItemDisplay[hp3]:');
+        lines.push('ItemDisplay[hp4]:');
+        lines.push('ItemDisplay[hp5]:');
+      } else {
+        if (c.consumables.indexOf('hidepots') !== -1) {
+          lines.push('ItemDisplay[hp1 DIFF>0]:');
+          lines.push('ItemDisplay[hp2 DIFF>0]:');
+          lines.push('ItemDisplay[hp3 DIFF>0]:');
+          if (isStrict || isMid) {
+            lines.push('ItemDisplay[hp4 DIFF>1]:');
+          }
         }
-        lines.push('ItemDisplay[mp1 DIFF>0]:');
-        lines.push('ItemDisplay[mp2 DIFF>0]:');
-        lines.push('ItemDisplay[mp3 DIFF>0]:');
-        if (isStrict || isMid) {
-          lines.push('ItemDisplay[mp4 DIFF>1]:');
-        }
+        lines.push('ItemDisplay[hp1]: %RED%+%WHITE%HP1');
+        lines.push('ItemDisplay[hp2]: %RED%+%WHITE%HP2');
+        lines.push('ItemDisplay[hp3]: %RED%+%WHITE%HP3');
+        lines.push('ItemDisplay[hp4]: %RED%+%WHITE%HP4');
+        lines.push('ItemDisplay[hp5]: %RED%+%WHITE%HP5');
       }
-      // Always show remaining potions with shortnames
-      lines.push('ItemDisplay[hp1]: %RED%+%WHITE%HP1');
-      lines.push('ItemDisplay[hp2]: %RED%+%WHITE%HP2');
-      lines.push('ItemDisplay[hp3]: %RED%+%WHITE%HP3');
-      lines.push('ItemDisplay[hp4]: %RED%+%WHITE%HP4');
-      lines.push('ItemDisplay[hp5]: %RED%+%WHITE%HP5');
-      lines.push('ItemDisplay[mp1]: %BLUE%+%WHITE%MP1');
-      lines.push('ItemDisplay[mp2]: %BLUE%+%WHITE%MP2');
-      lines.push('ItemDisplay[mp3]: %BLUE%+%WHITE%MP3');
-      lines.push('ItemDisplay[mp4]: %BLUE%+%WHITE%MP4');
-      lines.push('ItemDisplay[mp5]: %BLUE%+%WHITE%MP5');
+      // Mana potions
+      if (c.consumables.indexOf('hideallmp') !== -1) {
+        lines.push('ItemDisplay[mp1]:');
+        lines.push('ItemDisplay[mp2]:');
+        lines.push('ItemDisplay[mp3]:');
+        lines.push('ItemDisplay[mp4]:');
+        lines.push('ItemDisplay[mp5]:');
+      } else {
+        if (c.consumables.indexOf('hidepots') !== -1) {
+          lines.push('ItemDisplay[mp1 DIFF>0]:');
+          lines.push('ItemDisplay[mp2 DIFF>0]:');
+          lines.push('ItemDisplay[mp3 DIFF>0]:');
+          if (isStrict || isMid) {
+            lines.push('ItemDisplay[mp4 DIFF>1]:');
+          }
+        }
+        lines.push('ItemDisplay[mp1]: %BLUE%+%WHITE%MP1');
+        lines.push('ItemDisplay[mp2]: %BLUE%+%WHITE%MP2');
+        lines.push('ItemDisplay[mp3]: %BLUE%+%WHITE%MP3');
+        lines.push('ItemDisplay[mp4]: %BLUE%+%WHITE%MP4');
+        lines.push('ItemDisplay[mp5]: %BLUE%+%WHITE%MP5');
+      }
       // Rejuvenation potions
       if (isStrict) {
         lines.push('ItemDisplay[rvs FILTLVL>3]:');
@@ -2155,6 +2209,62 @@
       lines.push('');
 
       // ==========================
+      // 15b-pre. IDENTIFIED ITEM STAT DISPLAY (from HiimFilter/Phyx10n)
+      // ==========================
+      lines.push('// ============================================================');
+      lines.push('// IDENTIFIED ITEM STAT DISPLAY');
+      lines.push('// ============================================================');
+      // Key combat stats on identified magic/rare/craft items
+      lines.push('// --- Combat Stats ---');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FCR>0]: %TAN%%STAT105%FCR %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID IAS>0 !WAND !SOR]: %ORANGE%%STAT93%IAS %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FHR>0]: %GOLD%%STAT99%FHR %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FRW>0]: %GOLD%%FRW%FRW %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FBR>0]: %ORANGE%%STAT102%FBR %NAME%%CONTINUE%{%NAME%}');
+      // Resistances
+      lines.push('// --- Resistances ---');
+      lines.push('ItemDisplay[(ARMOR OR rin OR amu) (MAG OR RARE OR CRAFT) ID RES>0]: %PURPLE%%RES%Res %NAME%%CONTINUE%{%NAME%}');
+      // Life/Mana
+      lines.push('// --- Life & Mana ---');
+      lines.push('ItemDisplay[(ARMOR OR rin OR amu) (MAG OR RARE OR CRAFT) ID LIFE>29]: %RED%+%STAT7%Life %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR rin OR amu) (MAG OR RARE OR CRAFT) ID MANA>19]: %BLUE%+%STAT9%Mana %NAME%%CONTINUE%{%NAME%}');
+      // Damage stats
+      lines.push('// --- Damage ---');
+      lines.push('ItemDisplay[WEAPON (MAG OR RARE OR CRAFT) ID EDAM>149]: %RED%%EDAM%ED %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR rin OR amu) (MAG OR RARE OR CRAFT) ID STAT80>0]: %GREEN%%STAT80%MF %NAME%%CONTINUE%{%NAME%}');
+      // Skills on identified items
+      lines.push('// --- Skills ---');
+      lines.push('ItemDisplay[ID (MAG OR RARE OR CRAFT) CLSK0>0]: %PURPLE%%CLSK0%ZonSk %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[ID (MAG OR RARE OR CRAFT) CLSK1>0]: %PURPLE%%CLSK1%SorSk %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[ID (MAG OR RARE OR CRAFT) CLSK2>0]: %PURPLE%%CLSK2%NecSk %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[ID (MAG OR RARE OR CRAFT) CLSK3>0]: %PURPLE%%CLSK3%PalSk %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[ID (MAG OR RARE OR CRAFT) CLSK4>0]: %PURPLE%%CLSK4%BarSk %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[ID (MAG OR RARE OR CRAFT) CLSK5>0]: %PURPLE%%CLSK5%DruSk %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[ID (MAG OR RARE OR CRAFT) CLSK6>0]: %PURPLE%%CLSK6%SinSk %NAME%%CONTINUE%{%NAME%}');
+      // Corruption type display (from HiimFilter)
+      lines.push('// --- Corruption Types ---');
+      lines.push('ItemDisplay[STAT360=27]: %NAME% +1Skill%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=50]: %NAME% +1Skill%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=45]: %NAME% CBF%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=16]: %NAME% FCR%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=42]: %NAME% FCR%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=72]: %NAME% MaxRes%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=52]: %NAME% PDR%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=19]: %NAME% DS%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[STAT360=25]: %NAME% ED-DS%CONTINUE%{%NAME%}');
+      // Desecrated items (from HiimFilter)
+      lines.push('// --- Desecrated Items ---');
+      lines.push('ItemDisplay[STAT206>0 GROUND]: %BORDER-55%%MAP-58%%GOLD%Desecrated %NAME%');
+      lines.push('ItemDisplay[STAT206>0]: %NAME% %GOLD%[D]%CONTINUE%{%NAME%}');
+      // Weapon ED color coding (from HiimFilter)
+      lines.push('// --- Weapon ED tiers ---');
+      lines.push('ItemDisplay[WEAPON (MAG OR RARE OR CRAFT) ID EDAM>299]: %PURPLE%%EDAM%ED %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[WEAPON (MAG OR RARE OR CRAFT) ID EDAM>199]: %ORANGE%%EDAM%ED %NAME%%CONTINUE%{%NAME%}');
+      // Chest DEF display
+      lines.push('ItemDisplay[CHEST (MAG OR RARE OR CRAFT) ID DEF>400]: %TAN%%DEF%Def %NAME%%CONTINUE%{%NAME%}');
+      lines.push('');
+
+      // ==========================
       // 15b. INFERIOR ITEM HIDING
       // ==========================
       lines.push('// ============================================================');
@@ -2162,6 +2272,89 @@
       lines.push('// ============================================================');
       lines.push('ItemDisplay[!RW INF ID (ARMOR OR WEAPON) CLVL>10]:');
       lines.push('');
+
+      // ==========================
+      // 15c. SOCKET CUBE RECIPES (from Wolfie/Kryszard)
+      // ==========================
+      if (wantSocketRecipe) {
+        lines.push('// ============================================================');
+        lines.push('// SOCKET CUBE RECIPES -- shown on unsocketed bases');
+        lines.push('// ============================================================');
+        lines.push('ItemDisplay[CHEST !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Tal + Thul + Perf %YELLOW%Topaz%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[(HELM OR CIRC) !INF SOCK=0 NMAG !RW !SHOP !BAR !DRU]: %NAME%{%WHITE%Ral + Thul + Perf %BLUE%Sapphire%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[(SHIELD OR QUIVER) !INF SOCK=0 NMAG !RW !SHOP !DIN !NEC]: %NAME%{%WHITE%Tal + Amn + Perf %RED%Ruby%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[(WEAPON !THROWING) !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Ral + Amn + Perf %PURPLE%Amethyst%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[DIN !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Tal + Amn + Perf %RED%Ruby%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[NEC !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Tal + Amn + Perf %RED%Ruby%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[BAR !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Ral + Thul + Perf %BLUE%Sapphire%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[DRU !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Ral + Thul + Perf %BLUE%Sapphire%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[SIN !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Ral + Amn + Perf %PURPLE%Amethyst%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[SOR !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Ral + Amn + Perf %PURPLE%Amethyst%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[ZON BOW !INF SOCK=0 NMAG !RW !SHOP]: %NAME%{%WHITE%Ral + Amn + Perf %PURPLE%Amethyst%CL%%TAN%Socket Recipe:}%CONTINUE%');
+        lines.push('');
+      }
+
+      // ==========================
+      // 15d. SELL VALUE HIGHLIGHT (from Wolfie)
+      // ==========================
+      if (wantSellValue) {
+        lines.push('// ============================================================');
+        lines.push('// SELL VALUE HIGHLIGHT -- vendor-worthy items get $ tag');
+        lines.push('// ============================================================');
+        lines.push('ItemDisplay[RARE !RW SELLPRICE>34999]: %DARK_GREEN%$ %YELLOW%%NAME%{%NAME%}');
+        lines.push('ItemDisplay[RARE !RW SELLPRICE>19999 DIFF<2]: %DARK_GREEN%$ %YELLOW%%NAME%{%NAME%}');
+        lines.push('ItemDisplay[RARE !RW SELLPRICE>9999 DIFF<1]: %DARK_GREEN%$ %YELLOW%%NAME%{%NAME%}');
+        lines.push('ItemDisplay[MAG !RW SELLPRICE>34999]: %DARK_GREEN%$ %BLUE%%NAME%{%NAME%}');
+        lines.push('ItemDisplay[MAG !RW SELLPRICE>19999 DIFF<2]: %DARK_GREEN%$ %BLUE%%NAME%{%NAME%}');
+        lines.push('ItemDisplay[MAG !RW SELLPRICE>9999 DIFF<1]: %DARK_GREEN%$ %BLUE%%NAME%{%NAME%}');
+        lines.push('ItemDisplay[NMAG !RW SELLPRICE>34999 (NORM OR EXC OR ELT)]: %DARK_GREEN%$ %WHITE%%NAME%{%NAME%}');
+        lines.push('');
+      }
+
+      // ==========================
+      // 15e. UPGRADE RECIPES (from Wolfie/Kryszard)
+      // ==========================
+      if (wantUpgradeRecipe) {
+        lines.push('// ============================================================');
+        lines.push('// UPGRADE RECIPES -- shown on identified items');
+        lines.push('// ============================================================');
+        // Unique armor upgrades
+        lines.push('ItemDisplay[UNI ID NORM ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Tal, Shael,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[UNI ID EXC ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Ko, Lem,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[UNI ID NORM WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Ral, Sol,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+        lines.push('ItemDisplay[UNI ID EXC WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Lum, Pul,%NL%%ORANGE%Upgrade Recipe:}%CONTINUE%');
+        // Set armor upgrades
+        lines.push('ItemDisplay[SET ID NORM ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Tal, Shael,%NL%%GREEN%Set Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[SET ID EXC ARMOR]: %NAME%{%TAN%Rune + Perf Diamond%NL%Cube w/ Ko, Lem,%NL%%GREEN%Set Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[SET ID NORM WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Ral, Sol,%NL%%GREEN%Set Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[SET ID EXC WEAPON]: %NAME%{%TAN%Rune + Perf Emerald%NL%Cube w/ Lum, Pul,%NL%%GREEN%Set Upgrade:}%CONTINUE%');
+        // Rare/Craft armor upgrades
+        lines.push('ItemDisplay[RARE ID NORM (ARMOR OR QUIVER)]: %NAME%{%TAN%Rune + Perf Amethyst%NL%Cube w/ Ral, Thul,%NL%%YELLOW%Rare Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[RARE ID EXC (ARMOR OR QUIVER)]: %NAME%{%TAN%Rune + Perf Amethyst%NL%Cube w/ Ko, Pul,%NL%%YELLOW%Rare Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[RARE ID NORM WEAPON]: %NAME%{%TAN%Rune + Perf Sapphire%NL%Cube w/ Ort, Amn,%NL%%YELLOW%Rare Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[RARE ID EXC WEAPON]: %NAME%{%TAN%Rune + Perf Sapphire%NL%Cube w/ Fal, Um,%NL%%YELLOW%Rare Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[CRAFT ID NORM (ARMOR OR QUIVER)]: %NAME%{%TAN%Rune + Perf Amethyst%NL%Cube w/ Ral, Thul,%NL%%ORANGE%Craft Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[CRAFT ID EXC (ARMOR OR QUIVER)]: %NAME%{%TAN%Rune + Perf Amethyst%NL%Cube w/ Ko, Pul,%NL%%ORANGE%Craft Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[CRAFT ID NORM WEAPON]: %NAME%{%TAN%Rune + Perf Sapphire%NL%Cube w/ Ort, Amn,%NL%%ORANGE%Craft Upgrade:}%CONTINUE%');
+        lines.push('ItemDisplay[CRAFT ID EXC WEAPON]: %NAME%{%TAN%Rune + Perf Sapphire%NL%Cube w/ Fal, Um,%NL%%ORANGE%Craft Upgrade:}%CONTINUE%');
+        lines.push('');
+      }
+
+      // ==========================
+      // 15f. IMBUE / SLAM SUGGESTIONS (from Wolfie/HiimFilter)
+      // ==========================
+      if (wantImbue) {
+        lines.push('// ============================================================');
+        lines.push('// IMBUE & SLAM SUGGESTIONS');
+        lines.push('// ============================================================');
+        lines.push('// Eth elite bases worth imbuing at Charsi');
+        lines.push('ItemDisplay[NMAG ETH !RW SOCK=0 ELT (WEAPON OR CIRC)]: %NAME%{%GOLD%Imbue %WHITE%at Charsi for %YELLOW%Rare item%CL%%NAME%}%CONTINUE%');
+        lines.push('// Diadem always worth imbuing');
+        lines.push('ItemDisplay[ci3 NMAG !ETH SOCK=0]: %NAME%{%TAN%Imbue at Charsi for %YELLOW%Rare Diadem}');
+        lines.push('// Non-eth bases can be slammed');
+        lines.push('ItemDisplay[NMAG !ETH !RW SOCK=0 ELT (WEAPON OR ARMOR)]: %NAME%{%RED%Slam %WHITE%for chance of %YELLOW%Rare item%CL%%NAME%}%CONTINUE%');
+        lines.push('');
+      }
 
       // ==========================
       // 16. NORMAL & MAGIC ITEM HIDING (FILTLVL-gated)

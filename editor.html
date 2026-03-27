@@ -229,11 +229,43 @@
                   <strong>Hide Small Potions</strong>
                   <span>Hide minor/light healing and mana potions</span>
                 </button>
+                <button class="wizard-opt" data-value="hideallhp">
+                  <strong>Hide ALL Health Potions</strong>
+                  <span>Hide all HP potions including Super Healing — only show rejuvs</span>
+                </button>
+                <button class="wizard-opt" data-value="hideallmp">
+                  <strong>Hide ALL Mana Potions</strong>
+                  <span>Hide all MP potions including Super Mana — only show rejuvs</span>
+                </button>
               </div>
             </div>
 
-            <!-- Step 7: Confirm -->
+            <!-- Step 7: Tooltips & Recipes -->
             <div class="wizard-step" id="wiz-step-7" style="display:none">
+              <h3>Item tooltips and recipes?</h3>
+              <p class="text-muted">Add useful info to item descriptions when you hover over them.</p>
+              <div class="wizard-options" data-wiz="tooltips" data-multi="true">
+                <button class="wizard-opt" data-value="socketrecipe">
+                  <strong>Socket Cube Recipes</strong>
+                  <span>Show how to add sockets via cube (Ral+Thul+gem) on unsocketed bases</span>
+                </button>
+                <button class="wizard-opt" data-value="sellvalue">
+                  <strong>Sell Value Highlight</strong>
+                  <span>Mark items worth selling to vendors with a $ tag (35k+ gold)</span>
+                </button>
+                <button class="wizard-opt" data-value="upgraderecipe">
+                  <strong>Upgrade Recipes</strong>
+                  <span>Show cube upgrade recipes on identified uniques, sets, and rares</span>
+                </button>
+                <button class="wizard-opt" data-value="imbue">
+                  <strong>Imbue / Slam Suggestions</strong>
+                  <span>Suggest imbuing or slamming good ethereal white bases</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 8: Confirm -->
+            <div class="wizard-step" id="wiz-step-8" style="display:none">
               <h3>Ready to build your filter!</h3>
               <p class="text-muted">Here's a summary of your choices:</p>
               <div class="wizard-summary" id="wizard-summary"></div>
