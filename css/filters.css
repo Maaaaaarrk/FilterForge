@@ -1,0 +1,78 @@
+/* ============================================
+   Filter Forge — Community Filters Page Styles
+   ============================================ */
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.filter-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.filter-card:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
+.filter-card-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.filter-card-author {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.filter-card-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.filter-card-links a {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.filter-card-links a:hover {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.filter-card.hidden {
+  display: none;
+}
+
+.filters-loading {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 3rem 0;
+}
+
+.filters-error {
+  text-align: center;
+  color: var(--error);
+  padding: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+}

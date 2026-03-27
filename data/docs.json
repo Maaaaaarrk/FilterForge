@@ -1,0 +1,367 @@
+{
+  "sections": [
+    {
+      "id": "syntax-overview",
+      "title": "Syntax Overview",
+      "content": "<p>PD2 item filters control how items are displayed on the ground and in your inventory. Filters use a simple rule-based syntax where each line defines conditions to match and an output to display.</p>",
+      "subsections": [
+        {
+          "id": "basic-rule-structure",
+          "title": "Basic Rule Structure",
+          "content": "<p>Every filter rule follows this format:</p><pre><code>ItemDisplay[conditions]: output</code></pre><p>The <code>conditions</code> inside the brackets determine which items the rule matches. The <code>output</code> after the colon determines how the item is displayed. If the output is empty, the item is <strong>hidden</strong>.</p><pre><code>// Show Shako with custom name\nItemDisplay[UNI ELT HELM]: %GOLD%Shako %WHITE%- %NAME%\n\n// Hide low-tier normal items\nItemDisplay[NMAG NORM !ETH]:\n\n// Show all Runes with special notification\nItemDisplay[RUNE>0]: %ORANGE%%RUNENAME% Rune %MAP-0A%</code></pre><p>A rule with no output (nothing after the colon) hides the matched items. A rule with <code>%NAME%</code> in the output keeps the item's original name.</p>"
+        },
+        {
+          "id": "rule-processing",
+          "title": "Rule Processing",
+          "content": "<p>Rules are processed <strong>top-to-bottom</strong> and <strong>first match wins</strong>. Once an item matches a rule, no further rules are checked for that item (unless <code>%CONTINUE%</code> is used).</p><pre><code>// This rule matches first — Ber shows as &quot;Ber Rune&quot;\nItemDisplay[RUNE=30]: %ORANGE%Ber Rune\n\n// This would never match Ber because the above already caught it\nItemDisplay[RUNE>20]: %ORANGE%High Rune</code></pre><div class=\"callout\"><strong>Tip:</strong> Place more specific rules above general ones. If a general rule comes first, it will catch items before your specific rules can match them.</div>"
+        },
+        {
+          "id": "comments",
+          "title": "Comments",
+          "content": "<p>Comments start with <code>//</code> and are ignored by the game. They can appear on their own line or after a rule's output.</p><pre><code>// This is a full-line comment\n\nItemDisplay[RUNE=33]: %ORANGE%Zod Rune  // This is an inline comment\n\n// You can also use comments to temporarily disable rules:\n// ItemDisplay[NMAG NORM]: </code></pre>"
+        },
+        {
+          "id": "file-format",
+          "title": "File Format",
+          "content": "<p>Filter files use the <code>.filter</code> extension. Files should be saved in <strong>UTF-8</strong> encoding, though <strong>ANSI</strong> may be needed for certain special characters to render correctly in-game.</p><p>Filters are stored in the <code>ProjectD2/filters/</code> directory. The game looks for filters in this location at launch.</p>"
+        },
+        {
+          "id": "file-loading",
+          "title": "File Loading Order",
+          "content": "<p>PD2 loads filter files in this priority order:</p><ol><li><strong>Launcher selection</strong> — the filter chosen in the PD2 launcher takes priority</li><li><strong>loot.filter</strong> — if present, this file is loaded as the active filter</li><li><strong>default.filter</strong> — fallback if no other filter is specified</li></ol><div class=\"callout\">You can switch filters in-game using the <code>/reload</code> command, which re-reads the active filter file without restarting.</div>"
+        }
+      ]
+    },
+    {
+      "id": "aliases",
+      "title": "Aliases",
+      "content": "<p>Aliases allow you to define reusable text shortcuts that are expanded at filter load time. They work as a simple find-and-replace mechanism.</p>",
+      "subsections": [
+        {
+          "id": "alias-syntax",
+          "title": "Alias Syntax",
+          "content": "<p>Aliases are defined with the <code>Alias</code> keyword:</p><pre><code>Alias[TextToReplace]: TextToBeInserted</code></pre><p>When the filter loads, every occurrence of <code>TextToReplace</code> in subsequent rules is replaced with <code>TextToBeInserted</code>. Aliases can be defined <strong>anywhere</strong> in the file — they are processed before rules are evaluated.</p><pre><code>// Define color aliases\nAlias[HiRune]: %ORANGE%%MAP-0A%%NOTIFY-1%%BORDER-0A%\nAlias[MidRune]: %YELLOW%%DOT-09%\nAlias[LoRune]: %WHITE%\n\n// Use them in rules\nItemDisplay[RUNE=33]: HiRune Zod Rune\nItemDisplay[RUNE=30]: HiRune Ber Rune\nItemDisplay[RUNE=25]: MidRune Gul Rune\nItemDisplay[RUNE=1]: LoRune El Rune</code></pre>"
+        },
+        {
+          "id": "alias-tips",
+          "title": "Practical Alias Examples",
+          "content": "<pre><code>// Toggle alias — change TRUE to FALSE to disable a group of rules\nAlias[ShowNormals]: TRUE\nItemDisplay[ShowNormals NMAG NORM ELT]: %NAME%\n\n// Shorten common condition sets\nAlias[IsGoodUnique]: UNI ID !ETH\nAlias[IsEthElite]: ETH ELT NMAG\n\nItemDisplay[IsGoodUnique WEAPON]: %GOLD%%NAME%\nItemDisplay[IsEthElite SUP WEAPON]: %GREEN%Eth %NAME%\n\n// Reusable output fragments\nAlias[ShowDef]: {%NL%%BLUE%Def: %WHITE%%DEF%}\nAlias[ShowSock]: {%NL%%BLUE%Max: %WHITE%%MAXSOCKETS%}\n\nItemDisplay[NMAG ELT ARMOR]: %NAME% ShowDef ShowSock</code></pre><div class=\"callout warning\"><strong>Warning:</strong> Alias names are case-sensitive and must not conflict with existing filter keywords. Avoid names like <code>RUNE</code>, <code>MAG</code>, or other reserved words.</div>"
+        }
+      ]
+    },
+    {
+      "id": "filter-levels",
+      "title": "Filter Levels",
+      "content": "<p>Filter levels let you create multiple visibility tiers within a single filter. Users can cycle through levels in-game to show or hide different categories of items.</p>",
+      "subsections": [
+        {
+          "id": "filter-level-syntax",
+          "title": "Defining Filter Levels",
+          "content": "<p>Filter levels are defined with the <code>ItemDisplayFilterName[]</code> syntax. You can define up to <strong>12 levels</strong> (plus the default Level 0).</p><pre><code>ItemDisplayFilterName[1]: Relaxed\nItemDisplayFilterName[2]: Default\nItemDisplayFilterName[3]: Strict\nItemDisplayFilterName[4]: Uber Strict</code></pre><p><strong>Level 0</strong> is always <code>Show All Items</code> and cannot be renamed. It shows every item regardless of filter rules.</p><p>Players cycle through filter levels in-game using the assigned hotkey (default: Numpad 0).</p>"
+        },
+        {
+          "id": "filtlvl-condition",
+          "title": "FILTLVL Condition",
+          "content": "<p>Use the <code>FILTLVL</code> value condition to make rules apply only at certain filter levels:</p><pre><code>// Only show these items at filter level 1 or lower\nItemDisplay[FILTLVL<2 NMAG ELT]: %NAME%\n\n// Only apply at level 3+\nItemDisplay[FILTLVL>2 MAG !CHARM]: \n\n// Only at exact level 2\nItemDisplay[FILTLVL=2 MAG JEWELRY]: %NAME%</code></pre><p>Rules without a <code>FILTLVL</code> condition apply at <strong>all</strong> filter levels (except Level 0, which overrides everything).</p>"
+        },
+        {
+          "id": "tier-notifications",
+          "title": "%TIER-X% for Notification Control",
+          "content": "<p>The <code>%TIER-X%</code> keyword controls the minimum filter level at which an item's notifications (map icons, sounds, text popups) are active.</p><pre><code>// Notifications active at level 9+ (default if omitted)\nItemDisplay[RUNE>28]: %ORANGE%%RUNENAME% %MAP-0A%%TIER-9%\n\n// Notifications only at level 1+ (always on except Show All)\nItemDisplay[UNI ELT]: %GOLD%%NAME% %MAP-09%%TIER-1%\n\n// Notifications at level 5+ only\nItemDisplay[RUNE~20-28]: %YELLOW%%RUNENAME% %DOT-09%%TIER-5%</code></pre><p>If <code>%TIER-X%</code> is omitted, notifications default to <code>%TIER-9%</code>. The value X ranges from 0 to 12.</p>"
+        }
+      ]
+    },
+    {
+      "id": "boolean-conditions",
+      "title": "Boolean Conditions",
+      "content": "<p>Boolean conditions are true/false checks placed inside the <code>ItemDisplay[...]</code> brackets. They match items based on quality, type, equipment slot, and other properties. Multiple boolean conditions in a rule are combined with implicit AND logic.</p>",
+      "subsections": [
+        {
+          "id": "quality-conditions",
+          "title": "Quality",
+          "content": "<table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>NMAG</code></td><td>Non-magical (white/gray name) items</td></tr><tr><td><code>MAG</code></td><td>Magic (blue name) items</td></tr><tr><td><code>RARE</code></td><td>Rare (yellow name) items</td></tr><tr><td><code>UNI</code></td><td>Unique (gold name) items</td></tr><tr><td><code>SET</code></td><td>Set (green name) items</td></tr><tr><td><code>CRAFT</code></td><td>Crafted (orange name) items</td></tr></tbody></table><pre><code>ItemDisplay[UNI ELT WEAPON]: %GOLD%%NAME%\nItemDisplay[SET HELM]: %GREEN%%NAME%\nItemDisplay[RARE JEWELRY]: %YELLOW%%NAME%</code></pre>"
+        },
+        {
+          "id": "tier-conditions",
+          "title": "Item Tier",
+          "content": "<table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>NORM</code></td><td>Normal tier items</td></tr><tr><td><code>EXC</code></td><td>Exceptional tier items</td></tr><tr><td><code>ELT</code></td><td>Elite tier items</td></tr></tbody></table><pre><code>ItemDisplay[NMAG NORM !ETH]:      // Hide normal non-magic non-eth\nItemDisplay[NMAG ELT]: %NAME%     // Show elite non-magic</code></pre>"
+        },
+        {
+          "id": "property-conditions",
+          "title": "Item Properties",
+          "content": "<table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>ID</code></td><td>Item is identified</td></tr><tr><td><code>INF</code></td><td>Item is ethereal (inferior) — <em>Note: same as ETH for most purposes; prefer ETH</em></td></tr><tr><td><code>SUP</code></td><td>Item is superior</td></tr><tr><td><code>ETH</code></td><td>Item is ethereal</td></tr><tr><td><code>RW</code></td><td>Item is a runeword</td></tr><tr><td><code>GEMMED</code></td><td>Item has gems/runes/jewels inserted</td></tr></tbody></table><pre><code>ItemDisplay[ETH ELT NMAG WEAPON]: %WHITE%Eth %NAME%\nItemDisplay[RW]: %GOLD%%NAME%\nItemDisplay[SUP NMAG !ETH ELT ARMOR]: %WHITE%%NAME% {%NL%%BLUE%Superior}</code></pre>"
+        },
+        {
+          "id": "equipment-groups",
+          "title": "Equipment Groups",
+          "content": "<table><thead><tr><th>Code</th><th>Alias</th><th>Description</th></tr></thead><tbody><tr><td><code>EQ1</code></td><td><code>HELM</code></td><td>Helms, casques, etc.</td></tr><tr><td><code>EQ2</code></td><td><code>CHEST</code></td><td>Body armor</td></tr><tr><td><code>EQ3</code></td><td><code>SHIELD</code></td><td>Shields, shrunken heads</td></tr><tr><td><code>EQ4</code></td><td><code>GLOVES</code></td><td>Gloves</td></tr><tr><td><code>EQ5</code></td><td><code>BOOTS</code></td><td>Boots</td></tr><tr><td><code>EQ6</code></td><td><code>BELT</code></td><td>Belts</td></tr><tr><td><code>EQ7</code></td><td><code>CIRC</code></td><td>Circlets, coronets, tiaras, diadems</td></tr><tr><td>—</td><td><code>ARMOR</code></td><td>Any armor piece (EQ1–EQ7 combined)</td></tr></tbody></table><pre><code>ItemDisplay[NMAG ELT CHEST]: %NAME%\nItemDisplay[RARE CIRC ID]: %YELLOW%%NAME%\nItemDisplay[SET ARMOR]: %GREEN%%NAME%</code></pre>"
+        },
+        {
+          "id": "weapon-groups",
+          "title": "Weapon Groups",
+          "content": "<table><thead><tr><th>Code</th><th>Alias</th><th>Description</th></tr></thead><tbody><tr><td><code>WP1</code></td><td><code>AXE</code></td><td>Axes</td></tr><tr><td><code>WP2</code></td><td><code>MACE</code></td><td>Maces</td></tr><tr><td><code>WP3</code></td><td><code>SWORD</code></td><td>Swords</td></tr><tr><td><code>WP4</code></td><td><code>DAGGER</code></td><td>Daggers</td></tr><tr><td><code>WP5</code></td><td><code>THROWING</code></td><td>Throwing weapons</td></tr><tr><td><code>WP6</code></td><td><code>JAV</code></td><td>Javelins</td></tr><tr><td><code>WP7</code></td><td><code>SPEAR</code></td><td>Spears</td></tr><tr><td><code>WP8</code></td><td><code>POLEARM</code></td><td>Polearms</td></tr><tr><td><code>WP9</code></td><td><code>BOW</code></td><td>Bows</td></tr><tr><td><code>WP10</code></td><td><code>XBOW</code></td><td>Crossbows</td></tr><tr><td><code>WP11</code></td><td><code>STAFF</code></td><td>Staves</td></tr><tr><td><code>WP12</code></td><td><code>WAND</code></td><td>Wands</td></tr><tr><td><code>WP13</code></td><td><code>SCEPTER</code></td><td>Scepters</td></tr><tr><td>—</td><td><code>WEAPON</code></td><td>Any weapon (WP1–WP13 combined)</td></tr><tr><td>—</td><td><code>1H</code></td><td>One-handed weapons</td></tr><tr><td>—</td><td><code>2H</code></td><td>Two-handed weapons</td></tr><tr><td>—</td><td><code>CLUB</code></td><td>Clubs (subset of maces)</td></tr><tr><td>—</td><td><code>TMACE</code></td><td>Throwing maces (subset)</td></tr><tr><td>—</td><td><code>HAMMER</code></td><td>Hammers (subset of maces)</td></tr></tbody></table>"
+        },
+        {
+          "id": "class-items",
+          "title": "Class-Specific Items",
+          "content": "<table><thead><tr><th>Code</th><th>Alias</th><th>Description</th></tr></thead><tbody><tr><td><code>CL1</code></td><td><code>DRU</code></td><td>Druid pelts</td></tr><tr><td><code>CL2</code></td><td><code>BAR</code></td><td>Barbarian helms</td></tr><tr><td><code>CL3</code></td><td><code>DIN</code></td><td>Paladin shields</td></tr><tr><td><code>CL4</code></td><td><code>NEC</code></td><td>Necromancer shrunken heads</td></tr><tr><td><code>CL5</code></td><td><code>SIN</code></td><td>Assassin claws</td></tr><tr><td><code>CL6</code></td><td><code>SOR</code></td><td>Sorceress orbs</td></tr><tr><td><code>CL7</code></td><td><code>ZON</code></td><td>Amazon weapons (bows/javelins/spears)</td></tr><tr><td>—</td><td><code>CLASS</code></td><td>Any class-specific item</td></tr></tbody></table><pre><code>ItemDisplay[DIN ELT NMAG]: %WHITE%%NAME% {%NL%%BLUE%Pally Shield}\nItemDisplay[SIN ELT RARE ID]: %YELLOW%%NAME%</code></pre>"
+        },
+        {
+          "id": "misc-conditions",
+          "title": "Miscellaneous",
+          "content": "<table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>JEWELRY</code></td><td>Rings and amulets</td></tr><tr><td><code>CHARM</code></td><td>Charms (small, large, grand)</td></tr><tr><td><code>QUIVER</code></td><td>Arrows and bolts</td></tr><tr><td><code>MISC</code></td><td>Miscellaneous items (keys, organs, essences, etc.)</td></tr></tbody></table>"
+        },
+        {
+          "id": "mutable-conditions",
+          "title": "Mutable (Location/State) Conditions",
+          "content": "<p>These conditions check where or how the item is currently placed:</p><table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>SHOP</code></td><td>Item is in a shop/vendor window</td></tr><tr><td><code>EQUIPPED</code></td><td>Item is currently equipped by the player</td></tr><tr><td><code>MERC</code></td><td>Item is equipped on the mercenary</td></tr><tr><td><code>INVENTORY</code></td><td>Item is in the player's inventory</td></tr><tr><td><code>CUBE</code></td><td>Item is in the Horadric Cube</td></tr><tr><td><code>STASH</code></td><td>Item is in the stash</td></tr><tr><td><code>GROUND</code></td><td>Item is on the ground</td></tr></tbody></table><div class=\"callout\"><strong>Note:</strong> Most filter rules operate on ground items. Mutable conditions are useful for in-inventory recoloring and shop filtering.</div>"
+        },
+        {
+          "id": "character-class-conditions",
+          "title": "Character Class Conditions",
+          "content": "<p>These check the <strong>class of the current character</strong>, not the item type:</p><table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>AMAZON</code></td><td>Current character is an Amazon</td></tr><tr><td><code>ASSASSIN</code></td><td>Current character is an Assassin</td></tr><tr><td><code>BARBARIAN</code></td><td>Current character is a Barbarian</td></tr><tr><td><code>DRUID</code></td><td>Current character is a Druid</td></tr><tr><td><code>NECROMANCER</code></td><td>Current character is a Necromancer</td></tr><tr><td><code>PALADIN</code></td><td>Current character is a Paladin</td></tr><tr><td><code>SORCERESS</code></td><td>Current character is a Sorceress</td></tr></tbody></table><pre><code>// Only show Paladin shields when playing Paladin\nItemDisplay[PALADIN DIN ELT NMAG]: %WHITE%%NAME%\nItemDisplay[!PALADIN DIN NMAG]:\n\n// Show Amazon-specific bows only for Amazon\nItemDisplay[AMAZON ZON UNI]: %GOLD%%NAME%</code></pre>"
+        }
+      ]
+    },
+    {
+      "id": "value-conditions",
+      "title": "Value Conditions",
+      "content": "<p>Value conditions compare a numeric property against a value. They are used inside the <code>ItemDisplay[...]</code> brackets alongside boolean conditions.</p>",
+      "subsections": [
+        {
+          "id": "value-operators",
+          "title": "Operators",
+          "content": "<table><thead><tr><th>Operator</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><code>=</code></td><td>Equal to</td><td><code>RUNE=30</code></td></tr><tr><td><code>&lt;</code></td><td>Less than</td><td><code>ILVL&lt;25</code></td></tr><tr><td><code>&gt;</code></td><td>Greater than</td><td><code>CLVL&gt;80</code></td></tr><tr><td><code>~</code></td><td>Between (inclusive)</td><td><code>RUNE~20-28</code></td></tr></tbody></table><pre><code>ItemDisplay[RUNE=30]: Ber Rune         // Exact match\nItemDisplay[RUNE&gt;28]: %ORANGE%High Rune  // Greater than\nItemDisplay[ILVL&lt;10]: %GRAY%Low Level    // Less than\nItemDisplay[RUNE~20-28]: %YELLOW%Mid    // Between 20 and 28 inclusive</code></pre>"
+        },
+        {
+          "id": "value-info-codes",
+          "title": "Info Codes",
+          "content": "<table><thead><tr><th>Code</th><th>Description</th><th>Range/Notes</th></tr></thead><tbody><tr><td><code>GOLD</code></td><td>Gold pile amount</td><td>Matches gold piles</td></tr><tr><td><code>GEMLEVEL</code> / <code>GEM</code></td><td>Gem quality level</td><td>1=Chipped, 2=Flawed, 3=Normal, 4=Flawless, 5=Perfect</td></tr><tr><td><code>GEMTYPE</code></td><td>Gem type</td><td>1=Amethyst, 2=Diamond, 3=Emerald, 4=Ruby, 5=Sapphire, 6=Topaz, 7=Skull</td></tr><tr><td><code>RUNE</code></td><td>Rune number</td><td>1 (El) through 33 (Zod)</td></tr><tr><td><code>QTY</code></td><td>Stack quantity</td><td>For stackable items (keys, arrows, etc.)</td></tr><tr><td><code>LVLREQ</code></td><td>Level requirement</td><td>Required level to equip</td></tr><tr><td><code>PRICE</code></td><td>Item sell price</td><td>Gold value at vendor</td></tr><tr><td><code>ALVL</code></td><td>Area level</td><td>Level of the area where item dropped</td></tr><tr><td><code>CRAFTALVL</code></td><td>Crafting area level</td><td>Effective alvl for crafting recipes</td></tr><tr><td><code>REROLLALVL</code></td><td>Reroll area level</td><td>Effective alvl for reroll recipes</td></tr><tr><td><code>QLVL</code></td><td>Quality level</td><td>Item base quality level</td></tr><tr><td><code>ILVL</code></td><td>Item level</td><td>The item's internal level</td></tr><tr><td><code>CLVL</code></td><td>Character level</td><td>Current character level</td></tr><tr><td><code>DIFF</code></td><td>Difficulty</td><td>0=Normal, 1=Nightmare, 2=Hell</td></tr><tr><td><code>MAPID</code></td><td>Map ID</td><td>1–175, identifies the current map</td></tr><tr><td><code>MAPTIER</code></td><td>Map tier</td><td>0–5</td></tr><tr><td><code>PREFIX</code></td><td>Magic prefix ID</td><td>Use <code>~</code> operator (see note below)</td></tr><tr><td><code>SUFFIX</code></td><td>Magic suffix ID</td><td>Use <code>~</code> operator (see note below)</td></tr><tr><td><code>AUTOMOD</code></td><td>Automod ID</td><td>Automatic modifier (e.g., paladin shield resistances)</td></tr><tr><td><code>FILTLVL</code></td><td>Current filter level</td><td>0–12</td></tr><tr><td><code>MAXSOCKETS</code></td><td>Maximum possible sockets</td><td>Max sockets the base can roll</td></tr></tbody></table><div class=\"callout warning\"><strong>PREFIX/SUFFIX Note:</strong> The <code>&lt;</code> and <code>&gt;</code> operators are unreliable for PREFIX and SUFFIX codes. Always use the <code>~</code> (between) operator instead: <code>PREFIX~152-152</code> to match a specific prefix.</div>"
+        },
+        {
+          "id": "value-base-codes",
+          "title": "Base Stat Codes",
+          "content": "<p>These codes check the <strong>base item</strong> properties (before modifiers):</p><table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>BASEDEF</code></td><td>Base defense (unmodified)</td></tr><tr><td><code>BASEMAXDAM</code></td><td>Base maximum damage</td></tr><tr><td><code>BASEMINDAM</code></td><td>Base minimum damage</td></tr><tr><td><code>BASEMAXTHROW</code></td><td>Base max throw damage</td></tr><tr><td><code>BASEMINTHROW</code></td><td>Base min throw damage</td></tr><tr><td><code>REQDEX</code></td><td>Required dexterity</td></tr><tr><td><code>REQSTR</code></td><td>Required strength</td></tr><tr><td><code>REQLVL</code></td><td>Required level (base)</td></tr><tr><td><code>UPDEX</code></td><td>Required dex if upgraded</td></tr><tr><td><code>UPSTR</code></td><td>Required str if upgraded</td></tr><tr><td><code>UPLVL</code></td><td>Required level if upgraded</td></tr><tr><td><code>MAXRES</code></td><td>Maximum resistance on the base</td></tr><tr><td><code>ALLATTRIB</code></td><td>All attributes bonus</td></tr><tr><td><code>BASEBLOCK</code></td><td>Base block chance</td></tr><tr><td><code>HEIGHT</code></td><td>Inventory height in cells</td></tr><tr><td><code>WIDTH</code></td><td>Inventory width in cells</td></tr><tr><td><code>AREA</code></td><td>Inventory area (HEIGHT * WIDTH)</td></tr></tbody></table><pre><code>// Show elite armors with high base defense\nItemDisplay[NMAG ELT CHEST BASEDEF&gt;500]: %WHITE%%NAME% {%NL%%BLUE%Base Def: %EDEF%}\n\n// Show shields with 40+ base block\nItemDisplay[NMAG SHIELD BASEBLOCK&gt;39]: %WHITE%%NAME% {%NL%%BLUE%Block: %BASEBLOCK%%}</code></pre>"
+        }
+      ]
+    },
+    {
+      "id": "logical-operators",
+      "title": "Logical Operators",
+      "content": "<p>Logical operators control how multiple conditions are combined within a rule's brackets.</p>",
+      "subsections": [
+        {
+          "id": "and-operator",
+          "title": "AND (Implicit)",
+          "content": "<p>Conditions placed next to each other (separated by spaces) are combined with <strong>AND</strong> logic. All conditions must be true for the rule to match.</p><pre><code>// Item must be: Unique AND Elite AND Weapon\nItemDisplay[UNI ELT WEAPON]: %GOLD%%NAME%\n\n// Item must be: Non-magic AND Ethereal AND Elite AND Armor\nItemDisplay[NMAG ETH ELT ARMOR]: %WHITE%Eth %NAME%</code></pre>"
+        },
+        {
+          "id": "or-operator",
+          "title": "OR (Parentheses)",
+          "content": "<p>To match if <strong>any one</strong> of several conditions is true, use parentheses with the <code>OR</code> keyword:</p><pre><code>// Match Helms OR Circlets\nItemDisplay[NMAG ELT (HELM OR CIRC)]: %NAME%\n\n// Match if item is Unique OR Set\nItemDisplay[(UNI OR SET) ELT WEAPON]: %GOLD%%NAME%\n\n// Match specific runes\nItemDisplay[(RUNE=30 OR RUNE=32 OR RUNE=33)]: %ORANGE%%RUNENAME%</code></pre><div class=\"callout warning\"><strong>Important:</strong> The <code>OR</code> keyword <strong>only</strong> works inside parentheses. You cannot write <code>ItemDisplay[HELM OR CIRC]:</code> — it must be <code>ItemDisplay[(HELM OR CIRC)]:</code>.</div>"
+        },
+        {
+          "id": "not-operator",
+          "title": "NOT (Exclamation Mark)",
+          "content": "<p>Place <code>!</code> before a condition to negate it:</p><pre><code>// Not ethereal\nItemDisplay[NMAG ELT !ETH ARMOR]: %NAME%\n\n// Not identified\nItemDisplay[UNI !ID]: %GOLD%Unidentified %NAME%\n\n// NOT can also negate a group in parentheses\nItemDisplay[NMAG ELT !(HELM OR CHEST)]: %NAME%</code></pre>"
+        },
+        {
+          "id": "nesting-examples",
+          "title": "Combining Operators",
+          "content": "<p>You can combine AND, OR, and NOT for complex conditions:</p><pre><code>// Elite non-magic weapons that are either ethereal or superior\nItemDisplay[NMAG ELT WEAPON (ETH OR SUP)]: %WHITE%%NAME%\n\n// Unique or Set, Elite, not ethereal\nItemDisplay[(UNI OR SET) ELT !ETH ARMOR]: %GOLD%%NAME%\n\n// Runes 28-33 OR any unique elite weapon\nItemDisplay[(RUNE~28-33 OR (UNI ELT WEAPON))]: %ORANGE%%NAME%\n\n// Class items for specific classes when playing that class\nItemDisplay[PALADIN DIN ELT (NMAG OR RARE)]: %NAME%</code></pre>"
+        }
+      ]
+    },
+    {
+      "id": "named-attributes",
+      "title": "Named Attributes",
+      "content": "<p>Named attributes let you check specific item stats in conditions. They are used inside the brackets just like value conditions, comparing against a numeric threshold.</p>",
+      "subsections": [
+        {
+          "id": "attribute-table",
+          "title": "Attribute Reference",
+          "content": "<table><thead><tr><th>Code</th><th>Alias</th><th>Description</th></tr></thead><tbody><tr><td><code>SOCK</code></td><td><code>SOCKETS</code></td><td>Number of sockets</td></tr><tr><td><code>DEF</code></td><td>—</td><td>Total defense</td></tr><tr><td><code>ED</code></td><td>—</td><td>Enhanced damage/defense (from affixes only, NOT rw/sockets)</td></tr><tr><td><code>EDEF</code></td><td>—</td><td>Enhanced defense (includes all sources)</td></tr><tr><td><code>EDAM</code></td><td>—</td><td>Enhanced damage (includes all sources)</td></tr><tr><td><code>MAXDUR</code></td><td>—</td><td>Maximum durability</td></tr><tr><td><code>AR</code></td><td>—</td><td>Attack rating</td></tr><tr><td><code>RES</code></td><td>—</td><td>All resistances</td></tr><tr><td><code>FRES</code></td><td>—</td><td>Fire resistance</td></tr><tr><td><code>CRES</code></td><td>—</td><td>Cold resistance</td></tr><tr><td><code>LRES</code></td><td>—</td><td>Lightning resistance</td></tr><tr><td><code>PRES</code></td><td>—</td><td>Poison resistance</td></tr><tr><td><code>FRW</code></td><td>—</td><td>Faster run/walk</td></tr><tr><td><code>IAS</code></td><td>—</td><td>Increased attack speed</td></tr><tr><td><code>FCR</code></td><td>—</td><td>Faster cast rate</td></tr><tr><td><code>FHR</code></td><td>—</td><td>Faster hit recovery</td></tr><tr><td><code>FBR</code></td><td>—</td><td>Faster block rate</td></tr><tr><td><code>MINDMG</code></td><td>—</td><td>Minimum damage</td></tr><tr><td><code>MAXDMG</code></td><td>—</td><td>Maximum damage</td></tr><tr><td><code>STR</code></td><td>—</td><td>Strength bonus</td></tr><tr><td><code>DEX</code></td><td>—</td><td>Dexterity bonus</td></tr><tr><td><code>LIFE</code></td><td>—</td><td>Life bonus</td></tr><tr><td><code>MANA</code></td><td>—</td><td>Mana bonus</td></tr><tr><td><code>MFIND</code></td><td>—</td><td>Magic find %</td></tr><tr><td><code>GFIND</code></td><td>—</td><td>Gold find %</td></tr><tr><td><code>MAEK</code></td><td>—</td><td>Mana after each kill</td></tr><tr><td><code>DTM</code></td><td>—</td><td>Damage taken goes to mana %</td></tr><tr><td><code>REPLIFE</code></td><td>—</td><td>Replenish life</td></tr><tr><td><code>REPAIR</code></td><td>—</td><td>Repairs durability (1 in X seconds)</td></tr><tr><td><code>ARPER</code></td><td>—</td><td>Attack rating per level</td></tr><tr><td><code>FOOLS</code></td><td>—</td><td>Fool's mod (max damage per level)</td></tr></tbody></table>"
+        },
+        {
+          "id": "stat-addition",
+          "title": "Stat Addition (Combining Attributes)",
+          "content": "<p>You can add multiple attribute codes together using <code>+</code> and compare the sum:</p><pre><code>// Total elemental resistances above 79\nItemDisplay[RARE ARMOR ID FRES+CRES+LRES+PRES&gt;79]: %YELLOW%%NAME% {%NL%%GREEN%Res: %RES%}\n\n// FCR + FHR combo\nItemDisplay[RARE JEWELRY ID FCR+FHR&gt;30]: %YELLOW%%NAME%\n\n// Life + Mana total\nItemDisplay[RARE CHARM ID LIFE+MANA&gt;35]: %YELLOW%%NAME%</code></pre><p>This works with any named attributes or STAT/MULTI codes (covered in the next section).</p>"
+        },
+        {
+          "id": "ed-vs-edef-edam",
+          "title": "ED vs EDEF/EDAM",
+          "content": "<p>This is a common source of confusion:</p><ul><li><code>ED</code> — Enhanced Damage/Defense from <strong>affixes only</strong>. This does NOT include bonuses from runewords, socketed gems, or jewels.</li><li><code>EDEF</code> — Enhanced Defense from <strong>all sources</strong>, including runewords and socketed items.</li><li><code>EDAM</code> — Enhanced Damage from <strong>all sources</strong>, including runewords and socketed items.</li></ul><pre><code>// For checking runeword defense, use EDEF\nItemDisplay[RW ARMOR EDEF&gt;200]: %GOLD%%NAME% {%NL%%BLUE%Def: %DEF%}\n\n// For checking rare/magic affix ED, use ED\nItemDisplay[RARE WEAPON ID ED&gt;300]: %YELLOW%%NAME%\n\n// For checking total enhanced damage, use EDAM\nItemDisplay[UNI WEAPON ID EDAM&gt;250]: %GOLD%%NAME%</code></pre><div class=\"callout\"><strong>Shortcut codes</strong> that can be used directly in conditions without STAT/MULTI: <code>STR</code>, <code>DEX</code>, <code>LIFE</code>, <code>MANA</code>, <code>FRES</code>, <code>CRES</code>, <code>LRES</code>, <code>PRES</code>, <code>EDEF</code>, <code>EDAM</code>, <code>FCR</code>, <code>AR</code>, <code>REPLIFE</code>.</div>"
+        }
+      ]
+    },
+    {
+      "id": "stat-codes",
+      "title": "STAT Codes",
+      "content": "<p>For attributes not covered by named shortcuts, you can use the <code>STAT#</code> and <code>CHARSTAT#</code> codes to check any item or character stat by its numeric ID.</p>",
+      "subsections": [
+        {
+          "id": "stat-format",
+          "title": "STAT# Format",
+          "content": "<p>Use <code>STAT</code> followed by the stat number to check an item's stat value:</p><pre><code>// STAT0 = Strength\nItemDisplay[RARE ARMOR ID STAT0&gt;20]: %YELLOW%%NAME%\n\n// STAT39 = Faster Cast Rate\nItemDisplay[RARE JEWELRY ID STAT39&gt;9]: %YELLOW%%NAME%\n\n// STAT80 = Magic Find\nItemDisplay[UNI ID STAT80&gt;30]: %GOLD%%NAME%</code></pre><p>Common STAT codes:</p><table><thead><tr><th>STAT#</th><th>Description</th></tr></thead><tbody><tr><td><code>STAT0</code></td><td>Strength</td></tr><tr><td><code>STAT2</code></td><td>Dexterity</td></tr><tr><td><code>STAT3</code></td><td>Vitality</td></tr><tr><td><code>STAT7</code></td><td>Life</td></tr><tr><td><code>STAT9</code></td><td>Mana</td></tr><tr><td><code>STAT16</code></td><td>Enhanced defense %</td></tr><tr><td><code>STAT17</code></td><td>Enhanced damage % (min)</td></tr><tr><td><code>STAT19</code></td><td>Attack rating</td></tr><tr><td><code>STAT20</code></td><td>Increased blocking</td></tr><tr><td><code>STAT39</code></td><td>Faster cast rate</td></tr><tr><td><code>STAT43</code></td><td>Faster hit recovery</td></tr><tr><td><code>STAT48</code></td><td>Fire resistance</td></tr><tr><td><code>STAT49</code></td><td>Max fire resistance</td></tr><tr><td><code>STAT50</code></td><td>Cold resistance</td></tr><tr><td><code>STAT52</code></td><td>Lightning resistance</td></tr><tr><td><code>STAT54</code></td><td>Poison resistance</td></tr><tr><td><code>STAT67</code></td><td>Faster run/walk</td></tr><tr><td><code>STAT74</code></td><td>Replenish life</td></tr><tr><td><code>STAT76</code></td><td>Life after kill</td></tr><tr><td><code>STAT78</code></td><td>Magic find</td></tr><tr><td><code>STAT80</code></td><td>Gold find</td></tr><tr><td><code>STAT93</code></td><td>Increased attack speed</td></tr></tbody></table><div class=\"callout\"><strong>Note:</strong> There are 500+ stat codes in D2. Consult the <a href=\"https://wiki.projectdiablo2.com/wiki/Item_Filtering\" target=\"_blank\" rel=\"noopener\">PD2 Wiki — Item Filtering</a> page for the complete list.</div>"
+        },
+        {
+          "id": "charstat-codes",
+          "title": "CHARSTAT# (Character Stats)",
+          "content": "<p><code>CHARSTAT#</code> checks a stat on the <strong>character</strong>, not the item. This is useful for conditional display based on your current character's stats.</p><pre><code>// Show strength items if character has low strength\nItemDisplay[RARE ID STAT0&gt;15 CHARSTAT0&lt;150]: %YELLOW%%NAME% {%NL%%GREEN%+%STAT0% STR}\n\n// Check gold amounts\n// CHARSTAT14 = gold carried by character\n// CHARSTAT15 = gold in stash\nItemDisplay[GOLD&gt;5000 CHARSTAT14&lt;100000]: %WHITE%%NAME%</code></pre><table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>CHARSTAT0</code></td><td>Character strength</td></tr><tr><td><code>CHARSTAT2</code></td><td>Character dexterity</td></tr><tr><td><code>CHARSTAT3</code></td><td>Character vitality</td></tr><tr><td><code>CHARSTAT7</code></td><td>Character life</td></tr><tr><td><code>CHARSTAT9</code></td><td>Character mana</td></tr><tr><td><code>CHARSTAT14</code></td><td>Gold carried</td></tr><tr><td><code>CHARSTAT15</code></td><td>Gold in stash</td></tr></tbody></table>"
+        }
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Skills",
+      "content": "<p>Filter conditions can check for skill bonuses on items. There are several code formats for different types of skill bonuses.</p>",
+      "subsections": [
+        {
+          "id": "all-skills",
+          "title": "All Skills (ALLSK)",
+          "content": "<p>Checks for +X to All Skills:</p><pre><code>// Items with +2 or more to all skills\nItemDisplay[UNI ID ALLSK&gt;1]: %GOLD%%NAME% {%NL%%PURPLE%+%STAT127% All Skills}</code></pre>"
+        },
+        {
+          "id": "class-skills",
+          "title": "Class Skills (CLSK)",
+          "content": "<p><code>CLSK#</code> checks +X to (class) Skills. The class number mapping:</p><table><thead><tr><th>Code</th><th>Class</th></tr></thead><tbody><tr><td><code>CLSK0</code></td><td>Amazon</td></tr><tr><td><code>CLSK1</code></td><td>Sorceress</td></tr><tr><td><code>CLSK2</code></td><td>Necromancer</td></tr><tr><td><code>CLSK3</code></td><td>Paladin</td></tr><tr><td><code>CLSK4</code></td><td>Barbarian</td></tr><tr><td><code>CLSK5</code></td><td>Druid</td></tr><tr><td><code>CLSK6</code></td><td>Assassin</td></tr></tbody></table><pre><code>// Amulet with +2 Sorceress skills\nItemDisplay[RARE JEWELRY ID CLSK1&gt;1]: %YELLOW%%NAME% {%NL%%PURPLE%+%SK83% Sorc}\n\n// Any class skill +2\nItemDisplay[RARE ID (CLSK0&gt;1 OR CLSK1&gt;1 OR CLSK2&gt;1 OR CLSK3&gt;1 OR CLSK4&gt;1 OR CLSK5&gt;1 OR CLSK6&gt;1)]: %YELLOW%%NAME%</code></pre>"
+        },
+        {
+          "id": "skill-tabs",
+          "title": "Skill Tabs (TABSK)",
+          "content": "<p><code>TABSK#</code> checks +X to a specific skill tab. Each class has 3 tabs (numbered 0–20):</p><table><thead><tr><th>Tab IDs</th><th>Class</th><th>Tab 1</th><th>Tab 2</th><th>Tab 3</th></tr></thead><tbody><tr><td>0–2</td><td>Amazon</td><td>0: Bow &amp; Crossbow</td><td>1: Passive &amp; Magic</td><td>2: Javelin &amp; Spear</td></tr><tr><td>3–5</td><td>Sorceress</td><td>3: Fire</td><td>4: Lightning</td><td>5: Cold</td></tr><tr><td>6–8</td><td>Necromancer</td><td>6: Curses</td><td>7: Poison &amp; Bone</td><td>8: Summoning</td></tr><tr><td>9–11</td><td>Paladin</td><td>9: Combat</td><td>10: Offensive Auras</td><td>11: Defensive Auras</td></tr><tr><td>12–14</td><td>Barbarian</td><td>12: Warcries</td><td>13: Combat Masteries</td><td>14: Combat Skills</td></tr><tr><td>15–17</td><td>Druid</td><td>15: Summoning</td><td>16: Shape Shifting</td><td>17: Elemental</td></tr><tr><td>18–20</td><td>Assassin</td><td>18: Traps</td><td>19: Shadow Disciplines</td><td>20: Martial Arts</td></tr></tbody></table><pre><code>// Circlet with +Sorc Fire skills\nItemDisplay[RARE CIRC ID TABSK3&gt;1]: %YELLOW%%NAME% {%NL%%RED%+Fire Skills}\n\n// Paladin Combat tab bonus\nItemDisplay[RARE DIN ID TABSK9&gt;1]: %YELLOW%%NAME%</code></pre>"
+        },
+        {
+          "id": "individual-skills",
+          "title": "Individual Skills (SK#) and Oskills (OS#)",
+          "content": "<p><code>SK#</code> checks for +X to a specific skill. <code>OS#</code> checks for oskill (non-class skill) bonuses. <code>CHSK#</code> checks for skill charges.</p><pre><code>// Item with +Teleport (SK54)\nItemDisplay[UNI ID SK54&gt;0]: %GOLD%%NAME% {%NL%%BLUE%+Teleport}\n\n// Oskill Teleport\nItemDisplay[RARE ID OS54&gt;0]: %YELLOW%%NAME% {%NL%%BLUE%+Teleport}\n\n// Charges of Lower Resist (CHSK91)\nItemDisplay[UNI ID CHSK91&gt;0]: %GOLD%%NAME% {%NL%%RED%Lower Res Charges}</code></pre>"
+        },
+        {
+          "id": "multi-skills",
+          "title": "MULTI for Skills",
+          "content": "<p>The <code>MULTI</code> code is used for stats that require two parameters (stat ID and sub-parameter). For skills, the relevant MULTI formats are:</p><table><thead><tr><th>Format</th><th>Description</th></tr></thead><tbody><tr><td><code>MULTI83,class_id</code></td><td>+X to class skills (same as CLSK#)</td></tr><tr><td><code>MULTI97,skill_id</code></td><td>+X to oskill (same as OS#)</td></tr><tr><td><code>MULTI107,skill_id</code></td><td>+X to single skill (same as SK#)</td></tr><tr><td><code>MULTI188,tab_id</code></td><td>+X to skill tab (same as TABSK#)</td></tr></tbody></table><pre><code>// These two are equivalent:\nItemDisplay[UNI ID CLSK1&gt;1]: %GOLD%%NAME%\nItemDisplay[UNI ID MULTI83,1&gt;1]: %GOLD%%NAME%\n\n// MULTI is useful when combining with stat addition:\nItemDisplay[RARE ID MULTI107,54+MULTI107,59&gt;2]: %YELLOW%%NAME%</code></pre>"
+        }
+      ]
+    },
+    {
+      "id": "output-keywords",
+      "title": "Output Keywords",
+      "content": "<p>Output keywords are placed after the colon in a filter rule. They control the item's display name and provide dynamic information about the item.</p>",
+      "subsections": [
+        {
+          "id": "name-keywords",
+          "title": "Name Keywords",
+          "content": "<table><thead><tr><th>Keyword</th><th>Description</th></tr></thead><tbody><tr><td><code>%NAME%</code></td><td>The item's full name (or custom name from a previous <code>%CONTINUE%</code> rule)</td></tr><tr><td><code>%BASENAME%</code></td><td>The item's base type name (e.g., \"Dusk Shroud\" instead of \"Enigma Dusk Shroud\")</td></tr><tr><td><code>%CODE%</code></td><td>The item's internal 3-character code (e.g., \"utp\" for Archon Plate)</td></tr></tbody></table>"
+        },
+        {
+          "id": "value-keywords",
+          "title": "Value Keywords",
+          "content": "<p>These output the numeric value of a property in the item's display text:</p><table><thead><tr><th>Keyword</th><th>Description</th></tr></thead><tbody><tr><td><code>%ILVL%</code></td><td>Item level</td></tr><tr><td><code>%ALVL%</code></td><td>Area level</td></tr><tr><td><code>%CRAFTALVL%</code></td><td>Craft area level</td></tr><tr><td><code>%REROLLALVL%</code></td><td>Reroll area level</td></tr><tr><td><code>%LVLREQ%</code></td><td>Level requirement</td></tr><tr><td><code>%PRICE%</code></td><td>Sell price</td></tr><tr><td><code>%SELLPRICE%</code></td><td>Sell price (alias)</td></tr><tr><td><code>%BUYPRICE%</code></td><td>Buy price (shop items)</td></tr><tr><td><code>%QTY%</code></td><td>Stack quantity</td></tr><tr><td><code>%RANGE%</code></td><td>Weapon range</td></tr><tr><td><code>%WPNSPD%</code></td><td>Weapon speed modifier</td></tr><tr><td><code>%RUNENUM%</code></td><td>Rune number (1–33)</td></tr><tr><td><code>%RUNENAME%</code></td><td>Rune name (El, Eld, etc.)</td></tr><tr><td><code>%GEMLEVEL%</code></td><td>Gem quality level (1–5)</td></tr><tr><td><code>%GEMTYPE%</code></td><td>Gem type number (1–7)</td></tr><tr><td><code>%MAXSOCKETS%</code></td><td>Maximum possible sockets</td></tr><tr><td><code>%SOCKETS%</code></td><td>Current socket count</td></tr><tr><td><code>%DEF%</code></td><td>Total defense</td></tr><tr><td><code>%ED%</code></td><td>Enhanced damage/defense (affix only)</td></tr><tr><td><code>%EDEF%</code></td><td>Enhanced defense (all sources)</td></tr><tr><td><code>%EDAM%</code></td><td>Enhanced damage (all sources)</td></tr><tr><td><code>%AR%</code></td><td>Attack rating</td></tr><tr><td><code>%RES%</code></td><td>All resistances</td></tr><tr><td><code>%STR%</code></td><td>Strength</td></tr><tr><td><code>%DEX%</code></td><td>Dexterity</td></tr><tr><td><code>%STAT#%</code></td><td>Value of stat # (any stat by number)</td></tr><tr><td><code>%SK#%</code></td><td>Value of skill # bonus</td></tr><tr><td><code>%HEIGHT%</code></td><td>Inventory height</td></tr><tr><td><code>%WIDTH%</code></td><td>Inventory width</td></tr><tr><td><code>%AREA%</code></td><td>Inventory area</td></tr><tr><td><code>%BASEBLOCK%</code></td><td>Base block chance</td></tr><tr><td><code>%MAXRES%</code></td><td>Max resistance</td></tr><tr><td><code>%ALLATTRIB%</code></td><td>All attributes bonus</td></tr></tbody></table><pre><code>// Show defense and sockets on elite bases\nItemDisplay[NMAG ELT ARMOR]: %WHITE%%NAME% {%NL%%BLUE%Def: %DEF% %NL%%BLUE%Max Sockets: %MAXSOCKETS%}\n\n// Show rune number for sorting\nItemDisplay[RUNE&gt;0]: %ORANGE%%RUNENAME% [%RUNENUM%]\n\n// Show item level for crafting\nItemDisplay[RARE JEWELRY]: %YELLOW%%NAME% {%NL%%GRAY%ilvl: %ILVL%}</code></pre>"
+        }
+      ]
+    },
+    {
+      "id": "colors",
+      "title": "Colors",
+      "content": "<p>Color keywords change the text color of everything that follows them in the output. Colors can be used in both the item name and the description.</p>",
+      "subsections": [
+        {
+          "id": "color-reference",
+          "title": "Color Reference",
+          "content": "<table><thead><tr><th>Keyword</th><th>Color</th><th>Notes</th></tr></thead><tbody><tr><td><code>%WHITE%</code></td><td><span style=\"color:#ffffff;background:#333;padding:2px 8px;\">White</span></td><td>Default text color</td></tr><tr><td><code>%GRAY%</code></td><td><span style=\"color:#808080;background:#333;padding:2px 8px;\">Gray</span></td><td>Used for socketed/ethereal items</td></tr><tr><td><code>%BLUE%</code></td><td><span style=\"color:#6666ff;background:#333;padding:2px 8px;\">Blue</span></td><td>Magic item color</td></tr><tr><td><code>%YELLOW%</code></td><td><span style=\"color:#ffff00;background:#333;padding:2px 8px;\">Yellow</span></td><td>Rare item color</td></tr><tr><td><code>%GOLD%</code></td><td><span style=\"color:#c8aa6e;background:#333;padding:2px 8px;\">Gold</span></td><td>Unique item color</td></tr><tr><td><code>%GREEN%</code></td><td><span style=\"color:#00ff00;background:#333;padding:2px 8px;\">Green</span></td><td>Set item color</td></tr><tr><td><code>%DARK_GREEN%</code></td><td><span style=\"color:#008000;background:#333;padding:2px 8px;\">Dark Green</span></td><td></td></tr><tr><td><code>%TAN%</code></td><td><span style=\"color:#d2b48c;background:#333;padding:2px 8px;\">Tan</span></td><td></td></tr><tr><td><code>%BLACK%</code></td><td><span style=\"color:#000000;background:#555;padding:2px 8px;\">Black</span></td><td>Effectively invisible on dark backgrounds</td></tr><tr><td><code>%PURPLE%</code></td><td><span style=\"color:#aa55ff;background:#333;padding:2px 8px;\">Purple</span></td><td>Crafted item color</td></tr><tr><td><code>%RED%</code></td><td><span style=\"color:#ff0000;background:#333;padding:2px 8px;\">Red</span></td><td></td></tr><tr><td><code>%ORANGE%</code></td><td><span style=\"color:#ff8c00;background:#333;padding:2px 8px;\">Orange</span></td><td>Commonly used for runes</td></tr><tr><td><code>%CORAL%</code></td><td><span style=\"color:#ff7f50;background:#333;padding:2px 8px;\">Coral</span></td><td>Glide/HD Text only</td></tr><tr><td><code>%SAGE%</code></td><td><span style=\"color:#9acd32;background:#333;padding:2px 8px;\">Sage</span></td><td>Glide/HD Text only</td></tr><tr><td><code>%TEAL%</code></td><td><span style=\"color:#008080;background:#333;padding:2px 8px;\">Teal</span></td><td>Glide/HD Text only</td></tr><tr><td><code>%LIGHT_GRAY%</code></td><td><span style=\"color:#c0c0c0;background:#333;padding:2px 8px;\">Light Gray</span></td><td>Glide/HD Text only</td></tr></tbody></table><div class=\"callout warning\"><strong>Renderer Note:</strong> <code>%CORAL%</code>, <code>%SAGE%</code>, <code>%TEAL%</code>, and <code>%LIGHT_GRAY%</code> only work with the Glide wrapper or HD Text mod. In the default Direct3D renderer, they display as white.</div><div class=\"callout\"><strong>Character cost:</strong> Each color code consumes 3 internal characters toward the name/description limits. Plan your colors carefully when building long item names.</div>"
+        },
+        {
+          "id": "color-usage",
+          "title": "Color Usage Examples",
+          "content": "<pre><code>// Multi-color item name\nItemDisplay[RUNE=33]: %ORANGE%Zod %WHITE%Rune %GRAY%[33]\n\n// Color in descriptions\nItemDisplay[NMAG ELT CHEST]: %WHITE%%NAME% {%NL%%BLUE%Def: %WHITE%%DEF% %NL%%BLUE%Max: %WHITE%%MAXSOCKETS%}\n\n// Using color to create visual hierarchy\nItemDisplay[UNI ELT WEAPON ID]: %GOLD%%NAME% {%NL%%RED%ED: %WHITE%%EDAM%%% %NL%%BLUE%AR: %WHITE%%AR%}</code></pre>"
+        }
+      ]
+    },
+    {
+      "id": "descriptions",
+      "title": "Descriptions",
+      "content": "<p>Descriptions add extra text lines below the item name when you hover over it. They appear inside curly braces <code>{}</code> in the output section of a rule.</p>",
+      "subsections": [
+        {
+          "id": "description-syntax",
+          "title": "Description Syntax",
+          "content": "<p>Text inside <code>{}</code> braces in the output is placed in the item's description area (the tooltip), not the item name.</p><pre><code>// Name is \"Shako\", description shows defense\nItemDisplay[UNI ELT HELM ID]: %GOLD%Shako {%NL%%BLUE%Def: %WHITE%%DEF%}\n\n// Multiple description lines\nItemDisplay[NMAG ELT CHEST]: %WHITE%%NAME% {%NL%%BLUE%Def: %WHITE%%DEF% %NL%%BLUE%Max Sock: %WHITE%%MAXSOCKETS% %NL%%GRAY%ilvl: %ILVL%}</code></pre>"
+        },
+        {
+          "id": "newlines",
+          "title": "Newlines and Conditional Spacing",
+          "content": "<table><thead><tr><th>Code</th><th>Description</th></tr></thead><tbody><tr><td><code>%NL%</code></td><td>Newline — adds a line break. Lines build from <strong>bottom-up</strong> in descriptions.</td></tr><tr><td><code>%CL%</code></td><td>Conditional newline — only adds a newline if there is already content on the current line.</td></tr><tr><td><code>%CS%</code></td><td>Conditional space — only adds a space if there is already content on the current line.</td></tr></tbody></table><div class=\"callout\"><strong>Bottom-up construction:</strong> Description lines are rendered from bottom to top. The first <code>%NL%</code> in your output becomes the <em>bottom</em> line of the tooltip. Each subsequent <code>%NL%</code> adds a line <em>above</em> the previous one.</div><pre><code>// This creates:\n//   Line 3 (top)\n//   Line 2\n//   Line 1 (bottom, closest to stats)\nItemDisplay[UNI ID]: %GOLD%%NAME% {%NL%Line 1 %NL%Line 2 %NL%Line 3}</code></pre>"
+        },
+        {
+          "id": "character-limits",
+          "title": "Character Limits",
+          "content": "<p>Item names and descriptions have strict character limits:</p><table><thead><tr><th>Element</th><th>Displayed Limit</th><th>Internal Limit</th></tr></thead><tbody><tr><td>Item Name</td><td>56 characters</td><td>125 characters (includes color codes)</td></tr><tr><td>Description (total)</td><td colspan=\"2\">~500 characters total across all description lines</td></tr></tbody></table><p>Color codes each consume <strong>3 internal characters</strong>, so a name with many color changes will hit the internal limit faster than the displayed limit.</p><div class=\"callout warning\"><strong>Important:</strong> Descriptions (<code>{}</code> content) only work for: identified magic/rare/unique/set/craft items, runewords, and shop items. Unidentified items and plain non-magic items on the ground will <strong>not</strong> display description text.</div>"
+        }
+      ]
+    },
+    {
+      "id": "notifications",
+      "title": "Notifications",
+      "content": "<p>Notifications provide visual and audio alerts for important items. They include minimap icons, sounds, and on-screen text popups.</p>",
+      "subsections": [
+        {
+          "id": "minimap-icons",
+          "title": "Minimap Icons",
+          "content": "<p>Minimap icons place a colored marker on the minimap at the item's location. There are four sizes:</p><table><thead><tr><th>Code</th><th>Size</th><th>Description</th></tr></thead><tbody><tr><td><code>%BORDER-XX%</code></td><td>Large</td><td>Large bordered square icon</td></tr><tr><td><code>%MAP-XX%</code></td><td>Medium</td><td>Medium square icon</td></tr><tr><td><code>%DOT-XX%</code></td><td>Small</td><td>Small dot icon</td></tr><tr><td><code>%PX-XX%</code></td><td>Tiny</td><td>Single pixel</td></tr></tbody></table><p><code>XX</code> is a 2-digit hexadecimal color code (00–FF). If omitted, the icon uses the current text color.</p><pre><code>// Large orange icon for high runes\nItemDisplay[RUNE&gt;28]: %ORANGE%%RUNENAME% Rune %BORDER-0A%\n\n// Medium green icon for set items\nItemDisplay[SET ELT]: %GREEN%%NAME% %MAP-84%\n\n// Small blue dot for magic jewels\nItemDisplay[MAG jew]: %BLUE%%NAME% %DOT-97%\n\n// Icon with default text color\nItemDisplay[UNI ELT]: %GOLD%%NAME% %MAP%</code></pre><p>Common hex color values:</p><table><thead><tr><th>Hex</th><th>Color</th></tr></thead><tbody><tr><td><code>0A</code></td><td>Orange</td></tr><tr><td><code>09</code></td><td>Yellow</td></tr><tr><td><code>84</code></td><td>Green</td></tr><tr><td><code>97</code></td><td>Blue</td></tr><tr><td><code>62</code></td><td>Gold</td></tr><tr><td><code>1F</code></td><td>Red</td></tr><tr><td><code>D0</code></td><td>Purple</td></tr></tbody></table>"
+        },
+        {
+          "id": "sound-notifications",
+          "title": "Sound Notifications",
+          "content": "<p>Play a sound when an item drops:</p><pre><code>%SOUNDID-#%</code></pre><p>Sound IDs <strong>4714–4729</strong> are custom PoE-inspired notification sounds added by PD2. You can test sounds in-game using the command:</p><pre><code>.playsound 4714</code></pre><pre><code>// High rune with sound\nItemDisplay[RUNE&gt;28]: %ORANGE%%RUNENAME% %BORDER-0A%%SOUNDID-4715%\n\n// Unique elite with sound\nItemDisplay[UNI ELT]: %GOLD%%NAME% %MAP-62%%SOUNDID-4714%</code></pre>"
+        },
+        {
+          "id": "text-notifications",
+          "title": "Text Notifications",
+          "content": "<p><code>%NOTIFY-X%</code> displays a text popup on the side of the screen when the item drops. The <code>X</code> value determines the text color.</p><pre><code>// Orange text notification\nItemDisplay[RUNE=33]: %ORANGE%Zod Rune %NOTIFY-1%\n\n// Disable text notification for a rule\nItemDisplay[MAG CHARM]: %BLUE%%NAME% %NOTIFY-DEAD%</code></pre><p><code>%NOTIFY-DEAD%</code> explicitly disables the text notification for that rule.</p>"
+        },
+        {
+          "id": "notification-behavior",
+          "title": "Notification Behavior",
+          "content": "<p>Notifications are processed in a <strong>second pass</strong>, meaning they apply regardless of where the notification keywords appear in the rule output. The item name is determined by the first pass, then notifications are extracted and activated separately.</p><div class=\"callout\"><strong>Tip:</strong> Place notification keywords at the end of the output string for readability, though their position does not affect behavior.</div>"
+        },
+        {
+          "id": "tier-threshold",
+          "title": "%TIER-X% Notification Threshold",
+          "content": "<p><code>%TIER-X%</code> sets the minimum filter level at which an item's notifications are active. The value X ranges from 0 to 12.</p><ul><li>If the current filter level is <strong>less than</strong> X, notifications for that item are suppressed.</li><li>If omitted, <code>%TIER-9%</code> is used as the default.</li></ul><pre><code>// Always notify (filter level 0+, i.e., always)\nItemDisplay[RUNE=33]: %ORANGE%Zod %BORDER-0A%%SOUNDID-4715%%TIER-0%\n\n// Only notify at level 5+\nItemDisplay[RUNE~20-25]: %YELLOW%%RUNENAME% %DOT-09%%TIER-5%\n\n// Default behavior (TIER-9, only notifies at level 9+)\nItemDisplay[MAG JEWELRY]: %BLUE%%NAME% %DOT-97%</code></pre>"
+        }
+      ]
+    },
+    {
+      "id": "special-keywords",
+      "title": "Special Keywords",
+      "content": "<p>These keywords provide advanced control over filter behavior and item display.</p>",
+      "subsections": [
+        {
+          "id": "continue-keyword",
+          "title": "%CONTINUE%",
+          "content": "<p><code>%CONTINUE%</code> overrides the normal \"first match wins\" behavior. When a rule's output contains <code>%CONTINUE%</code>, the current output is stored as the item's <code>%NAME%</code>, and rule processing <strong>continues</strong> to subsequent rules.</p><div class=\"callout warning\"><strong>Important:</strong> <code>%CONTINUE%</code> must appear <strong>outside</strong> of description braces <code>{}</code>. It will not work inside descriptions.</div><pre><code>// Step 1: Add base info to all elite armors, then continue\nItemDisplay[NMAG ELT ARMOR]: %WHITE%%NAME% %CONTINUE%\n\n// Step 2: Add socket info (this sees the modified %NAME% from Step 1)\nItemDisplay[NMAG ELT ARMOR SOCK&gt;0]: %NAME% %GRAY%(%SOCKETS%) %CONTINUE%\n\n// Step 3: Add defense info and stop\nItemDisplay[NMAG ELT ARMOR BASEDEF&gt;400]: %NAME% {%NL%%BLUE%Def: %DEF%}</code></pre><p>This creates a chain: the first rule adds the base name, the second appends socket count, and the third adds a defense description. Each <code>%CONTINUE%</code> passes the accumulated name to the next matching rule.</p>"
+        },
+        {
+          "id": "continue-chaining",
+          "title": "Practical %CONTINUE% Chaining",
+          "content": "<pre><code>// Build up rune display progressively\nItemDisplay[RUNE&gt;0]: %ORANGE%%RUNENAME% %CONTINUE%\nItemDisplay[RUNE&gt;0]: %NAME% %GRAY%[#%RUNENUM%] %CONTINUE%\nItemDisplay[RUNE&gt;20]: %NAME% %MAP-0A%%SOUNDID-4714%%TIER-3%\nItemDisplay[RUNE~1-20]: %NAME% %DOT-09%\n\n// Add tier labels to unique items\nItemDisplay[UNI NORM]: %GOLD%%NAME% %GRAY%(N) %CONTINUE%\nItemDisplay[UNI EXC]: %GOLD%%NAME% %GRAY%(X) %CONTINUE%\nItemDisplay[UNI ELT]: %GOLD%%NAME% %GRAY%(E) %CONTINUE%\nItemDisplay[UNI ID]: %NAME% {%NL%%BLUE%ilvl: %ILVL%}</code></pre>"
+        },
+        {
+          "id": "highlight-spaces",
+          "title": "Highlight with Spaces",
+          "content": "<p>You can pad item names with spaces for visual emphasis. However, whitespace at the <strong>edges</strong> of the name is trimmed. To preserve leading/trailing whitespace, use a <strong>tab character</strong> as an anchor.</p><pre><code>// Padding with spaces (tabs at edges preserve spacing)\nItemDisplay[RUNE=33]: %ORANGE%\t   Zod Rune   \t\n\n// Creating a highlighted/padded appearance\nItemDisplay[RUNE&gt;28]: %ORANGE%\t  %RUNENAME% Rune  \t %BORDER-0A%</code></pre>"
+        },
+        {
+          "id": "shop-price-recolor",
+          "title": "Shop Item Price Recoloring",
+          "content": "<p>Filter rules can change how items appear in shop windows using the <code>SHOP</code> condition. This is useful for highlighting good deals or items worth buying.</p><pre><code>// Highlight staffmods in shop\nItemDisplay[SHOP STAFF MAG SK54&gt;0]: %PURPLE%%NAME%\n\n// Color cheap items differently\nItemDisplay[SHOP PRICE&lt;1000]: %GRAY%%NAME%\n\n// Highlight shop items with useful mods\nItemDisplay[SHOP RARE JEWELRY ID FCR&gt;9]: %YELLOW%%NAME% {%NL%%BLUE%FCR: %STAT39%}</code></pre>"
+        },
+        {
+          "id": "true-false-constants",
+          "title": "TRUE/FALSE Constants",
+          "content": "<p><code>TRUE</code> and <code>FALSE</code> are constant conditions that always pass or always fail. They are most useful when combined with aliases to create toggle switches.</p><pre><code>// Create toggle aliases\nAlias[ShowCharms]: TRUE\nAlias[ShowJewels]: TRUE\nAlias[ShowScrolls]: FALSE\n\n// Rules that can be toggled by changing the alias\nItemDisplay[ShowCharms MAG CHARM]: %BLUE%%NAME%\nItemDisplay[ShowJewels MAG jew]: %BLUE%%NAME%\nItemDisplay[ShowScrolls (tsc OR isc)]: %NAME%\n\n// To disable charm display, just change the alias:\n// Alias[ShowCharms]: FALSE</code></pre><div class=\"callout\"><strong>Tip:</strong> This pattern is very popular for creating user-configurable filters. Place all toggle aliases at the top of the file with comments explaining what each controls.</div>"
+        }
+      ]
+    }
+  ]
+}

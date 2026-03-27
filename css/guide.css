@@ -1,0 +1,61 @@
+/* ============================================
+   Filter Forge — Guide Page Styles
+   ============================================ */
+
+.guide-step {
+  position: relative;
+  margin-bottom: 3rem;
+  padding-left: 3.5rem;
+}
+
+.step-number {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--bg-tertiary);
+  border: 2px solid var(--accent-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.guide-step h2 {
+  margin-bottom: 0.75rem;
+}
+
+.guide-step h3 {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.guide-step ul, .guide-step ol {
+  margin: 0.5rem 0 1rem;
+  padding-left: 1.5rem;
+}
+
+.guide-step li {
+  margin-bottom: 0.35rem;
+}
+
+.guide-step .callout {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .guide-step {
+    padding-left: 2.75rem;
+  }
+
+  .step-number {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.9rem;
+  }
+}

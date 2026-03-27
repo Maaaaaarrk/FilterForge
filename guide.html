@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — Filter Forge</title>
+  <meta name="description" content="Step-by-step guide to installing and customizing PD2 item filters.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/guide.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="filters.html">Filters</a></li>
+      <li><a href="guide.html">Guide</a></li>
+      <li><a href="editor.html">Editor</a></li>
+    </ul>
+    <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
+    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-title">
+        <h1>Getting Started with PD2 Filters</h1>
+        <p class="text-muted">Everything you need to know to install, use, and customize item filters</p>
+      </div>
+
+      <!-- Step 1 -->
+      <section class="guide-step" id="what-are-filters">
+        <div class="step-number">1</div>
+        <h2>What Are Item Filters?</h2>
+        <p>Item filters are text files that control how items appear on the ground in Project Diablo 2. They can:</p>
+        <ul>
+          <li><strong>Show or hide</strong> items based on conditions (type, quality, stats, etc.)</li>
+          <li><strong>Change colors</strong> of item names to make important drops stand out</li>
+          <li><strong>Add map icons</strong> so you can spot drops on the minimap</li>
+          <li><strong>Play sounds</strong> when valuable items drop</li>
+          <li><strong>Add descriptions</strong> with extra info like item level or vendor price</li>
+        </ul>
+        <div class="callout">
+          Filter files use the <code>.filter</code> extension and are plain text — you can edit them with any text editor like Notepad, VS Code, or Notepad++.
+        </div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="guide-step" id="installing-a-filter">
+        <div class="step-number">2</div>
+        <h2>Installing a Filter</h2>
+        <p>The easiest way to use a filter is through the <strong>PD2 Launcher</strong>:</p>
+        <ol>
+          <li>Open the PD2 Launcher</li>
+          <li>Click <strong>Item Filter Profiles</strong></li>
+          <li>Browse the available filters and select one</li>
+          <li>The launcher downloads and activates it automatically</li>
+        </ol>
+        <p>You can browse all available community filters on our <a href="filters.html">Filters page</a>.</p>
+
+        <div class="callout">
+          To install a filter manually, place the <code>.filter</code> file in<br>
+          <code>Diablo II\ProjectD2\filters\local\</code><br>
+          Then select it from the "Local" section in the launcher.
+        </div>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="guide-step" id="using-in-game">
+        <div class="step-number">3</div>
+        <h2>Using Filters In-Game</h2>
+        <p>Once a filter is installed:</p>
+        <ol>
+          <li>Open <strong>PD2 Options</strong> in-game (not regular D2 options)</li>
+          <li>Enable <strong>Loot Filter</strong></li>
+          <li>Choose a <strong>Filter Level</strong> (strictness) — most filters offer multiple levels</li>
+          <li>Press <strong>Numpad 0</strong> to reload the filter after making changes</li>
+        </ol>
+
+        <div class="callout">
+          Filter Level 0 always means "Show All Items" — it's built in and always available regardless of the filter. Levels 1–12 are defined by the filter author.
+        </div>
+      </section>
+
+      <!-- Step 4 -->
+      <section class="guide-step" id="how-filters-work">
+        <div class="step-number">4</div>
+        <h2>How Filters Work</h2>
+        <p>Every filter rule follows this pattern:</p>
+        <pre><code>ItemDisplay[conditions]: output</code></pre>
+        <ul>
+          <li><strong>Conditions</strong> (inside <code>[]</code>) — what items this rule matches</li>
+          <li><strong>Output</strong> (after <code>:</code>) — how to display matching items</li>
+        </ul>
+
+        <p>Key rules:</p>
+        <ul>
+          <li>Rules are checked <strong>top to bottom</strong> — the first match wins</li>
+          <li>An empty output <strong>hides</strong> the item: <code>ItemDisplay[key]:</code></li>
+          <li><code>%NAME%</code> shows the item's default name</li>
+          <li>Lines starting with <code>//</code> are comments (ignored)</li>
+        </ul>
+
+        <h3>Simple Examples</h3>
+        <pre><code>// Hide keys
+ItemDisplay[key]:
+
+// Hide gold under 100
+ItemDisplay[GOLD<100]:
+
+// Show all unique items with purple text and a map icon
+ItemDisplay[UNI]: %PURPLE%%NAME%%MAP%
+
+// Show all items normally (catch-all, goes last)
+ItemDisplay[]: %NAME%</code></pre>
+      </section>
+
+      <!-- Step 5 -->
+      <section class="guide-step" id="editing-a-filter">
+        <div class="step-number">5</div>
+        <h2>Making Your First Edit</h2>
+        <p>Let's say you want to customize an existing filter. Here's how:</p>
+        <ol>
+          <li>Find your filter file in <code>Diablo II\ProjectD2\filters\local\</code></li>
+          <li>Open it with a text editor (Notepad++ or VS Code recommended)</li>
+          <li>Find the rule you want to change, or add a new rule <strong>near the top</strong> (higher = higher priority)</li>
+          <li>Save the file</li>
+          <li>Press <strong>Numpad 0</strong> in-game to reload</li>
+        </ol>
+
+        <div class="callout warning">
+          <strong>Tip:</strong> Always keep a backup of the original filter before editing. If something breaks, you can restore it.
+        </div>
+
+        <h3>Common Edits</h3>
+        <pre><code>// Make Shakos stand out with red text and a border icon
+ItemDisplay[uap]: %RED%SHAKO!%BORDER%
+
+// Show socket count on normal items
+ItemDisplay[NMAG SOCKETS>0]: %NAME% [%SOCKETS%]
+
+// Hide normal items below level 30
+ItemDisplay[NMAG !SUP CLVL>30]:
+
+// Highlight runes above Lem (#20) with gold + sound
+ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%MAP%%SOUNDID-4718%</code></pre>
+      </section>
+
+      <!-- Step 6 -->
+      <section class="guide-step" id="next-steps">
+        <div class="step-number">6</div>
+        <h2>Next Steps</h2>
+        <ul>
+          <li><a href="faq.html">FAQ</a> — Answers to common questions and troubleshooting</li>
+          <li><a href="https://wiki.projectdiablo2.com/wiki/Item_Filtering" target="_blank" rel="noopener">PD2 Wiki — Syntax Reference</a> — Full documentation of every condition, output, and keyword</li>
+          <li><a href="filters.html">Community Filters</a> — Browse filters to use or learn from</li>
+          <li><a href="https://wiki.projectdiablo2.com/wiki/Item_Filtering" target="_blank" rel="noopener">PD2 Wiki</a> — Official item filtering documentation</li>
+        </ul>
+
+        <div class="callout success">
+          <strong>Remember:</strong> You can always set Filter Level to 0 in-game to show all items, even if your filter has a bug. Numpad 0 reloads the filter instantly — no need to restart the game.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Filter Forge is a community resource for <a href="https://www.projectdiablo2.com/" target="_blank" rel="noopener">Project Diablo 2</a> &middot; <a href="https://github.com/Maaaaaarrk/FilterForge" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <script src="js/shared.js"></script>
+</body>
+</html>

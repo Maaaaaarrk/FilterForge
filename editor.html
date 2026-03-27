@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filter Editor — Filter Forge</title>
+  <meta name="description" content="Create and edit Project Diablo 2 item filters with a visual rule builder, live preview, and code editor.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="filters.html">Filters</a></li>
+      <li><a href="guide.html">Guide</a></li>
+      <li><a href="editor.html">Editor</a></li>
+    </ul>
+    <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
+    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+  </nav>
+
+  <main class="main-content">
+    <div class="editor-container">
+
+      <!-- Top toolbar -->
+      <div class="editor-toolbar">
+        <div class="toolbar-left">
+          <h1>Filter Editor</h1>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn btn-secondary" id="btn-new" title="New filter">New</button>
+          <button class="btn btn-secondary" id="btn-import" title="Import .filter file from disk">Import File</button>
+          <button class="btn btn-secondary" id="btn-import-author" title="Import from a community filter author">Import from Author</button>
+          <button class="btn btn-accent" id="btn-wizard" title="Answer questions to build a custom filter">Build My Filter</button>
+          <button class="btn btn-primary" id="btn-export" title="Download as .filter file">Export .filter</button>
+          <input type="file" id="file-import" accept=".filter,.txt" style="display:none">
+        </div>
+      </div>
+
+      <!-- Import from Author modal -->
+      <div class="modal-overlay" id="author-modal" style="display:none">
+        <div class="modal">
+          <div class="modal-header">
+            <h2>Import from Community Author</h2>
+            <button class="btn-icon modal-close" id="author-modal-close">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted mb-2">Select an author, then choose a .filter file from their repository.</p>
+
+            <!-- Step 1: Author list -->
+            <div id="author-step-1">
+              <div class="author-list" id="author-list">
+                <p class="text-muted text-center">Loading filter authors...</p>
+              </div>
+            </div>
+
+            <!-- Step 2: File list -->
+            <div id="author-step-2" style="display:none">
+              <button class="btn btn-small mb-2" id="author-back">&larr; Back to authors</button>
+              <h3 id="author-selected-name" class="mb-1"></h3>
+              <div class="filter-file-list" id="filter-file-list">
+                <p class="text-muted text-center">Loading .filter files...</p>
+              </div>
+            </div>
+
+            <!-- Step 3: Loading/confirm -->
+            <div id="author-step-3" style="display:none">
+              <div class="text-center" style="padding:2rem 0;">
+                <p id="author-loading-msg">Downloading filter...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Build My Filter wizard modal -->
+      <div class="modal-overlay" id="wizard-modal" style="display:none">
+        <div class="modal modal-wide">
+          <div class="modal-header">
+            <h2>Build My Filter</h2>
+            <button class="btn-icon modal-close" id="wizard-modal-close">&times;</button>
+          </div>
+          <div class="modal-body">
+            <!-- Progress bar -->
+            <div class="wizard-progress">
+              <div class="wizard-progress-bar" id="wizard-progress-bar" style="width:14%"></div>
+            </div>
+            <div class="wizard-step-label" id="wizard-step-label">Step 1 of 7</div>
+
+            <!-- Step 1: Class -->
+            <div class="wizard-step" id="wiz-step-1">
+              <h3>What class are you playing?</h3>
+              <p class="text-muted">This highlights class-specific items and skills for your build.</p>
+              <div class="wizard-options" data-wiz="class" data-multi="false">
+                <button class="wizard-opt" data-value="all">All Classes / Multiple</button>
+                <button class="wizard-opt" data-value="amazon">Amazon</button>
+                <button class="wizard-opt" data-value="sorceress">Sorceress</button>
+                <button class="wizard-opt" data-value="necromancer">Necromancer</button>
+                <button class="wizard-opt" data-value="paladin">Paladin</button>
+                <button class="wizard-opt" data-value="barbarian">Barbarian</button>
+                <button class="wizard-opt" data-value="druid">Druid</button>
+                <button class="wizard-opt" data-value="assassin">Assassin</button>
+              </div>
+            </div>
+
+            <!-- Step 2: Experience -->
+            <div class="wizard-step" id="wiz-step-2" style="display:none">
+              <h3>What's your experience level?</h3>
+              <p class="text-muted">This sets the overall strictness — how aggressively items are hidden.</p>
+              <div class="wizard-options" data-wiz="experience" data-multi="false">
+                <button class="wizard-opt" data-value="new">
+                  <strong>New to PD2</strong>
+                  <span>Show almost everything. I want to learn what drops.</span>
+                </button>
+                <button class="wizard-opt" data-value="casual">
+                  <strong>Casual</strong>
+                  <span>Hide obvious junk but keep anything potentially useful.</span>
+                </button>
+                <button class="wizard-opt" data-value="experienced">
+                  <strong>Experienced</strong>
+                  <span>Hide low-value items. I know what I'm looking for.</span>
+                </button>
+                <button class="wizard-opt" data-value="endgame">
+                  <strong>Endgame / Mapping</strong>
+                  <span>Very strict. Only show items worth picking up in maps.</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 3: Notifications -->
+            <div class="wizard-step" id="wiz-step-3" style="display:none">
+              <h3>How do you want to be notified about drops?</h3>
+              <p class="text-muted">Map icons appear on your minimap. Sounds play when items drop.</p>
+              <div class="wizard-options" data-wiz="notifications" data-multi="true">
+                <button class="wizard-opt" data-value="mapicons">
+                  <strong>Map Icons</strong>
+                  <span>Show icons on minimap for valuable drops</span>
+                </button>
+                <button class="wizard-opt" data-value="sounds">
+                  <strong>Drop Sounds</strong>
+                  <span>Play sounds when high-value items drop</span>
+                </button>
+                <button class="wizard-opt" data-value="bignotify">
+                  <strong>Big Notifications</strong>
+                  <span>Large border icons for the most valuable drops (HRs, uniques)</span>
+                </button>
+              </div>
+              <p class="text-muted mt-2" style="font-size:0.82rem">Click multiple options, or none to skip.</p>
+            </div>
+
+            <!-- Step 4: Display extras -->
+            <div class="wizard-step" id="wiz-step-4" style="display:none">
+              <h3>What extra info should items show?</h3>
+              <p class="text-muted">Additional details appended to item names or shown in descriptions.</p>
+              <div class="wizard-options" data-wiz="extras" data-multi="true">
+                <button class="wizard-opt" data-value="sockets">
+                  <strong>Socket Count</strong>
+                  <span>Show [4] next to socketable items</span>
+                </button>
+                <button class="wizard-opt" data-value="ilvl">
+                  <strong>Item Level</strong>
+                  <span>Show iLvl in item descriptions</span>
+                </button>
+                <button class="wizard-opt" data-value="price">
+                  <strong>Vendor Price</strong>
+                  <span>Show gold sell value in descriptions</span>
+                </button>
+                <button class="wizard-opt" data-value="crafting">
+                  <strong>Crafting Info</strong>
+                  <span>Show ALVL and crafted ALVL on magic items</span>
+                </button>
+                <button class="wizard-opt" data-value="eth">
+                  <strong>Ethereal Tag</strong>
+                  <span>Show [ETH] on ethereal items</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 5: Runeword bases -->
+            <div class="wizard-step" id="wiz-step-5" style="display:none">
+              <h3>Highlight runeword bases?</h3>
+              <p class="text-muted">Runeword bases are non-magic items with the right socket count for popular runewords.</p>
+              <div class="wizard-options" data-wiz="rwbases" data-multi="false">
+                <button class="wizard-opt" data-value="all">
+                  <strong>Yes — Show All Good Bases</strong>
+                  <span>Highlight elite bases with useful socket counts (4os armor, 5os weapons, etc.)</span>
+                </button>
+                <button class="wizard-opt" data-value="eth">
+                  <strong>Ethereal Bases Only</strong>
+                  <span>Only highlight bases that are also ethereal (best for mercs/Fortitude)</span>
+                </button>
+                <button class="wizard-opt" data-value="none">
+                  <strong>No — Skip This</strong>
+                  <span>Don't add special runeword base highlighting</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 6: Gold & Potions -->
+            <div class="wizard-step" id="wiz-step-6" style="display:none">
+              <h3>What about gold, potions, and consumables?</h3>
+              <p class="text-muted">These settings control clutter from common drops.</p>
+              <div class="wizard-options" data-wiz="consumables" data-multi="true">
+                <button class="wizard-opt" data-value="hidegold">
+                  <strong>Hide Low Gold</strong>
+                  <span>Hide gold piles under a threshold based on strictness</span>
+                </button>
+                <button class="wizard-opt" data-value="hidekeys">
+                  <strong>Hide Keys</strong>
+                  <span>Keys are cheap — hide them to reduce clutter</span>
+                </button>
+                <button class="wizard-opt" data-value="hidescrolls">
+                  <strong>Hide TP/ID Scrolls</strong>
+                  <span>You can buy these from vendors</span>
+                </button>
+                <button class="wizard-opt" data-value="hidepots">
+                  <strong>Hide Small Potions</strong>
+                  <span>Hide minor/light healing and mana potions</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 7: Confirm -->
+            <div class="wizard-step" id="wiz-step-7" style="display:none">
+              <h3>Ready to build your filter!</h3>
+              <p class="text-muted">Here's a summary of your choices:</p>
+              <div class="wizard-summary" id="wizard-summary"></div>
+              <p class="text-muted mt-2">Click <strong>Build Filter</strong> to generate your custom filter and load it into the editor.</p>
+            </div>
+
+            <!-- Navigation -->
+            <div class="wizard-nav">
+              <button class="btn btn-secondary" id="wiz-prev" style="visibility:hidden">&larr; Back</button>
+              <button class="btn btn-primary" id="wiz-next">Next &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main editor layout: sidebar + code + preview -->
+      <div class="editor-layout">
+
+        <!-- Left: Rule Builder panel -->
+        <aside class="editor-sidebar" id="editor-sidebar">
+          <div class="sidebar-section">
+            <h3>Rule Builder</h3>
+            <p class="text-muted" style="font-size:0.82rem; margin-bottom:0.75rem;">Build a rule visually, then insert it into the editor.</p>
+
+            <!-- Conditions -->
+            <div class="builder-group">
+              <div class="builder-group-header" data-toggle="conditions-panel">
+                <span>Conditions</span>
+                <span class="chevron">&#9654;</span>
+              </div>
+              <div class="builder-panel" id="conditions-panel">
+
+                <label class="builder-label">Quality</label>
+                <div class="chip-group" data-field="quality">
+                  <button class="chip" data-value="NMAG">Normal</button>
+                  <button class="chip" data-value="MAG">Magic</button>
+                  <button class="chip" data-value="RARE">Rare</button>
+                  <button class="chip" data-value="UNI">Unique</button>
+                  <button class="chip" data-value="SET">Set</button>
+                  <button class="chip" data-value="CRAFT">Crafted</button>
+                </div>
+
+                <label class="builder-label">Tier</label>
+                <div class="chip-group" data-field="tier">
+                  <button class="chip" data-value="NORM">Normal</button>
+                  <button class="chip" data-value="EXC">Exceptional</button>
+                  <button class="chip" data-value="ELT">Elite</button>
+                </div>
+
+                <label class="builder-label">Properties</label>
+                <div class="chip-group" data-field="properties" data-multi="true">
+                  <button class="chip" data-value="ETH">Ethereal</button>
+                  <button class="chip" data-value="SUP">Superior</button>
+                  <button class="chip" data-value="INF">Inferior</button>
+                  <button class="chip" data-value="ID">Identified</button>
+                  <button class="chip" data-value="RW">Runeword</button>
+                  <button class="chip" data-value="GEMMED">Gemmed</button>
+                </div>
+
+                <label class="builder-label">Equipment</label>
+                <div class="chip-group" data-field="equipment">
+                  <button class="chip" data-value="ARMOR">All Armor</button>
+                  <button class="chip" data-value="WEAPON">All Weapons</button>
+                  <button class="chip" data-value="HELM">Helm</button>
+                  <button class="chip" data-value="CHEST">Chest</button>
+                  <button class="chip" data-value="SHIELD">Shield</button>
+                  <button class="chip" data-value="GLOVES">Gloves</button>
+                  <button class="chip" data-value="BOOTS">Boots</button>
+                  <button class="chip" data-value="BELT">Belt</button>
+                  <button class="chip" data-value="CIRC">Circlet</button>
+                </div>
+
+                <label class="builder-label">Weapons</label>
+                <div class="chip-group" data-field="weapons">
+                  <button class="chip" data-value="AXE">Axe</button>
+                  <button class="chip" data-value="MACE">Mace</button>
+                  <button class="chip" data-value="SWORD">Sword</button>
+                  <button class="chip" data-value="DAGGER">Dagger</button>
+                  <button class="chip" data-value="SPEAR">Spear</button>
+                  <button class="chip" data-value="POLEARM">Polearm</button>
+                  <button class="chip" data-value="BOW">Bow</button>
+                  <button class="chip" data-value="XBOW">Crossbow</button>
+                  <button class="chip" data-value="STAFF">Staff</button>
+                  <button class="chip" data-value="WAND">Wand</button>
+                  <button class="chip" data-value="SCEPTER">Scepter</button>
+                  <button class="chip" data-value="JAV">Javelin</button>
+                  <button class="chip" data-value="THROWING">Throwing</button>
+                  <button class="chip" data-value="1H">1-Handed</button>
+                  <button class="chip" data-value="2H">2-Handed</button>
+                </div>
+
+                <label class="builder-label">Misc</label>
+                <div class="chip-group" data-field="misc">
+                  <button class="chip" data-value="JEWELRY">Jewelry</button>
+                  <button class="chip" data-value="CHARM">Charm</button>
+                  <button class="chip" data-value="QUIVER">Quiver</button>
+                  <button class="chip" data-value="MISC">Misc</button>
+                </div>
+
+                <label class="builder-label">Class Items</label>
+                <div class="chip-group" data-field="classitems">
+                  <button class="chip" data-value="ZON">Amazon</button>
+                  <button class="chip" data-value="SOR">Sorceress</button>
+                  <button class="chip" data-value="NEC">Necro</button>
+                  <button class="chip" data-value="DIN">Paladin</button>
+                  <button class="chip" data-value="BAR">Barbarian</button>
+                  <button class="chip" data-value="DRU">Druid</button>
+                  <button class="chip" data-value="SIN">Assassin</button>
+                  <button class="chip" data-value="CLASS">Any Class</button>
+                </div>
+
+                <label class="builder-label">Value Conditions</label>
+                <div class="value-conditions" id="value-conditions">
+                  <div class="value-row">
+                    <select class="value-code">
+                      <option value="">-- Code --</option>
+                      <optgroup label="Common">
+                        <option value="SOCKETS">SOCKETS</option>
+                        <option value="DEF">DEF</option>
+                        <option value="ED">ED</option>
+                        <option value="ILVL">ILVL</option>
+                        <option value="CLVL">CLVL</option>
+                        <option value="RUNE">RUNE</option>
+                        <option value="GOLD">GOLD</option>
+                        <option value="PRICE">PRICE</option>
+                      </optgroup>
+                      <optgroup label="Resistances">
+                        <option value="FRES">Fire Res</option>
+                        <option value="CRES">Cold Res</option>
+                        <option value="LRES">Light Res</option>
+                        <option value="PRES">Poison Res</option>
+                        <option value="RES">All Res</option>
+                      </optgroup>
+                      <optgroup label="Stats">
+                        <option value="STR">STR</option>
+                        <option value="DEX">DEX</option>
+                        <option value="LIFE">LIFE</option>
+                        <option value="MANA">MANA</option>
+                        <option value="FCR">FCR</option>
+                        <option value="IAS">IAS</option>
+                        <option value="FHR">FHR</option>
+                        <option value="FRW">FRW</option>
+                        <option value="MFIND">MF</option>
+                      </optgroup>
+                      <optgroup label="Info">
+                        <option value="ALVL">ALVL</option>
+                        <option value="QLVL">QLVL</option>
+                        <option value="LVLREQ">Lvl Req</option>
+                        <option value="MAXSOCKETS">Max Sockets</option>
+                        <option value="GEMLEVEL">Gem Level</option>
+                        <option value="FILTLVL">Filter Level</option>
+                        <option value="DIFF">Difficulty</option>
+                        <option value="MAPID">Map ID</option>
+                        <option value="MAPTIER">Map Tier</option>
+                      </optgroup>
+                      <optgroup label="Skills">
+                        <option value="ALLSK">All Skills</option>
+                      </optgroup>
+                    </select>
+                    <select class="value-op">
+                      <option value=">">&gt;</option>
+                      <option value="<">&lt;</option>
+                      <option value="=">=</option>
+                      <option value="~">~ (between)</option>
+                    </select>
+                    <input type="text" class="value-val" placeholder="value" size="6">
+                    <button class="btn-icon btn-remove-value" title="Remove">&times;</button>
+                  </div>
+                </div>
+                <button class="btn btn-small btn-add-value" id="btn-add-value">+ Add Condition</button>
+
+                <label class="builder-label">Negate (NOT)</label>
+                <div class="chip-group" data-field="negate" data-multi="true">
+                  <button class="chip" data-value="!ETH">!ETH</button>
+                  <button class="chip" data-value="!SUP">!SUP</button>
+                  <button class="chip" data-value="!INF">!INF</button>
+                  <button class="chip" data-value="!ID">!ID</button>
+                  <button class="chip" data-value="!RW">!RW</button>
+                </div>
+
+                <label class="builder-label">Item Code (3-char)</label>
+                <input type="text" class="builder-input" id="item-code-input" placeholder="e.g. uap, r30, cm3" maxlength="20">
+              </div>
+            </div>
+
+            <!-- Output -->
+            <div class="builder-group">
+              <div class="builder-group-header" data-toggle="output-panel">
+                <span>Output</span>
+                <span class="chevron">&#9654;</span>
+              </div>
+              <div class="builder-panel" id="output-panel">
+
+                <label class="builder-label">Action</label>
+                <div class="chip-group" data-field="action">
+                  <button class="chip active" data-value="show">Show</button>
+                  <button class="chip" data-value="hide">Hide</button>
+                </div>
+
+                <div id="output-options">
+                  <label class="builder-label">Name Display</label>
+                  <div class="chip-group" data-field="nameDisplay">
+                    <button class="chip active" data-value="%NAME%">Default Name</button>
+                    <button class="chip" data-value="custom">Custom Text</button>
+                  </div>
+                  <input type="text" class="builder-input" id="custom-name-input" placeholder="Custom item text" style="display:none">
+
+                  <label class="builder-label">Color</label>
+                  <div class="color-grid" data-field="color">
+                    <button class="color-chip" data-value="" title="Default" style="background:#ccc;"></button>
+                    <button class="color-chip" data-value="%WHITE%" title="White" style="background:#fff;"></button>
+                    <button class="color-chip" data-value="%GRAY%" title="Gray" style="background:#808080;"></button>
+                    <button class="color-chip" data-value="%RED%" title="Red" style="background:#ff4040;"></button>
+                    <button class="color-chip" data-value="%GREEN%" title="Green" style="background:#00c000;"></button>
+                    <button class="color-chip" data-value="%DARK_GREEN%" title="Dark Green" style="background:#008000;"></button>
+                    <button class="color-chip" data-value="%BLUE%" title="Blue" style="background:#6464ff;"></button>
+                    <button class="color-chip" data-value="%GOLD%" title="Gold" style="background:#c8a040;"></button>
+                    <button class="color-chip" data-value="%YELLOW%" title="Yellow" style="background:#ffff40;"></button>
+                    <button class="color-chip" data-value="%ORANGE%" title="Orange" style="background:#ff8000;"></button>
+                    <button class="color-chip" data-value="%PURPLE%" title="Purple" style="background:#a000c8;"></button>
+                    <button class="color-chip" data-value="%TAN%" title="Tan" style="background:#b0a080;"></button>
+                    <button class="color-chip" data-value="%BLACK%" title="Black" style="background:#000; border:1px solid #555;"></button>
+                    <button class="color-chip" data-value="%CORAL%" title="Coral (HD)" style="background:#ff7f50;"></button>
+                    <button class="color-chip" data-value="%SAGE%" title="Sage (HD)" style="background:#80b080;"></button>
+                    <button class="color-chip" data-value="%TEAL%" title="Teal (HD)" style="background:#008080;"></button>
+                    <button class="color-chip" data-value="%LIGHT_GRAY%" title="Light Gray (HD)" style="background:#c0c0c0;"></button>
+                  </div>
+
+                  <label class="builder-label">Append to Name</label>
+                  <input type="text" class="builder-input" id="append-text" placeholder="e.g. [%SOCKETS%] or !">
+
+                  <label class="builder-label">Map Icon</label>
+                  <div class="chip-group" data-field="mapIcon">
+                    <button class="chip" data-value="">None</button>
+                    <button class="chip" data-value="%BORDER%">Border (lg)</button>
+                    <button class="chip" data-value="%MAP%">Map (md)</button>
+                    <button class="chip" data-value="%DOT%">Dot (sm)</button>
+                    <button class="chip" data-value="%PX%">Pixel (xs)</button>
+                  </div>
+
+                  <label class="builder-label">Map Icon Color (hex)</label>
+                  <input type="text" class="builder-input" id="map-icon-color" placeholder="e.g. 0A, FF, 1F (optional)" maxlength="2">
+
+                  <label class="builder-label">Sound</label>
+                  <select class="builder-select" id="sound-select">
+                    <option value="">None</option>
+                    <option value="4714">4714 — Exalted Orb</option>
+                    <option value="4715">4715 — Divine Orb</option>
+                    <option value="4716">4716 — Mirror of Kalandra</option>
+                    <option value="4717">4717 — General</option>
+                    <option value="4718">4718 — Regal Orb</option>
+                    <option value="4719">4719 — Chaos Orb</option>
+                    <option value="4720">4720 — Fusing</option>
+                    <option value="4721">4721 — Alchemy Orb</option>
+                    <option value="4722">4722 — Vaal Orb</option>
+                    <option value="4723">4723 — Blessed Orb</option>
+                    <option value="4724">4724</option>
+                    <option value="4725">4725</option>
+                    <option value="4726">4726</option>
+                    <option value="4727">4727</option>
+                    <option value="4728">4728</option>
+                    <option value="4729">4729</option>
+                  </select>
+
+                  <label class="builder-label">Notification</label>
+                  <div class="chip-group" data-field="notify">
+                    <button class="chip active" data-value="">Default</button>
+                    <button class="chip" data-value="%NOTIFY-DEAD%">Disable</button>
+                  </div>
+
+                  <label class="builder-label">Continue</label>
+                  <div class="chip-group" data-field="continue">
+                    <button class="chip active" data-value="">No</button>
+                    <button class="chip" data-value="%CONTINUE%">%CONTINUE%</button>
+                  </div>
+
+                  <label class="builder-label">Description (in braces)</label>
+                  <input type="text" class="builder-input" id="description-input" placeholder="e.g. iLvl: %ILVL%%NL%Price: %PRICE%">
+                </div>
+              </div>
+            </div>
+
+            <!-- Preview + Insert -->
+            <div class="builder-group">
+              <div class="builder-group-header always-open">
+                <span>Generated Rule</span>
+              </div>
+              <div class="builder-panel open" id="generated-panel">
+                <pre class="generated-rule"><code id="generated-code">ItemDisplay[]: %NAME%</code></pre>
+                <div class="builder-actions">
+                  <button class="btn btn-primary" id="btn-insert-rule">Insert into Editor</button>
+                  <button class="btn btn-secondary" id="btn-copy-rule">Copy</button>
+                  <button class="btn btn-secondary" id="btn-clear-builder">Clear</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Templates -->
+            <div class="builder-group">
+              <div class="builder-group-header" data-toggle="templates-panel">
+                <span>Templates</span>
+                <span class="chevron">&#9654;</span>
+              </div>
+              <div class="builder-panel" id="templates-panel">
+                <button class="template-btn" data-template="starter">Starter Filter</button>
+                <button class="template-btn" data-template="endgame">Endgame Strict</button>
+                <button class="template-btn" data-template="runes">Rune Highlights</button>
+                <button class="template-btn" data-template="crafting">Crafting Bases</button>
+                <button class="template-btn" data-template="mapping">Mapping Filter</button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Center: Code Editor -->
+        <div class="editor-main">
+          <div class="editor-tabs">
+            <button class="editor-tab active" data-tab="code">Code Editor</button>
+            <button class="editor-tab" data-tab="preview">Live Preview</button>
+          </div>
+
+          <!-- Code editor -->
+          <div class="editor-pane" id="pane-code">
+            <div class="editor-meta">
+              <span class="line-count" id="line-count">Lines: 0</span>
+              <span class="char-count" id="char-count">Chars: 0</span>
+              <span class="rule-count" id="rule-count">Rules: 0</span>
+            </div>
+            <div class="code-editor-wrap">
+              <div class="line-numbers" id="line-numbers"></div>
+              <textarea class="code-editor" id="code-editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                placeholder="// Start typing your filter rules here, or use the Rule Builder on the left.
+//
+// Example:
+// ItemDisplay[UNI]: %PURPLE%%NAME%%MAP%
+// ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%BORDER%
+// ItemDisplay[NMAG NORM CLVL>30]:
+// ItemDisplay[]: %NAME%"></textarea>
+            </div>
+          </div>
+
+          <!-- Preview pane -->
+          <div class="editor-pane" id="pane-preview" style="display:none">
+            <div class="preview-header">
+              <p class="text-muted">Preview shows how your rules will display items. Enter item scenarios below to test.</p>
+            </div>
+            <div class="preview-test-bar">
+              <select id="preview-item-type">
+                <option value="unique-shako">Unique Shako (uap, UNI ELT HELM)</option>
+                <option value="ber-rune">Ber Rune (r30, RUNE=30)</option>
+                <option value="jah-rune">Jah Rune (r31, RUNE=31)</option>
+                <option value="zod-rune">Zod Rune (r33, RUNE=33)</option>
+                <option value="normal-cap">Normal Cap (cap, NMAG NORM HELM)</option>
+                <option value="magic-ring">Magic Ring (rin, MAG JEWELRY)</option>
+                <option value="rare-amu">Rare Amulet (amu, RARE JEWELRY)</option>
+                <option value="set-item">Set Shako (uap, SET ELT HELM)</option>
+                <option value="eth-superior">Eth Superior Archon Plate (uui, NMAG ELT ETH SUP CHEST)</option>
+                <option value="key">Key (key, NMAG MISC)</option>
+                <option value="gold-500">500 Gold (GOLD=500)</option>
+                <option value="gold-50">50 Gold (GOLD=50)</option>
+                <option value="tp-scroll">TP Scroll (tsc, NMAG MISC)</option>
+                <option value="id-scroll">ID Scroll (isc, NMAG MISC)</option>
+                <option value="perfect-gem">Perfect Amethyst (gpv, GEM=5)</option>
+                <option value="rune-el">El Rune (r01, RUNE=1)</option>
+                <option value="charm-sc">Small Charm (cm1, MAG CHARM)</option>
+                <option value="charm-gc">Grand Charm (cm3, MAG CHARM)</option>
+                <option value="jewel">Magic Jewel (jew, MAG JEWELRY)</option>
+              </select>
+              <button class="btn btn-secondary" id="btn-test-rule">Test</button>
+            </div>
+            <div class="preview-results" id="preview-results">
+              <p class="text-muted text-center">Select an item and click Test to see how your filter handles it.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Filter Forge is a community resource for <a href="https://www.projectdiablo2.com/" target="_blank" rel="noopener">Project Diablo 2</a> &middot; <a href="https://github.com/Maaaaaarrk/FilterForge" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <script src="js/shared.js"></script>
+  <script src="js/editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Filters — Filter Forge</title>
+  <meta name="description" content="Browse community-maintained item filters for Project Diablo 2.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/filters.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="filters.html">Filters</a></li>
+      <li><a href="guide.html">Guide</a></li>
+      <li><a href="editor.html">Editor</a></li>
+    </ul>
+    <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
+    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-title">
+        <h1>Community Filters</h1>
+        <p class="text-muted">Filters available in the PD2 launcher, maintained by the community</p>
+      </div>
+
+      <div class="faq-search-wrap">
+        <input type="text" class="search-input" id="filter-search" placeholder="Search filters..." autocomplete="off">
+      </div>
+
+      <div class="filter-grid" id="filter-grid"></div>
+      <div class="filters-loading" id="filters-loading">Loading filters...</div>
+      <div class="filters-error" id="filters-error" style="display:none;">
+        Could not load filters. <a href="https://github.com/Project-Diablo-2/LootFilters" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Filter Forge is a community resource for <a href="https://www.projectdiablo2.com/" target="_blank" rel="noopener">Project Diablo 2</a> &middot; <a href="https://github.com/Maaaaaarrk/FilterForge" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <script src="js/shared.js"></script>
+  <script src="js/filters.js"></script>
+</body>
+</html>

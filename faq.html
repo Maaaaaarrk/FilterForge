@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Filter Forge</title>
+  <meta name="description" content="Frequently asked questions about Project Diablo 2 item filters.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/faq.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="filters.html">Filters</a></li>
+      <li><a href="guide.html">Guide</a></li>
+      <li><a href="editor.html">Editor</a></li>
+    </ul>
+    <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
+    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+  </nav>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-title">
+        <h1>Frequently Asked Questions</h1>
+      </div>
+
+      <div class="faq-search-wrap">
+        <input type="text" class="search-input" id="faq-search" placeholder="Search FAQ..." autocomplete="off">
+      </div>
+      <div class="faq-result-count" id="faq-result-count"></div>
+
+      <div id="faq-container"></div>
+      <div class="faq-no-results" id="faq-no-results">No questions match your search.</div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Filter Forge is a community resource for <a href="https://www.projectdiablo2.com/" target="_blank" rel="noopener">Project Diablo 2</a> &middot; <a href="https://github.com/Maaaaaarrk/FilterForge" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <script src="js/shared.js"></script>
+  <script src="data/faq-data.js"></script>
+  <script src="js/faq.js"></script>
+</body>
+</html>
