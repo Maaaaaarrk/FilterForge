@@ -291,6 +291,7 @@
     'set-shako': { code: 'uap', name: 'Shako', flags: ['SET', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 66, DEF: 98, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'set-ik-armor': { code: 'uth', name: 'Lacquered Plate', flags: ['SET', 'ELT', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 487, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'set-tal-amu': { code: 'amu', name: 'Amulet', flags: ['SET', 'JEWELRY'], values: { ILVL: 26, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'set-lbt': { code: 'lbt', name: 'Boots', flags: ['SET', 'NORM', 'BOOTS', 'ARMOR', 'EQ5'], values: { ILVL: 45, DEF: 12, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     // Rare / Crafted (!ID — unidentified, %NAME% shows base type name)
     'rare-amu': { code: 'amu', name: 'Amulet', flags: ['RARE', 'JEWELRY'], values: { ILVL: 85, ALVL: 90, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'rare-ring': { code: 'rin', name: 'Ring', flags: ['RARE', 'JEWELRY'], values: { ILVL: 85, ALVL: 81, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
@@ -1342,8 +1343,40 @@
       displayName = renderOutput(result.output, item);
     }
 
+    // Build item info tag
+    var rarity = '';
+    if (item.flags.indexOf('UNI') !== -1) rarity = 'Unique';
+    else if (item.flags.indexOf('SET') !== -1) rarity = 'Set';
+    else if (item.flags.indexOf('RARE') !== -1) rarity = 'Rare';
+    else if (item.flags.indexOf('CRAFT') !== -1) rarity = 'Crafted';
+    else if (item.flags.indexOf('MAG') !== -1) rarity = 'Magic';
+    else if (item.flags.indexOf('NMAG') !== -1) rarity = 'Normal';
+    if (item.flags.indexOf('ETH') !== -1) rarity = 'Eth ' + rarity;
+    if (item.flags.indexOf('SUP') !== -1) rarity = 'Sup ' + rarity;
+    if (item.flags.indexOf('INF') !== -1) rarity = 'Inf ' + rarity;
+    var itemType = '';
+    var typeFlags = ['HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC'];
+    for (var tf = 0; tf < typeFlags.length; tf++) {
+      if (item.flags.indexOf(typeFlags[tf]) !== -1) { itemType = typeFlags[tf]; break; }
+    }
+    var infoTag = '<span class="preview-item-info">' + escapeHtml(item.name) + ' <code>' + item.code + '</code>';
+    if (rarity) infoTag += ' <span class="preview-rarity">' + rarity + '</span>';
+    if (itemType) infoTag += ' <span class="preview-type">' + itemType + '</span>';
+    // Show key values
+    var vals = [];
+    if (item.values.RUNE) vals.push('RUNE=' + item.values.RUNE);
+    if (item.values.GEM) vals.push('GEM=' + item.values.GEM);
+    if (item.values.GOLD) vals.push('GOLD=' + item.values.GOLD);
+    if (item.values.SOCKETS) vals.push('SOCK=' + item.values.SOCKETS);
+    if (item.values.ILVL) vals.push('iLvl=' + item.values.ILVL);
+    if (item.values.DEF) vals.push('DEF=' + item.values.DEF);
+    if (item.values.MAPTIER) vals.push('T' + item.values.MAPTIER);
+    if (vals.length) infoTag += ' <span class="preview-vals">' + vals.join(' ') + '</span>';
+    infoTag += '</span>';
+
     var html = '<div class="' + cssClass + '"' + (isSelected ? ' style="border-width:2px;"' : '') + '>';
     html += '<div class="preview-item-name">' + displayName + '</div>';
+    html += infoTag;
 
     if (!result.matched) {
       html += '<div class="preview-item-rule">No matching rule — shown with default name</div>';
@@ -1738,7 +1771,7 @@
         colorHR = '%DARK_GREEN%'; colorMidRune = '%TAN%'; colorLowRune = '%TAN%';
         colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
       } else if (profile === 'rainbow') {
-        colorHR = '%RED%%ORANGE%%YELLOW%%GREEN%%BLUE%%PURPLE%'; colorMidRune = '%PURPLE%'; colorLowRune = '%ORANGE%';
+        colorHR = '%ORANGE%'; colorMidRune = '%PURPLE%'; colorLowRune = '%ORANGE%';
         colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
       } else if (profile === 'clean') {
         colorHR = '%ORANGE%'; colorMidRune = '%ORANGE%'; colorLowRune = '%ORANGE%';
@@ -1771,6 +1804,30 @@
       } else {
         // arrows (default)
         decoHR_L = '>> '; decoHR_R = ' <<'; decoMid_L = '> '; decoMid_R = ' <'; decoLow_L = ''; decoLow_R = '';
+      }
+
+      // Rainbow: override decorations with color-per-character
+      // Left side: R O Y G B P, Right side: P B G Y O R (reversed)
+      if (profile === 'rainbow' && deco !== 'none') {
+        var rbColors = ['%RED%', '%ORANGE%', '%YELLOW%', '%GREEN%', '%BLUE%', '%PURPLE%'];
+        var rbReverse = ['%PURPLE%', '%BLUE%', '%GREEN%', '%YELLOW%', '%ORANGE%', '%RED%'];
+        function rainbowText(str, colors) {
+          var out = '', ci = 0;
+          for (var ri = 0; ri < str.length; ri++) {
+            if (str[ri] === ' ') { out += ' '; }
+            else { out += colors[ci % colors.length] + str[ri]; ci++; }
+          }
+          return out;
+        }
+        decoHR_L = rainbowText(decoHR_L.trim(), rbColors) + ' '; decoHR_R = ' ' + rainbowText(decoHR_R.trim(), rbReverse);
+        decoMid_L = rainbowText(decoMid_L.trim(), rbColors) + ' '; decoMid_R = ' ' + rainbowText(decoMid_R.trim(), rbReverse);
+        decoLow_L = decoLow_L ? rainbowText(decoLow_L.trim(), rbColors) + ' ' : '';
+        decoLow_R = decoLow_R ? ' ' + rainbowText(decoLow_R.trim(), rbReverse) : '';
+        // Decorations have embedded colors. The decoHR_L ends with "char " (last rainbow color + char + space).
+        // We don't need colorHR as a prefix — instead embed the name color INTO decoHR_L's trailing space.
+        // This avoids %ORANGE%%RED%< adjacent color issue.
+        decoHR_L += '%ORANGE%'; decoMid_L += '%PURPLE%'; decoLow_L += decoLow_L ? '%ORANGE%' : '';
+        colorHR = ''; colorMidRune = ''; colorLowRune = '';
       }
 
       // Notification levels: none < minimal < standard < full < max
@@ -1838,7 +1895,17 @@
       lines.push('// ============================================================');
       lines.push('// Filter Forge -- Custom Filter');
       lines.push('// Generated by the Build My Filter wizard');
-      lines.push('// Class: ' + (label('', c['class']) || 'All') + ' | Strictness: ' + (label('', c.experience) || 'Casual'));
+      lines.push('// https://maaaaaarrk.github.io/FilterForge/editor.html');
+      lines.push('//');
+      lines.push('// Class: ' + (label('', c['class']) || 'All'));
+      lines.push('// Strictness: ' + (label('', c.experience) || 'Casual'));
+      lines.push('// Notifications: ' + (label('', c.notifications) || 'None'));
+      lines.push('// Color Theme: ' + (label('', c.colorprofile) || 'Default'));
+      lines.push('// Decoration: ' + (label('', c.decoration) || 'Arrows'));
+      lines.push('// Extras: ' + (c.extras.length ? c.extras.map(function (x) { return label('', x); }).join(', ') : 'None'));
+      lines.push('// RW Bases: ' + (label('', c.rwbases + '-rw') || 'None'));
+      lines.push('// Consumables: ' + (c.consumables.length ? c.consumables.map(function (x) { return label('', x); }).join(', ') : 'Default'));
+      lines.push('// Tooltips: ' + (c.tooltips.length ? c.tooltips.map(function (x) { return label('', x); }).join(', ') : 'None'));
       lines.push('// ============================================================');
       lines.push('');
 
@@ -2103,45 +2170,44 @@
       var uni4eth = '(utp OR amf OR 9gm OR 7p7 OR 7xf OR 9la OR 7s8 OR 7b7 OR 7b8 OR ama OR aar OR xlt OR 7gd OR 7pa OR 8ls OR 7gm OR 7ts)';
       var uni3star = '(amf OR bae OR xhn OR utu OR zlb OR uvc OR uhg OR uh9 OR 9gm OR 7fl OR 7wc OR 9bw OR 9gw OR 6lw OR xtb OR xui OR 7cr OR uvg OR ulm OR uow OR 7p7 OR nee OR 7xf OR ned OR xh9 OR zvb OR 6sw OR 7gd OR paf OR 8ls OR 7mp OR scl OR 8cb OR 7gm OR zhb OR 7b7 OR drc OR 8rx OR aqv3 OR aqv2)';
       var uni2star = '(drb OR oba OR xea OR xmb OR tgl OR xvg OR 7bl OR 9wn OR 7bw OR xld OR ulb OR umb OR 9la OR 7bt OR pae OR xtg OR 7wa OR 8ws OR obc OR uhb OR bad OR 9s8 OR ba6 OR dra OR 7ls OR pac OR 7s8 OR neg)';
-      var set3star = '(ne9 OR utc OR xmg OR uhm OR xul OR 7ws OR paf OR lgl OR xvg)';
+      var set3star = '(ne9 OR utc OR xmg OR uhm OR xul OR 7ws OR paf OR lgl OR xvg OR amu OR rin OR lbt)';
       var set2star = '(xap OR stu OR uts OR xar OR urn OR dr8 OR ucl OR xh9 OR 7qr OR vbt)';
       var set1star = '(ulg OR 6cs OR xtb OR uul OR ba5 OR 7m7 OR zhb OR xhg OR xhb OR xmb OR oba OR xsk OR zmb OR uh9 OR uar OR xhm OR ci3 OR amc OR uld OR xtg OR zvb OR uth OR mbl)';
 
-      // Unique boss items (DClone/Rathma) — always show with max notification
+      // Unique boss items (DClone/Rathma) — always show with max decoration
       lines.push('// --- Boss Uniques (DClone/Rathma — always show) ---');
-      lines.push('ItemDisplay[UNI !ID (ram OR rar OR rbe OR 7qr OR uhn OR uth OR utb OR 7bs OR 7cr2)]: %GOLD%%NAME%' + (wantBigNotify ? '%BORDER-62%' : wantMapIcons ? '%MAP-62%' : '') + (wantSounds ? '%SOUNDID-4719%' : ''));
+      lines.push('ItemDisplay[UNI !ID (ram OR rar OR rbe OR 7qr OR uhn OR uth OR utb OR 7bs OR 7cr2)]: %GOLD%' + decoHR_L + '%NAME%' + decoHR_R + (wantBigNotify ? '%BORDER-62%' : wantMapIcons ? '%MAP-62%' : '') + (wantSounds ? '%SOUNDID-4719%' : ''));
 
-      // Unique jewels (Rainbow Facet) — always show
-      lines.push('ItemDisplay[jew UNI !ID]: %GOLD%%NAME%' + uniNotify);
-      // Unique rings/amulets — always show
-      lines.push('ItemDisplay[(rin OR amu) UNI !ID]: %GOLD%%NAME%' + uniNotify);
+      // Unique jewels (Rainbow Facet) — always show with high decoration
+      lines.push('ItemDisplay[jew UNI !ID]: %GOLD%' + decoHR_L + '%NAME%' + decoHR_R + uniNotify);
+      // Unique rings/amulets — always show with mid decoration
+      lines.push('ItemDisplay[(rin OR amu) UNI !ID]: %GOLD%' + decoMid_L + '%NAME%' + decoMid_R + uniNotify);
 
-      // 4-star uniques — always show with full notifications
+      // 4-star uniques — always show with high decoration + full notifications
       lines.push('// --- 4-Star Uniques (GG tier — always show) ---');
-      lines.push('ItemDisplay[UNI !ID ' + uni4star + ']: %GOLD%%NAME%' + descStr + uniNotify);
-      lines.push('ItemDisplay[UNI !ID ETH ' + uni4eth + ']: %GOLD%%NAME%' + descStr + uniNotify);
+      lines.push('ItemDisplay[UNI !ID ' + uni4star + ']: %GOLD%' + decoHR_L + '%NAME%' + decoHR_R + descStr + uniNotify);
+      lines.push('ItemDisplay[UNI !ID ETH ' + uni4eth + ']: %GOLD%' + decoHR_L + '%NAME%' + decoHR_R + descStr + uniNotify);
 
-      // 3-star uniques — always show with good notification
+      // 3-star uniques — always show with mid decoration
       lines.push('// --- 3-Star Uniques (high value) ---');
-      lines.push('ItemDisplay[UNI !ID ' + uni3star + ']: %GOLD%%NAME%' + descStr + (wantMapIcons ? '%MAP-A5%' : '') + (wantSounds ? '%SOUNDID-4715%' : ''));
+      lines.push('ItemDisplay[UNI !ID ' + uni3star + ']: %GOLD%' + decoMid_L + '%NAME%' + decoMid_R + descStr + (wantMapIcons ? '%MAP-A5%' : '') + (wantSounds ? '%SOUNDID-4715%' : ''));
 
-      // 2-star uniques — shown with dot, hidden at FILTLVL 4
+      // 2-star uniques — low decoration, shown with dot, hidden at FILTLVL 4
       lines.push('// --- 2-Star Uniques (mid value) ---');
-      lines.push('ItemDisplay[UNI !ID FILTLVL<4 ' + uni2star + ']: %GOLD%%NAME%' + descStr + (wantMapIcons ? '%DOT-D3%' : ''));
+      lines.push('ItemDisplay[UNI !ID FILTLVL<4 ' + uni2star + ']: %GOLD%' + decoLow_L + '%NAME%' + decoLow_R + descStr + (wantDots ? '%DOT-D3%' : ''));
 
-      // Remaining uniques — shown at lower FILTLVL, hidden at 3+
+      // Remaining uniques — no decoration, shown at lower FILTLVL
       lines.push('// --- Low-tier Uniques (shown at FILTLVL 1-2) ---');
       lines.push('ItemDisplay[UNI !ID FILTLVL<3]: %GOLD%%NAME%' + descStr);
-      lines.push('// Unique catch-all at high FILTLVL — still show with minimal display');
       lines.push('ItemDisplay[UNI !ID]: %GOLD%%NAME%');
 
-      // 3-star sets — always show
+      // 3-star sets — always show with mid decoration
       lines.push('// --- 3-Star Sets (top tier — always show) ---');
-      lines.push('ItemDisplay[SET !ID ' + set3star + ']: %GREEN%%NAME%' + descStr + setNotify);
+      lines.push('ItemDisplay[SET !ID ' + set3star + ']: %GREEN%' + decoMid_L + '%NAME%' + decoMid_R + descStr + setNotify);
 
-      // 2-star sets — shown with dot
+      // 2-star sets — low decoration, shown with dot
       lines.push('// --- 2-Star Sets (high value) ---');
-      lines.push('ItemDisplay[SET !ID ' + set2star + ']: %GREEN%%NAME%' + descStr + (wantMapIcons ? '%DOT-84%' : ''));
+      lines.push('ItemDisplay[SET !ID ' + set2star + ']: %GREEN%' + decoLow_L + '%NAME%' + decoLow_R + descStr + (wantDots ? '%DOT-84%' : ''));
 
       // 1-star sets — shown at FILTLVL 1-3
       lines.push('// --- 1-Star Sets (mid value) ---');
@@ -2310,10 +2376,10 @@
       lines.push('// ============================================================');
       lines.push('// NMAG ITEM ENRICHMENT');
       lines.push('// ============================================================');
-      // Base coloring: white for 0os, gray for socketed
+      // Base coloring: white for 0os, gray for socketed (skip ETH — already tagged in section 3)
       lines.push('// Base item coloring');
-      lines.push('ItemDisplay[(ARMOR OR WEAPON) NMAG SOCK=0]: %WHITE%%NAME%%CONTINUE%{%NAME%}');
-      lines.push('ItemDisplay[(ARMOR OR WEAPON) NMAG SOCK>0]: %GRAY%%NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON) NMAG !ETH SOCK=0]: %WHITE%%NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON) NMAG !ETH SOCK>0]: %GRAY%%NAME%%CONTINUE%{%NAME%}');
       // SUP enhanced defense/damage display
       lines.push('// Superior ED% display');
       lines.push('ItemDisplay[!INF !RW NMAG SUP EDEF>0]: %BLUE%[%EDEF%%%] %NAME%{%NAME%}%CONTINUE%');
@@ -2322,7 +2388,7 @@
       if (!myClass || myClass === 'DIN') {
         lines.push('// Paladin shield All Res');
         lines.push('ItemDisplay[!INF !RW NMAG DIN RES>19]: %GREEN%[%RES%r] %NAME%{%NAME%}%CONTINUE%');
-        lines.push('ItemDisplay[!INF !RW NMAG DIN RES>0]: %TAN%[%RES%r] %NAME%{%NAME%}%CONTINUE%');
+        lines.push('ItemDisplay[!INF !RW NMAG DIN RES~1-19]: %TAN%[%RES%r] %NAME%{%NAME%}%CONTINUE%');
       }
       // High-defense chests
       lines.push('// High defense chest armor');
