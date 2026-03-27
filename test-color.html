@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html><head><title>Color Parser Test</title></head>
+<body style="background:#1a1a2e;color:#e0e0e0;font-family:monospace;padding:2rem;">
+<h2>Color Parser Test</h2>
+<div id="output"></div>
+<script>
+var D2_COLORS = {
+  '%WHITE%':'#ffffff','%GRAY%':'#808080','%RED%':'#ff4040','%GREEN%':'#00c000',
+  '%DARK_GREEN%':'#008000','%BLUE%':'#6464ff','%GOLD%':'#c8a040',
+  '%YELLOW%':'#ffff40','%ORANGE%':'#ff8000','%PURPLE%':'#a000c8',
+  '%TAN%':'#b0a080','%BLACK%':'#000000','%CORAL%':'#ff7f50',
+  '%SAGE%':'#80b080','%TEAL%':'#008080','%LIGHT_GRAY%':'#c0c0c0'
+};
+
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderColors(text) {
+  var currentColor = '#ffffff';
+  var result = '';
+  var ci = 0;
+  while (ci < text.length) {
+    if (text.charAt(ci) === '%') {
+      var endPct = text.indexOf('%', ci + 1);
+      if (endPct !== -1) {
+        var token = text.substring(ci, endPct + 1);
+        if (D2_COLORS[token]) {
+          currentColor = D2_COLORS[token];
+          ci = endPct + 1;
+          continue;
+        }
+        if (/^%[A-Z_0-9]+%$/.test(token)) {
+          ci = endPct + 1;
+          continue;
+        }
+      }
+      ci++;
+      continue;
+    }
+    var textStart = ci;
+    while (ci < text.length && text.charAt(ci) !== '%') ci++;
+    var chunk = text.substring(textStart, ci);
+    if (chunk) {
+      result += '<span style="color:' + currentColor + '">' + escapeHtml(chunk) + '</span>';
+    }
+  }
+  return result;
+}
+
+var tests = [
+  '%RED%x%ORANGE%X%YELLOW%x %ORANGE%Ber Rune %PURPLE%x%BLUE%X%GREEN%x (#30)',
+  '%PURPLE%O%ORANGE%O %GOLD%Grand Charm %ORANGE%O%PURPLE%O',
+  '%GOLD%>> Shako << ',
+  '%RED%<%ORANGE%> %YELLOW%<%GREEN%> %BLUE%<%PURPLE%> %ORANGE%Ber Rune %PURPLE%<%BLUE%> %GREEN%<%YELLOW%> %ORANGE%<%RED%>'
+];
+
+var out = document.getElementById('output');
+tests.forEach(function(test, i) {
+  var div = document.createElement('div');
+  div.style.marginBottom = '1.5rem';
+  div.innerHTML = '<div style="font-size:0.8rem;color:#808080;margin-bottom:0.3rem;">Test ' + (i+1) + ': ' + escapeHtml(test) + '</div>' +
+    '<div style="font-size:1.5rem;">' + renderColors(test) + '</div>';
+  out.appendChild(div);
+});
+
+// Also test what the ACTUAL editor.js renderOutput does
+var script = document.createElement('script');
+script.src = 'js/editor.js?v=' + Date.now();
+script.onerror = function() {
+  out.innerHTML += '<div style="color:red;">Failed to load editor.js</div>';
+};
+</script>
+</body></html>
