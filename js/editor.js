@@ -875,12 +875,19 @@
     for (var i = 0; i < Math.min(lineNum - 1, lines.length); i++) {
       pos += lines[i].length + 1;
     }
-    codeEditor.focus();
-    codeEditor.setSelectionRange(pos, pos + (lines[lineNum - 1] || '').length);
-    // Scroll to the line
+    var lineEnd = pos + (lines[lineNum - 1] || '').length;
     var lh = getLineHeight();
-    codeEditor.scrollTop = Math.max(0, (lineNum - 5) * lh);
-    renderVisibleLineNumbers();
+    var targetScroll = Math.max(0, (lineNum - 5) * lh);
+
+    // Focus and select the line, then force scroll position after browser settles
+    codeEditor.focus();
+    codeEditor.setSelectionRange(pos, lineEnd);
+    codeEditor.scrollTop = targetScroll;
+    // Browser may override scrollTop on focus — force it again after a frame
+    requestAnimationFrame(function () {
+      codeEditor.scrollTop = targetScroll;
+      renderVisibleLineNumbers();
+    });
   }
 
   function initPreview() {
@@ -969,38 +976,59 @@
   }
 
   function matchItem(item, rules) {
-    var accumulated = '';
+    // PD2 %CONTINUE% behavior:
+    // 1. When a rule matches and has %CONTINUE%, its output (with %NAME% resolved)
+    //    becomes the new value of %NAME% for subsequent rules.
+    // 2. Processing continues to the next rule.
+    // 3. When a rule matches WITHOUT %CONTINUE%, that's the final display.
+    //
+    // This means %CONTINUE% chains build up the display string step by step,
+    // each rule modifying %NAME% before the next one sees it.
+
+    var currentName = item.name; // Start with the item's original name
     var lastRule = null;
-    var continueChain = false;
+    var anyMatched = false;
+    var allMatchedRules = [];
+
     for (var i = 0; i < rules.length; i++) {
       var rule = rules[i];
       if (evaluateConditions(rule.conditions, item)) {
         var output = rule.output;
-        // Check for %CONTINUE% — store output in item name and keep matching
-        if (output.indexOf('%CONTINUE%') !== -1) {
+        var hasContinue = output.indexOf('%CONTINUE%') !== -1;
+
+        if (hasContinue) {
+          // Remove %CONTINUE% token
           output = output.replace(/%CONTINUE%/g, '');
-          // In PD2, %CONTINUE% stores current output as the new %NAME%
-          // Accumulate the output
-          accumulated = output || accumulated;
-          continueChain = true;
+          // Resolve %NAME% in the output to the current accumulated name
+          output = output.replace(/%NAME%/g, currentName);
+          // This becomes the new %NAME% for subsequent rules
+          if (output) currentName = output;
           lastRule = rule;
-          continue; // Keep checking next rules
+          anyMatched = true;
+          allMatchedRules.push(rule);
+          continue; // Keep processing
         }
+
         // Final match (no %CONTINUE%)
+        // Resolve %NAME% with accumulated value
+        output = output.replace(/%NAME%/g, currentName);
+        allMatchedRules.push(rule);
         return {
           matched: true,
           rule: rule,
-          hidden: output === '' && !continueChain,
-          output: output || accumulated,
-          continued: continueChain
+          hidden: output === '' && !anyMatched,
+          output: output,
+          continued: anyMatched,
+          allRules: allMatchedRules
         };
       }
     }
-    // If we only had %CONTINUE% rules with no final match
-    if (continueChain && accumulated) {
-      return { matched: true, rule: lastRule, hidden: false, output: accumulated, continued: true };
+
+    // If we only had %CONTINUE% rules with no final terminal match
+    if (anyMatched) {
+      return { matched: true, rule: lastRule, hidden: false, output: currentName, continued: true, allRules: allMatchedRules };
     }
-    return { matched: false, hidden: false, output: '', rule: null };
+    return { matched: false, hidden: false, output: '', rule: null, allRules: [] };
   }
 
   function evaluateConditions(condStr, item) {
@@ -1194,7 +1222,11 @@
       statusText = 'HIDDEN by line ' + result.rule.lineNum;
     } else {
       cssClass += ' preview-item-shown';
-      statusText = 'Matched line ' + result.rule.lineNum;
+      if (result.continued && result.allRules && result.allRules.length > 1) {
+        statusText = result.allRules.length + ' rules matched (lines ' + result.allRules.map(function (r) { return r.lineNum; }).join(', ') + ')';
+      } else {
+        statusText = 'Matched line ' + result.rule.lineNum;
+      }
     }
 
     if (isSelected) {
@@ -1210,7 +1242,6 @@
     html += '<div class="preview-item-name">' + displayName + '</div>';
     html += '<div class="preview-item-rule">' + escapeHtml(statusText);
     if (result.rule) {
-      html += ' — <code>' + escapeHtml(result.rule.raw) + '</code>';
       html += ' <button class="btn-goto-line" data-line="' + result.rule.lineNum + '">Line ' + result.rule.lineNum + ' &rarr;</button>';
     }
     html += '</div></div>';
@@ -1220,7 +1251,8 @@
   function renderOutput(output, item) {
     var text = output;
 
-    // Replace value tokens
+    // %NAME% may already be resolved by matchItem's %CONTINUE% handling
+    // Only replace remaining %NAME% tokens that weren't resolved
     text = text.replace(/%NAME%/g, item.name);
     text = text.replace(/%RUNENAME%/g, RUNE_NAMES[item.values.RUNE] || '');
     text = text.replace(/%RUNENUM%/g, item.values.RUNE || '');
