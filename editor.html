@@ -142,26 +142,109 @@
             <!-- Step 3: Notifications -->
             <div class="wizard-step" id="wiz-step-3" style="display:none">
               <h3>How do you want to be notified about drops?</h3>
-              <p class="text-muted">Map icons appear on your minimap. Sounds play when items drop.</p>
-              <div class="wizard-options" data-wiz="notifications" data-multi="true">
-                <button class="wizard-opt" data-value="mapicons">
-                  <strong>Map Icons</strong>
-                  <span>Show icons on minimap for valuable drops</span>
+              <p class="text-muted">Choose a notification level. Higher levels add more visual indicators for valuable items.</p>
+              <div class="wizard-options" data-wiz="notifications" data-multi="false">
+                <button class="wizard-opt" data-value="none">
+                  <strong>None</strong>
+                  <span>No map icons, no sounds — items just show on the ground with text only</span>
                 </button>
-                <button class="wizard-opt" data-value="sounds">
-                  <strong>Drop Sounds</strong>
-                  <span>Play sounds when high-value items drop</span>
+                <button class="wizard-opt" data-value="minimal">
+                  <strong>Minimal</strong>
+                  <span>Small minimap dots (%DOT%) on valuable items — no sounds</span>
                 </button>
-                <button class="wizard-opt" data-value="bignotify">
-                  <strong>Big Notifications</strong>
-                  <span>Large border icons for the most valuable drops (HRs, uniques)</span>
+                <button class="wizard-opt" data-value="standard">
+                  <strong>Standard</strong>
+                  <span>Map icons (%MAP%) on good drops + dots on lesser items — no sounds</span>
+                </button>
+                <button class="wizard-opt" data-value="full">
+                  <strong>Full</strong>
+                  <span>Map icons + drop sounds on high runes, uniques, and key items</span>
+                </button>
+                <button class="wizard-opt" data-value="max">
+                  <strong>Maximum</strong>
+                  <span>Border flashes (%BORDER%) + sounds on top drops, map icons on mid drops, dots on everything else</span>
                 </button>
               </div>
-              <p class="text-muted mt-2" style="font-size:0.82rem">Click multiple options, or none to skip.</p>
             </div>
 
-            <!-- Step 4: Display extras -->
+            <!-- Step 4: Color Profile -->
             <div class="wizard-step" id="wiz-step-4" style="display:none">
+              <h3>Choose a color theme</h3>
+              <p class="text-muted">Sets the color palette used for runes, item highlights, and decorations.</p>
+              <div class="wizard-options" data-wiz="colorprofile" data-multi="false">
+                <button class="wizard-opt" data-value="default">
+                  <strong>Default (Gold &amp; Orange)</strong>
+                  <span>Classic PD2 gold runes, orange highlights — most community filters use this</span>
+                </button>
+                <button class="wizard-opt" data-value="fire">
+                  <strong>Fire</strong>
+                  <span>Red and orange tones — high runes in red, mid in orange, items in gold</span>
+                </button>
+                <button class="wizard-opt" data-value="water">
+                  <strong>Water</strong>
+                  <span>Blue and teal tones — high runes in purple, mid in blue, cool highlights</span>
+                </button>
+                <button class="wizard-opt" data-value="earth">
+                  <strong>Earth</strong>
+                  <span>Green and tan tones — high runes in dark green, natural earth palette</span>
+                </button>
+                <button class="wizard-opt" data-value="rainbow">
+                  <strong>Rainbow</strong>
+                  <span>Multi-color — high runes cycle through colors, vibrant and loud</span>
+                </button>
+                <button class="wizard-opt" data-value="clean">
+                  <strong>Clean (No Extra Colors)</strong>
+                  <span>Minimal colors — items use their default rarity colors only</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 5: Decoration Style -->
+            <div class="wizard-step" id="wiz-step-5" style="display:none">
+              <h3>Decoration style for valuable items</h3>
+              <p class="text-muted">How should high-value items be decorated on the ground?</p>
+              <div class="wizard-options" data-wiz="decoration" data-multi="false">
+                <button class="wizard-opt" data-value="arrows">
+                  <strong>Arrows</strong>
+                  <span>>> High Rune &lt;&lt;  and  > Mid Rune &lt;</span>
+                </button>
+                <button class="wizard-opt" data-value="stars">
+                  <strong>Stars</strong>
+                  <span>*** High Rune ***  and  * Mid Rune *</span>
+                </button>
+                <button class="wizard-opt" data-value="diamonds">
+                  <strong>Diamonds</strong>
+                  <span>&lt;> &lt;> High Rune &lt;> &lt;>  and  &lt;> Mid Rune &lt;></span>
+                </button>
+                <button class="wizard-opt" data-value="pipes">
+                  <strong>Pipes</strong>
+                  <span>|| High Rune ||  and  | Mid Rune |</span>
+                </button>
+                <button class="wizard-opt" data-value="exclaim">
+                  <strong>Exclaim</strong>
+                  <span>!! High Rune !!  and  ! Mid Rune !</span>
+                </button>
+                <button class="wizard-opt" data-value="circles">
+                  <strong>Circles</strong>
+                  <span>oOo High Rune oOo  and  oO Mid Rune Oo</span>
+                </button>
+                <button class="wizard-opt" data-value="dots">
+                  <strong>Dots</strong>
+                  <span>... High Rune ...  and  .. Mid Rune ..</span>
+                </button>
+                <button class="wizard-opt" data-value="crosses">
+                  <strong>Crosses</strong>
+                  <span>xXx High Rune xXx  and  xX Mid Rune Xx</span>
+                </button>
+                <button class="wizard-opt" data-value="none">
+                  <strong>None</strong>
+                  <span>No decorations — just the item name with colors</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Step 6: Display extras -->
+            <div class="wizard-step" id="wiz-step-6" style="display:none">
               <h3>What extra info should items show?</h3>
               <p class="text-muted">Additional details appended to item names or shown in descriptions.</p>
               <div class="wizard-options" data-wiz="extras" data-multi="true">
@@ -188,8 +271,8 @@
               </div>
             </div>
 
-            <!-- Step 5: Runeword bases -->
-            <div class="wizard-step" id="wiz-step-5" style="display:none">
+            <!-- Step 7: Runeword bases -->
+            <div class="wizard-step" id="wiz-step-7" style="display:none">
               <h3>Highlight runeword bases?</h3>
               <p class="text-muted">Runeword bases are non-magic items with the right socket count for popular runewords.</p>
               <div class="wizard-options" data-wiz="rwbases" data-multi="false">
@@ -209,7 +292,7 @@
             </div>
 
             <!-- Step 6: Gold & Potions -->
-            <div class="wizard-step" id="wiz-step-6" style="display:none">
+            <div class="wizard-step" id="wiz-step-8" style="display:none">
               <h3>What about gold, potions, and consumables?</h3>
               <p class="text-muted">These settings control clutter from common drops.</p>
               <div class="wizard-options" data-wiz="consumables" data-multi="true">
@@ -241,7 +324,7 @@
             </div>
 
             <!-- Step 7: Tooltips & Recipes -->
-            <div class="wizard-step" id="wiz-step-7" style="display:none">
+            <div class="wizard-step" id="wiz-step-9" style="display:none">
               <h3>Item tooltips and recipes?</h3>
               <p class="text-muted">Add useful info to item descriptions when you hover over them.</p>
               <div class="wizard-options" data-wiz="tooltips" data-multi="true">
@@ -265,7 +348,7 @@
             </div>
 
             <!-- Step 8: Confirm -->
-            <div class="wizard-step" id="wiz-step-8" style="display:none">
+            <div class="wizard-step" id="wiz-step-10" style="display:none">
               <h3>Ready to build your filter!</h3>
               <p class="text-muted">Here's a summary of your choices:</p>
               <div class="wizard-summary" id="wizard-summary"></div>
@@ -522,6 +605,9 @@
                     <button class="color-chip" data-value="%TEAL%" title="Teal (HD)" style="background:#008080;"></button>
                     <button class="color-chip" data-value="%LIGHT_GRAY%" title="Light Gray (HD)" style="background:#c0c0c0;"></button>
                   </div>
+
+                  <label class="builder-label">Prepend to Name</label>
+                  <input type="text" class="builder-input" id="prepend-text" placeholder="e.g. eth or GG">
 
                   <label class="builder-label">Append to Name</label>
                   <input type="text" class="builder-input" id="append-text" placeholder="e.g. [%SOCKETS%] or !">

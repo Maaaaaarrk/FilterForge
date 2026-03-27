@@ -524,7 +524,7 @@
   // Builder: text inputs
   // ==========================================
   function initTextInputs() {
-    var ids = ['item-code-input', 'custom-name-input', 'append-text', 'map-icon-color', 'description-input'];
+    var ids = ['item-code-input', 'custom-name-input', 'prepend-text', 'append-text', 'map-icon-color', 'description-input'];
     ids.forEach(function (id) {
       var el = document.getElementById(id);
       if (el) {
@@ -605,6 +605,7 @@
       var color = builderState.color || '';
       var nameDisplay = builderState.nameDisplay || '%NAME%';
       var customName = document.getElementById('custom-name-input').value.trim();
+      var prependText = document.getElementById('prepend-text').value.trim();
       var appendText = document.getElementById('append-text').value.trim();
       var mapIcon = builderState.mapIcon || '';
       var mapIconColor = document.getElementById('map-icon-color').value.trim().toUpperCase();
@@ -614,6 +615,10 @@
       var description = document.getElementById('description-input').value.trim();
 
       output += color;
+
+      if (prependText) {
+        output += prependText;
+      }
 
       if (nameDisplay === 'custom' && customName) {
         output += customName;
@@ -980,7 +985,8 @@
       var al = lines[a].trim();
       var aliasMatch = al.match(/^Alias\s*\[([^\]]+)\]\s*:\s*(.*)/);
       if (aliasMatch) {
-        aliases[aliasMatch[1].trim()] = aliasMatch[2].trim();
+        // Don't trim the value — spaces in alias values are intentional formatting
+        aliases[aliasMatch[1].trim()] = aliasMatch[2];
       }
     }
 
@@ -1431,6 +1437,26 @@
     // Strip any remaining unknown %TOKEN% patterns (but preserve color tokens)
     text = text.replace(/%(?!WHITE|GRAY|RED|GREEN|DARK_GREEN|BLUE|GOLD|YELLOW|ORANGE|PURPLE|TAN|BLACK|CORAL|SAGE|TEAL|LIGHT_GRAY)[A-Z_0-9]+%/g, '');
 
+    // Convert ÿcX color codes (Kassahi/ANSI format) to %COLOR% format
+    var yColorMap = {
+      '\xFF\x63\x30':'%WHITE%', '\xFF\x63\x31':'%RED%', '\xFF\x63\x32':'%GREEN%',
+      '\xFF\x63\x33':'%BLUE%', '\xFF\x63\x34':'%GOLD%', '\xFF\x63\x35':'%GRAY%',
+      '\xFF\x63\x36':'%BLACK%', '\xFF\x63\x37':'%TAN%', '\xFF\x63\x38':'%ORANGE%',
+      '\xFF\x63\x39':'%YELLOW%', '\xFF\x63\x3A':'%DARK_GREEN%', '\xFF\x63\x3B':'%PURPLE%',
+      '\xFF\x63\x2E':'%TEAL%', '\xFF\x63\x2C':'%SAGE%', '\xFF\x63\x2D':'%CORAL%',
+      '\xFF\x63\x2F':'%LIGHT_GRAY%'
+    };
+    // Also handle the decoded ÿ character (U+00FF) when loaded as Latin-1
+    text = text.replace(/\u00FFc(.)/g, function (m, code) {
+      var lookup = {
+        '0':'%WHITE%','1':'%RED%','2':'%GREEN%','3':'%BLUE%','4':'%GOLD%',
+        '5':'%GRAY%','6':'%BLACK%','7':'%TAN%','8':'%ORANGE%','9':'%YELLOW%',
+        ':':'%DARK_GREEN%',';':'%PURPLE%','.':'%TEAL%',',':'%SAGE%',
+        '-':'%CORAL%','/':'%LIGHT_GRAY%','<':'%LIGHT_GRAY%'
+      };
+      return lookup[code] || '';
+    });
+
     // Remove descriptions {} for inline display
     text = text.replace(/\{[^}]*\}/g, '');
 
@@ -1535,6 +1561,7 @@
       document.getElementById('item-code-input').value = '';
       document.getElementById('custom-name-input').value = '';
       document.getElementById('custom-name-input').style.display = 'none';
+      document.getElementById('prepend-text').value = '';
       document.getElementById('append-text').value = '';
       document.getElementById('map-icon-color').value = '';
       document.getElementById('sound-select').value = '';
@@ -1569,12 +1596,14 @@
     var stepLabel = document.getElementById('wizard-step-label');
     var summaryEl = document.getElementById('wizard-summary');
 
-    var totalSteps = 8;
+    var totalSteps = 10;
     var currentStep = 1;
     var choices = {
       'class': '',
       experience: '',
-      notifications: [],
+      notifications: '',
+      colorprofile: '',
+      decoration: '',
       extras: [],
       rwbases: '',
       consumables: [],
@@ -1654,7 +1683,10 @@
         'all': 'All Classes', amazon: 'Amazon', sorceress: 'Sorceress', necromancer: 'Necromancer',
         paladin: 'Paladin', barbarian: 'Barbarian', druid: 'Druid', assassin: 'Assassin',
         'new': 'New to PD2', casual: 'Casual', experienced: 'Experienced', endgame: 'Endgame',
-        mapicons: 'Map Icons', sounds: 'Drop Sounds', bignotify: 'Big Notifications',
+        none: 'None', minimal: 'Minimal', standard: 'Standard', full: 'Full', max: 'Maximum',
+        'default': 'Default', fire: 'Fire', water: 'Water', earth: 'Earth', rainbow: 'Rainbow', clean: 'Clean',
+        arrows: 'Arrows', stars: 'Stars', diamonds: 'Diamonds', pipes: 'Pipes', exclaim: 'Exclaim',
+        circles: 'Circles', dots: 'Dots', crosses: 'Crosses',
         sockets: 'Socket Count', ilvl: 'Item Level', price: 'Vendor Price',
         crafting: 'Crafting Info', eth: 'Ethereal Tag',
         'all-rw': 'All Good Bases', 'eth-rw': 'Eth Bases Only', 'none-rw': 'None',
@@ -1670,7 +1702,9 @@
       var rows = [
         { l: 'Class', v: label('', choices['class']) || 'Not selected' },
         { l: 'Experience', v: label('', choices.experience) || 'Not selected' },
-        { l: 'Notifications', v: choices.notifications.length ? choices.notifications.map(function (x) { return label('', x); }).join(', ') : 'None' },
+        { l: 'Notifications', v: label('', choices.notifications) || 'None' },
+        { l: 'Color Theme', v: label('', choices.colorprofile) || 'Default' },
+        { l: 'Decoration', v: label('', choices.decoration) || 'Arrows' },
         { l: 'Extra Info', v: choices.extras.length ? choices.extras.map(function (x) { return label('', x); }).join(', ') : 'None' },
         { l: 'Runeword Bases', v: label('', choices.rwbases + '-rw') },
         { l: 'Hide Consumables', v: choices.consumables.length ? choices.consumables.map(function (x) { return label('', x); }).join(', ') : 'None' },
@@ -1691,9 +1725,60 @@
       var isMid = c.experience === 'experienced';
       var isCasual = c.experience === 'casual';
       var isNew = c.experience === 'new';
-      var wantMapIcons = c.notifications.indexOf('mapicons') !== -1;
-      var wantSounds = c.notifications.indexOf('sounds') !== -1;
-      var wantBigNotify = c.notifications.indexOf('bignotify') !== -1;
+      // Color profile
+      var profile = c.colorprofile || 'default';
+      var colorHR, colorMidRune, colorLowRune, colorUni, colorSet, colorRare, colorCraft;
+      if (profile === 'fire') {
+        colorHR = '%RED%'; colorMidRune = '%ORANGE%'; colorLowRune = '%ORANGE%';
+        colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
+      } else if (profile === 'water') {
+        colorHR = '%PURPLE%'; colorMidRune = '%BLUE%'; colorLowRune = '%TEAL%';
+        colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
+      } else if (profile === 'earth') {
+        colorHR = '%DARK_GREEN%'; colorMidRune = '%TAN%'; colorLowRune = '%TAN%';
+        colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
+      } else if (profile === 'rainbow') {
+        colorHR = '%RED%%ORANGE%%YELLOW%%GREEN%%BLUE%%PURPLE%'; colorMidRune = '%PURPLE%'; colorLowRune = '%ORANGE%';
+        colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
+      } else if (profile === 'clean') {
+        colorHR = '%ORANGE%'; colorMidRune = '%ORANGE%'; colorLowRune = '%ORANGE%';
+        colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
+      } else {
+        // default
+        colorHR = '%ORANGE%'; colorMidRune = '%ORANGE%'; colorLowRune = '%DARK_GREEN%';
+        colorUni = '%GOLD%'; colorSet = '%GREEN%'; colorRare = '%YELLOW%'; colorCraft = '%ORANGE%';
+      }
+
+      // Decoration style
+      var deco = c.decoration || 'arrows';
+      var decoHR_L, decoHR_R, decoMid_L, decoMid_R, decoLow_L, decoLow_R;
+      if (deco === 'stars') {
+        decoHR_L = '*** '; decoHR_R = ' ***'; decoMid_L = '** '; decoMid_R = ' **'; decoLow_L = '* '; decoLow_R = ' *';
+      } else if (deco === 'diamonds') {
+        decoHR_L = '<> <> <> '; decoHR_R = ' <> <> <>'; decoMid_L = '<> <> '; decoMid_R = ' <> <>'; decoLow_L = '<> '; decoLow_R = ' <>';
+      } else if (deco === 'pipes') {
+        decoHR_L = '|| '; decoHR_R = ' ||'; decoMid_L = '| '; decoMid_R = ' |'; decoLow_L = '| '; decoLow_R = ' |';
+      } else if (deco === 'exclaim') {
+        decoHR_L = '!! '; decoHR_R = ' !!'; decoMid_L = '! '; decoMid_R = ' !'; decoLow_L = '! '; decoLow_R = ' !';
+      } else if (deco === 'circles') {
+        decoHR_L = 'oOo '; decoHR_R = ' oOo'; decoMid_L = 'oO '; decoMid_R = ' Oo'; decoLow_L = 'o '; decoLow_R = ' o';
+      } else if (deco === 'dots') {
+        decoHR_L = '... '; decoHR_R = ' ...'; decoMid_L = '.. '; decoMid_R = ' ..'; decoLow_L = '. '; decoLow_R = ' .';
+      } else if (deco === 'crosses') {
+        decoHR_L = 'xXx '; decoHR_R = ' xXx'; decoMid_L = 'xX '; decoMid_R = ' Xx'; decoLow_L = 'x '; decoLow_R = ' x';
+      } else if (deco === 'none') {
+        decoHR_L = ''; decoHR_R = ''; decoMid_L = ''; decoMid_R = ''; decoLow_L = ''; decoLow_R = '';
+      } else {
+        // arrows (default)
+        decoHR_L = '>> '; decoHR_R = ' <<'; decoMid_L = '> '; decoMid_R = ' <'; decoLow_L = ''; decoLow_R = '';
+      }
+
+      // Notification levels: none < minimal < standard < full < max
+      var notifyLevel = c.notifications || 'none';
+      var wantDots = notifyLevel !== 'none'; // minimal+
+      var wantMapIcons = notifyLevel === 'standard' || notifyLevel === 'full' || notifyLevel === 'max';
+      var wantSounds = notifyLevel === 'full' || notifyLevel === 'max';
+      var wantBigNotify = notifyLevel === 'max';
       var wantSockets = c.extras.indexOf('sockets') !== -1;
       var wantIlvl = c.extras.indexOf('ilvl') !== -1;
       var wantPrice = c.extras.indexOf('price') !== -1;
@@ -1712,31 +1797,31 @@
       };
       var myClass = classMap[c['class']] || '';
 
-      // ---- Notification helpers ----
-      // High runes: border + loud sound
-      var hrNotify = (wantBigNotify ? '%BORDER-FF%' : wantMapIcons ? '%MAP-0A%' : '') + (wantSounds ? '%SOUNDID-4716%' : '');
-      // Mid-high runes: map icon + sound
-      var midNotify = (wantMapIcons ? '%MAP-0A%' : '') + (wantSounds ? '%SOUNDID-4715%' : '');
+      // ---- Notification helpers (escalating by level) ----
+      // High runes: border(max) > map(full/std) > dot(min) + sound(full+)
+      var hrNotify = (wantBigNotify ? '%BORDER-FF%' : wantMapIcons ? '%MAP-0A%' : wantDots ? '%DOT-0A%' : '') + (wantSounds ? '%SOUNDID-4716%' : '');
+      // Mid-high runes: map(std+) > dot(min) + sound(full+)
+      var midNotify = (wantMapIcons ? '%MAP-0A%' : wantDots ? '%DOT-0A%' : '') + (wantSounds ? '%SOUNDID-4715%' : '');
       // Mid runes: dot + optional sound
-      var midRuneDot = wantMapIcons ? '%DOT-0A%' : '';
+      var midRuneDot = wantDots ? '%DOT-0A%' : '';
       var midRuneNotify = midRuneDot + (wantSounds ? '%SOUNDID-4718%' : '');
-      // Low runes: small dot only
-      var lowRuneDot = wantMapIcons ? '%DOT-60%' : '';
-      // Unique notification
-      var uniNotify = (wantBigNotify ? '%BORDER-62%' : wantMapIcons ? '%MAP-62%' : '') + (wantSounds ? '%SOUNDID-4715%' : '');
+      // Low runes: small dot only at minimal+
+      var lowRuneDot = wantDots ? '%DOT-60%' : '';
+      // Unique notification: border(max) > map(std+) > dot(min)
+      var uniNotify = (wantBigNotify ? '%BORDER-62%' : wantMapIcons ? '%MAP-62%' : wantDots ? '%DOT-D3%' : '') + (wantSounds ? '%SOUNDID-4715%' : '');
       // Set notification
-      var setNotify = (wantBigNotify ? '%BORDER-84%' : wantMapIcons ? '%MAP-84%' : '') + (wantSounds ? '%SOUNDID-4715%' : '');
-      // Special PD2 items
-      var pd2Notify = wantMapIcons ? '%MAP-68%' : '';
-      var pd2BigNotify = (wantBigNotify ? '%BORDER-62%' : wantMapIcons ? '%MAP-62%' : '') + (wantSounds ? '%SOUNDID-4716%' : '');
+      var setNotify = (wantBigNotify ? '%BORDER-84%' : wantMapIcons ? '%MAP-84%' : wantDots ? '%DOT-7D%' : '') + (wantSounds ? '%SOUNDID-4715%' : '');
+      // Special PD2 items: map(std+) > dot(min)
+      var pd2Notify = wantMapIcons ? '%MAP-68%' : wantDots ? '%DOT-68%' : '';
+      var pd2BigNotify = (wantBigNotify ? '%BORDER-62%' : wantMapIcons ? '%MAP-62%' : wantDots ? '%DOT-62%' : '') + (wantSounds ? '%SOUNDID-4716%' : '');
       // Quest items
-      var questNotify = wantMapIcons ? '%MAP-58%' : '';
+      var questNotify = wantMapIcons ? '%MAP-58%' : wantDots ? '%DOT-58%' : '';
       // Charm notify
-      var charmNotify = wantMapIcons ? '%DOT-97%' : '';
+      var charmNotify = wantDots ? '%DOT-97%' : '';
       // Gem notify
-      var gemNotify = wantMapIcons ? '%DOT-5B%' : '';
-      // RW base notify
-      var rwNotify = wantMapIcons ? '%MAP-18%' : '';
+      var gemNotify = wantDots ? '%DOT-5B%' : '';
+      // RW base notify: map(std+) > dot(min)
+      var rwNotify = wantMapIcons ? '%MAP-18%' : wantDots ? '%DOT-18%' : '';
 
       // ---- Description builder ----
       var descParts = [];
@@ -1971,20 +2056,20 @@
 
       // Tier 1: High Runes (Lo #28 through Zod #33)
       lines.push('// --- High Runes (Lo - Zod) ---');
-      lines.push('ItemDisplay[RUNE=33]: %ORANGE%>> %RUNENAME% Rune << (#%RUNENUM%)' + hrNotify);
-      lines.push('ItemDisplay[RUNE=32]: %ORANGE%>> %RUNENAME% Rune << (#%RUNENUM%)' + hrNotify);
-      lines.push('ItemDisplay[RUNE=31]: %ORANGE%>> %RUNENAME% Rune << (#%RUNENUM%)' + hrNotify);
-      lines.push('ItemDisplay[RUNE=30]: %ORANGE%>> %RUNENAME% Rune << (#%RUNENUM%)' + hrNotify);
-      lines.push('ItemDisplay[RUNE=29]: %ORANGE%>> %RUNENAME% Rune << (#%RUNENUM%)' + hrNotify);
-      lines.push('ItemDisplay[RUNE=28]: %ORANGE%>> %RUNENAME% Rune << (#%RUNENUM%)' + hrNotify);
+      lines.push('ItemDisplay[RUNE=33]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify);
+      lines.push('ItemDisplay[RUNE=32]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify);
+      lines.push('ItemDisplay[RUNE=31]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify);
+      lines.push('ItemDisplay[RUNE=30]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify);
+      lines.push('ItemDisplay[RUNE=29]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify);
+      lines.push('ItemDisplay[RUNE=28]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify);
 
       // Tier 2: Mid-high Runes (Ist #24 through Ohm #27)
       lines.push('// --- Mid-High Runes (Ist - Ohm) ---');
-      lines.push('ItemDisplay[RUNE>23 RUNE<28]: %ORANGE%> %RUNENAME% Rune < (#%RUNENUM%)' + midNotify);
+      lines.push('ItemDisplay[RUNE>23 RUNE<28]: ' + colorMidRune + decoMid_L + '%RUNENAME% Rune' + decoMid_R + ' (#%RUNENUM%)' + midNotify);
 
       // Tier 3: Mid Runes (Lem #20 through Mal #23)
       lines.push('// --- Mid Runes (Lem - Mal) ---');
-      lines.push('ItemDisplay[RUNE>19 RUNE<24]: %ORANGE%%RUNENAME% Rune (#%RUNENUM%)' + midRuneNotify);
+      lines.push('ItemDisplay[RUNE>19 RUNE<24]: ' + colorMidRune + decoLow_L + '%RUNENAME% Rune' + decoLow_R + ' (#%RUNENUM%)' + midRuneNotify);
 
       // Rune stacking display (from Wolfie/HiimFilter)
       lines.push('// --- Rune Stack Display ---');
@@ -1993,7 +2078,7 @@
 
       // Tier 4: Low Runes (El #1 through Fal #19) — FILTLVL-gated
       lines.push('// --- Low Runes (El - Fal) — hidden at higher FILTLVL ---');
-      lines.push('ItemDisplay[RUNE>14 RUNE<20]: %ORANGE%%RUNENAME% Rune (#%RUNENUM%)' + lowRuneDot);
+      lines.push('ItemDisplay[RUNE>14 RUNE<20]: ' + colorLowRune + '%RUNENAME% Rune (#%RUNENUM%)' + lowRuneDot);
       lines.push('ItemDisplay[RUNE>10 RUNE<15 FILTLVL<3]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
       lines.push('ItemDisplay[RUNE>0 RUNE<11 FILTLVL<2]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
       lines.push('ItemDisplay[RUNE>0 RUNE<20 FILTLVL>2]:');
