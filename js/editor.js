@@ -2410,19 +2410,42 @@
           lines.push('ItemDisplay[NMAG !INF !RW ETH (SOCK=0 OR SOCK=3) 7xf (SK263>2 OR SK252>2)]: %GOLD%Chaos Base %GRAY%ETH %WHITE%%NAME%' + rwNotify);
         }
 
-        // GG Skill-Checked Bases (from HiimFilter — runewords that need specific staffmods)
+        // GG Skill-Checked Bases (from HiimFilter)
+        // Perfect (all skills) = GG, partial (key skill only) = Good
         lines.push('// --- GG Skill-Checked Bases ---');
-        // Dominion wand: +3 Fire Golem + Bone Armor + Lower Res/Revive
+
+        // Chaos claw — perfect: +3 Venom AND +3 Weapon Block; good: either one
+        lines.push('// Chaos: Feral Claws (7xf) — Venom (SK263), Weapon Block (SK252)');
+        if (showEthBases) {
+          lines.push('ItemDisplay[7xf ETH !INF NMAG !RW SK263>2 SK252>2 (SOCK=0 OR SOCK=3)]: %GOLD%GG Chaos %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+          lines.push('ItemDisplay[7xf ETH !INF NMAG !RW (SK263>2 OR SK252>2) (SOCK=0 OR SOCK=3)]: %WHITE%Chaos Base %GRAY%ETH %WHITE%%NAME%' + (wantMapIcons ? '%DOT-0E%' : ''));
+        }
+        lines.push('ItemDisplay[7xf !INF NMAG !RW (SK263>2 OR SK252>2 OR SK267>2 OR SK266>2) (SOCK=0 OR SOCK=3)]: %WHITE%Chaos Base %NAME%' + (wantMapIcons ? '%DOT-0E%' : ''));
+
+        // Dominion wand — perfect: +3 Fire Golem + Bone Armor + LR/Revive; good: +3 Lower Res OR +3 Revive
+        lines.push('// Dominion: Wands — Lower Res (SK91), Revive (SK95), Fire Golem (SK94), Bone Armor (SK68)');
         lines.push('ItemDisplay[WAND !(wnd OR ywn OR 9wn) SK94>2 SK68>0 (SK91>0 OR SK95>0) !SOCK=1 NMAG !RW]: %GOLD%GG Dominion %WHITE%%NAME%' + rwNotify);
-        lines.push('ItemDisplay[WAND !(wnd OR ywn OR 9wn) SK85>2 SK68>0 SK95>0 !SOCK=1 NMAG !RW]: %GOLD%GG Dominion %WHITE%%NAME%' + rwNotify);
-        // Infinity staff: +3 Nova/ChrgBolt/ChainLight + LightMastery/Teleport
+        lines.push('ItemDisplay[WAND !(wnd OR ywn OR 9wn) (SK91>2 OR SK95>2 OR SK94>2) !SOCK=1 NMAG !RW]: %WHITE%Dominion Base %NAME%' + (wantMapIcons ? '%DOT-0E%' : ''));
+
+        // Infinity staff — perfect: +3 light skill + mastery; good: any +3 light skill
+        lines.push('// Infinity: Elite Staves — Nova (SK48), ChrgBolt (SK38), ChainLight (SK53), LightMast (SK63)');
         lines.push('ItemDisplay[(6ls OR 6cs OR 6bs OR 6ws) (SK48>2 OR SK38>2 OR SK53>2) (SK63>0 OR SK54>0) NMAG !RW (SOCK=0 OR SOCK=4)]: %GOLD%GG Infinity %WHITE%%NAME%' + rwNotify);
-        // CTA staff: Enchant + Energy Shield/Fireball + Thunder Storm
+        lines.push('ItemDisplay[(6ls OR 6cs OR 6bs OR 6ws) (SK48>2 OR SK38>2 OR SK53>2 OR SK63>2) NMAG !RW (SOCK=0 OR SOCK=4)]: %WHITE%Infinity Base %NAME%' + (wantMapIcons ? '%DOT-0E%' : ''));
+
+        // CTA staff — perfect: Enchant + ES + Thunder Storm; good: any 2 of 3
+        lines.push('// CTA: War Staves — Enchant (SK58), Energy Shield (SK50), Thunder Storm (SK57)');
         lines.push('ItemDisplay[(wst OR 8ws OR 6ws) SK58>0 (SK50>0 OR SK60>0) SK57>0 !INF NMAG !RW SOCK=5]: %GOLD%GG CTA %WHITE%%NAME%' + rwNotify);
-        // Memory staff: +3 Thunder Storm + +3 Lightning Mastery + ES/Fireball
+        lines.push('ItemDisplay[(wst OR 8ws OR 6ws) (SK58>0 OR SK57>0) (SK50>0 OR SK60>0) !INF NMAG !RW SOCK=5]: %WHITE%CTA Base %NAME%' + (wantMapIcons ? '%DOT-0E%' : ''));
+
+        // Memory staff — perfect: +3 TStorm + +3 LightMast + ES; good: +3 TStorm + +3 LightMast
+        lines.push('// Memory: Staves — Thunder Storm (SK57), Lightning Mastery (SK63), Energy Shield (SK50)');
         lines.push('ItemDisplay[STAFF SK57>2 SK63>2 (SK50>0 OR SK60>0) !INF NMAG !RW SOCK=4]: %GOLD%GG Memory %WHITE%%NAME%' + rwNotify);
-        // Obsession staff: +3 Meteor/Fire Mastery + +3 Warmth
+        lines.push('ItemDisplay[STAFF SK57>2 SK63>2 !INF NMAG !RW SOCK=4]: %WHITE%Memory Base %NAME%' + (wantMapIcons ? '%DOT-0E%' : ''));
+
+        // Obsession staff — perfect: +3 Meteor/FireMast + +3 Warmth; good: any +3
+        lines.push('// Obsession: Archon Staff (6ws) — Meteor (SK56), Fire Mastery (SK62), Warmth (SK61)');
         lines.push('ItemDisplay[6ws (SK56>2 OR SK62>2) SK61>2 NMAG !RW (SOCK=0 OR SOCK=6)]: %GOLD%GG Obsession %WHITE%%NAME%' + rwNotify);
+        lines.push('ItemDisplay[6ws (SK56>2 OR SK62>2 OR SK61>2) NMAG !RW (SOCK=0 OR SOCK=6)]: %WHITE%Obsession Base %NAME%' + (wantMapIcons ? '%DOT-0E%' : ''));
         lines.push('');
 
         // Phase Blade (7cr) — always show, cannot be eth, fixed speed
