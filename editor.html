@@ -549,6 +549,39 @@
                 </div>
                 <button class="btn btn-small btn-add-value" id="btn-add-value">+ Add Condition</button>
 
+                <hr class="builder-divider">
+                <label class="builder-label">Skill Conditions (max 3)</label>
+                <div class="skill-conditions" id="skill-conditions">
+                  <div class="skill-row">
+                    <select class="skill-class" aria-label="Skill class">
+                      <option value="">-- Class --</option>
+                      <option value="amazon">Amazon</option>
+                      <option value="sorceress">Sorceress</option>
+                      <option value="necromancer">Necromancer</option>
+                      <option value="paladin">Paladin</option>
+                      <option value="barbarian">Barbarian</option>
+                      <option value="druid">Druid</option>
+                      <option value="assassin">Assassin</option>
+                    </select>
+                    <select class="skill-name" aria-label="Skill name" disabled>
+                      <option value="">-- Skill --</option>
+                    </select>
+                    <select class="skill-op" aria-label="Skill operator">
+                      <option value="=">=</option>
+                      <option value=">">&gt; (at least)</option>
+                      <option value="<">&lt;</option>
+                    </select>
+                    <select class="skill-level" aria-label="Skill level">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                    </select>
+                    <button class="btn-icon btn-remove-skill" title="Remove">&times;</button>
+                  </div>
+                </div>
+                <button class="btn btn-small" id="btn-add-skill">+ Add Skill</button>
+
+                <hr class="builder-divider">
                 <label class="builder-label">Negate (NOT)</label>
                 <div class="chip-group" data-field="negate" data-multi="true">
                   <button class="chip" data-value="!ETH">!ETH</button>

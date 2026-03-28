@@ -537,6 +537,97 @@
   }
 
   // ==========================================
+  // Builder: skill conditions
+  // ==========================================
+  var SKILL_DATA = {
+    amazon: [['SK6','Magic Arrow'],['SK7','Fire Arrow'],['SK8','Inner Sight'],['SK9','Critical Strike'],['SK10','Jab'],['SK11','Cold Arrow'],['SK12','Multiple Shot'],['SK13','Dodge'],['SK14','Power Strike'],['SK15','Poison Javelin'],['SK16','Exploding Arrow'],['SK17','Slow Movement'],['SK18','Avoid'],['SK19','Jav/Spear Mastery'],['SK20','Lightning Bolt'],['SK21','Ice Arrow'],['SK22','Guided Arrow'],['SK23','Penetrate'],['SK24','Charged Strike'],['SK25','Plague Javelin'],['SK26','Strafe'],['SK27','Immolation Arrow'],['SK28','Decoy'],['SK29','Evade'],['SK30','Fend'],['SK31','Freezing Arrow'],['SK32','Valkyrie'],['SK33','Pierce'],['SK34','Lightning Strike'],['SK35','Lightning Fury']],
+    sorceress: [['SK36','Fire Bolt'],['SK37','Warmth'],['SK38','Charged Bolt'],['SK39','Ice Bolt'],['SK40','Cold Enchant'],['SK41','Inferno'],['SK42','Static Field'],['SK43','Telekinesis'],['SK44','Frost Nova'],['SK45','Ice Blast'],['SK46','Blaze'],['SK47','Fire Ball'],['SK48','Nova'],['SK49','Lightning'],['SK50','Shiver Armor'],['SK51','Fire Wall'],['SK52','Enchant Fire'],['SK53','Chain Lightning'],['SK54','Teleport'],['SK55','Glacial Spike'],['SK56','Meteor'],['SK57','Thunder Storm'],['SK58','Energy Shield'],['SK59','Blizzard'],['SK60','Chilling Armor'],['SK61','Fire Mastery'],['SK62','Hydra'],['SK63','Lightning Mastery'],['SK64','Frozen Orb'],['SK65','Cold Mastery'],['SK369','Ice Barrage'],['SK376','Combustion'],['SK383','Lesser Hydra']],
+    necromancer: [['SK66','Amplify Damage'],['SK67','Teeth'],['SK68','Bone Armor'],['SK69','Skeleton Mastery'],['SK70','Raise Skeleton'],['SK71','Dim Vision'],['SK72','Weaken'],['SK73','Poison Strike'],['SK74','Corpse Explosion'],['SK75','Clay Golem'],['SK76','Iron Maiden'],['SK77','Terror'],['SK78','Bone Wall'],['SK79','Golem Mastery'],['SK80','Skeletal Mage'],['SK81','Confuse'],['SK82','Life Tap'],['SK83','Desecrate'],['SK84','Bone Spear'],['SK85','Blood Golem'],['SK86','Attract'],['SK87','Decrepify'],['SK88','Bone Prison'],['SK89','Skeleton Archer'],['SK90','Iron Golem'],['SK91','Lower Resist'],['SK92','Poison Nova'],['SK93','Bone Spirit'],['SK94','Fire Golem'],['SK95','Revive'],['SK367','Blood Warp'],['SK374','Curse Mastery'],['SK381','Dark Pact']],
+    paladin: [['SK96','Sacrifice'],['SK97','Smite'],['SK98','Might'],['SK99','Prayer'],['SK100','Resist Fire'],['SK101','Holy Bolt'],['SK102','Holy Fire'],['SK103','Thorns'],['SK104','Defiance'],['SK105','Resist Cold'],['SK106','Zeal'],['SK107','Charge'],['SK108','Blessed Aim'],['SK109','Cleansing'],['SK110','Resist Lightning'],['SK111','Vengeance'],['SK112','Blessed Hammer'],['SK113','Concentration'],['SK114','Holy Freeze'],['SK115','Vigor'],['SK116','Holy Sword'],['SK117','Holy Shield'],['SK118','Holy Shock'],['SK119','Sanctuary'],['SK120','Meditation'],['SK121','Fist of Heavens'],['SK122','Fanaticism'],['SK123','Conviction'],['SK124','Redemption'],['SK125','Salvation'],['SK364','Holy Nova'],['SK371','Holy Light'],['SK378','Joust']],
+    barbarian: [['SK126','Bash'],['SK127','Sword Mastery'],['SK128','General Mastery'],['SK129','Mace Mastery'],['SK130','Howl'],['SK131','Find Potion'],['SK132','Leap'],['SK133','Double Swing'],['SK134','Polearm Mastery'],['SK135','Throwing Mastery'],['SK136','Spear Mastery'],['SK137','Taunt'],['SK138','Shout'],['SK139','Stun'],['SK140','Double Throw'],['SK141','Combat Reflexes'],['SK142','Find Item'],['SK143','Leap Attack'],['SK144','Concentrate'],['SK145','Iron Skin'],['SK146','Battle Cry'],['SK147','Frenzy'],['SK148','Increased Speed'],['SK149','Battle Orders'],['SK150','Grim Ward'],['SK151','Whirlwind'],['SK152','Berserk'],['SK153','Natural Resistance'],['SK154','War Cry'],['SK155','Battle Command'],['SK368','Deep Wounds']],
+    druid: [['SK221','Raven'],['SK222','Poison Creeper'],['SK223','Werewolf'],['SK224','Lycanthropy'],['SK225','Firestorm'],['SK226','Oak Sage'],['SK227','Spirit Wolf'],['SK228','Werebear'],['SK229','Molten Boulder'],['SK230','Arctic Blast'],['SK231','Carrion Vine'],['SK232','Feral Rage'],['SK233','Maul'],['SK234','Fissure'],['SK235','Cyclone Armor'],['SK236','Heart of Wolverine'],['SK237','Dire Wolf'],['SK238','Rabies'],['SK239','Fire Claws'],['SK240','Twister'],['SK241','Solar Creeper'],['SK242','Hunger'],['SK243','Shock Wave'],['SK244','Volcano'],['SK245','Tornado'],['SK246','Spirit of Barbs'],['SK247','Grizzly'],['SK248','Fury'],['SK249','Armageddon'],['SK250','Hurricane'],['SK370','Gust']],
+    assassin: [['SK251','Fire Blast'],['SK252','Claw Mastery'],['SK253','Psychic Hammer'],['SK254','Tiger Strike'],['SK255','Dragon Talon'],['SK256','Shock Web'],['SK257','Blade Sentinel'],['SK258','Burst of Speed'],['SK259','Fists of Fire'],['SK260','Dragon Claw'],['SK261','Charged Bolt Sentry'],['SK262','Wake of Fire'],['SK263','Weapon Block'],['SK264','Cloak of Shadows'],['SK265','Cobra Strike'],['SK266','Blade Fury'],['SK267','Fade'],['SK268','Shadow Warrior'],['SK269','Claws of Thunder'],['SK270','Dragon Tail'],['SK271','Chain Lightning Sentry'],['SK272','Wake of Inferno'],['SK273','Mind Blast'],['SK274','Blades of Ice'],['SK275','Dragon Flight'],['SK276','Death Sentry'],['SK277','Blade Shield'],['SK278','Venom'],['SK279','Shadow Master'],['SK280','Phoenix Strike'],['SK366','Lightning Sentry']]
+  };
+
+  function initSkillConditions() {
+    var container = document.getElementById('skill-conditions');
+    var addBtn = document.getElementById('btn-add-skill');
+    var MAX_SKILLS = 3;
+
+    function populateSkills(row) {
+      var classSelect = row.querySelector('.skill-class');
+      var skillSelect = row.querySelector('.skill-name');
+      classSelect.addEventListener('change', function () {
+        var cls = classSelect.value;
+        skillSelect.innerHTML = '<option value="">-- Skill --</option>';
+        if (cls && SKILL_DATA[cls]) {
+          SKILL_DATA[cls].forEach(function (sk) {
+            var opt = document.createElement('option');
+            opt.value = sk[0];
+            opt.textContent = sk[1];
+            skillSelect.appendChild(opt);
+          });
+          skillSelect.disabled = false;
+        } else {
+          skillSelect.disabled = true;
+        }
+        updateGeneratedRule();
+      });
+      skillSelect.addEventListener('change', function () { updateGeneratedRule(); });
+      row.querySelector('.skill-op').addEventListener('change', function () { updateGeneratedRule(); });
+      row.querySelector('.skill-level').addEventListener('change', function () { updateGeneratedRule(); });
+    }
+
+    function createRow() {
+      var row = document.createElement('div');
+      row.className = 'skill-row';
+      row.innerHTML =
+        '<select class="skill-class" aria-label="Skill class">' +
+        '<option value="">-- Class --</option>' +
+        '<option value="amazon">Amazon</option><option value="sorceress">Sorceress</option>' +
+        '<option value="necromancer">Necromancer</option><option value="paladin">Paladin</option>' +
+        '<option value="barbarian">Barbarian</option><option value="druid">Druid</option>' +
+        '<option value="assassin">Assassin</option></select>' +
+        '<select class="skill-name" aria-label="Skill name" disabled><option value="">-- Skill --</option></select>' +
+        '<select class="skill-op" aria-label="Skill operator"><option value="=">=</option><option value=">">&gt; (at least)</option><option value="<">&lt;</option></select>' +
+        '<select class="skill-level" aria-label="Skill level"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>' +
+        '<button class="btn-icon btn-remove-skill" title="Remove">&times;</button>';
+      return row;
+    }
+
+    // Wire up existing first row
+    var firstRow = container.querySelector('.skill-row');
+    populateSkills(firstRow);
+    firstRow.querySelector('.btn-remove-skill').addEventListener('click', function () {
+      var rows = container.querySelectorAll('.skill-row');
+      if (rows.length > 1) {
+        firstRow.remove();
+      } else {
+        firstRow.querySelector('.skill-class').value = '';
+        firstRow.querySelector('.skill-name').innerHTML = '<option value="">-- Skill --</option>';
+        firstRow.querySelector('.skill-name').disabled = true;
+        firstRow.querySelector('.skill-op').value = '=';
+        firstRow.querySelector('.skill-level').value = '1';
+      }
+      updateGeneratedRule();
+    });
+
+    addBtn.addEventListener('click', function () {
+      if (container.querySelectorAll('.skill-row').length >= MAX_SKILLS) return;
+      var row = createRow();
+      container.appendChild(row);
+      populateSkills(row);
+      row.querySelector('.btn-remove-skill').addEventListener('click', function () {
+        row.remove();
+        updateGeneratedRule();
+      });
+      if (container.querySelectorAll('.skill-row').length >= MAX_SKILLS) {
+        addBtn.style.display = 'none';
+      }
+    });
+  }
+
+  // ==========================================
   // Builder: text inputs
   // ==========================================
   function initTextInputs() {
@@ -611,6 +702,19 @@
         conditions.push(code + op + val);
       }
     });
+
+    // Skill conditions
+    var skContainer = document.getElementById('skill-conditions');
+    if (skContainer) {
+      skContainer.querySelectorAll('.skill-row').forEach(function (row) {
+        var code = row.querySelector('.skill-name').value;
+        var op = row.querySelector('.skill-op').value;
+        var level = row.querySelector('.skill-level').value;
+        if (code && level) {
+          conditions.push(code + op + level);
+        }
+      });
+    }
 
     // Build conditions string
     var condStr = conditions.join(' ');
@@ -1807,6 +1911,22 @@
         rows[0].querySelector('.value-code').value = '';
         rows[0].querySelector('.value-val').value = '';
       }
+
+      // Reset skill conditions
+      var skContainer = document.getElementById('skill-conditions');
+      var skRows = skContainer.querySelectorAll('.skill-row');
+      for (var si = skRows.length - 1; si > 0; si--) {
+        skRows[si].remove();
+      }
+      if (skRows[0]) {
+        skRows[0].querySelector('.skill-class').value = '';
+        skRows[0].querySelector('.skill-name').innerHTML = '<option value="">-- Skill --</option>';
+        skRows[0].querySelector('.skill-name').disabled = true;
+        skRows[0].querySelector('.skill-op').value = '=';
+        skRows[0].querySelector('.skill-level').value = '1';
+      }
+      var addSkillBtn = document.getElementById('btn-add-skill');
+      if (addSkillBtn) addSkillBtn.style.display = '';
 
       generatedCode.textContent = 'Use the Rule Builder to generate a rule';
       generatedCode.classList.add('empty-state');
@@ -3870,6 +3990,7 @@
     initChips();
     initPanelToggles();
     initValueConditions();
+    initSkillConditions();
     initTextInputs();
     initImportExport();
     initTemplates();

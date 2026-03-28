@@ -277,13 +277,35 @@
   font-family: var(--font-mono);
 }
 
-.btn-add-value {
+.btn-add-value, #btn-add-skill {
   margin-top: 0.35rem;
 }
 
-.btn-remove-value {
+.btn-remove-value, .btn-remove-skill {
   flex-shrink: 0;
 }
+
+.skill-row {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.skill-row select {
+  padding: 0.3rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-family: var(--font-body);
+}
+
+.skill-class { flex: 0 0 5.5rem; }
+.skill-name { flex: 1; min-width: 0; }
+.skill-op { flex: 0 0 4.5rem; }
+.skill-level { flex: 0 0 2.5rem; }
 
 /* Builder inputs */
 .builder-input, .builder-select {
