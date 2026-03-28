@@ -1028,14 +1028,28 @@
     return escapeForHtml(line);
   }
 
+  var hlCache = [];
   function highlightCode() {
     var text = codeEditor.value;
     var lines = text.split('\n');
-    var html = lines.map(highlightLine).join('\n');
-    highlightEl.innerHTML = html + '\n';
-    // Sync scroll
-    highlightEl.scrollTop = codeEditor.scrollTop;
-    highlightEl.scrollLeft = codeEditor.scrollLeft;
+    var changed = false;
+
+    // Only re-highlight lines that changed
+    if (lines.length !== hlCache.length) {
+      hlCache = lines.map(function (l) { return { src: l, html: highlightLine(l) }; });
+      changed = true;
+    } else {
+      for (var i = 0; i < lines.length; i++) {
+        if (hlCache[i].src !== lines[i]) {
+          hlCache[i] = { src: lines[i], html: highlightLine(lines[i]) };
+          changed = true;
+        }
+      }
+    }
+
+    if (changed) {
+      highlightEl.innerHTML = hlCache.map(function (c) { return c.html; }).join('\n') + '\n';
+    }
   }
 
   function syncScroll() {
@@ -4482,13 +4496,17 @@
     initAuthorImport();
 
     // Code editor events
-    var inputTimer = null;
+    var saveTimer = null;
     codeEditor.addEventListener('input', function () {
-      clearTimeout(inputTimer);
-      inputTimer = setTimeout(function () {
+      // Highlight must run immediately so typed characters are visible
+      if (typeof highlightCode === 'function') highlightCode();
+
+      // Debounce everything else (stats, resize, save)
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(function () {
         updateLineNumbers();
         saveToStorage();
-      }, 80);
+      }, 150);
     });
     var editorWrap = document.querySelector('.code-editor-wrap');
     editorWrap.addEventListener('scroll', syncScroll);
