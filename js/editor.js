@@ -4482,15 +4482,13 @@
     initAuthorImport();
 
     // Code editor events
-    function autoResizeEditor() {
-      codeEditor.style.height = 'auto';
-      codeEditor.style.height = codeEditor.scrollHeight + 'px';
-    }
-
+    var inputTimer = null;
     codeEditor.addEventListener('input', function () {
-      updateLineNumbers();
-      autoResizeEditor();
-      saveToStorage();
+      clearTimeout(inputTimer);
+      inputTimer = setTimeout(function () {
+        updateLineNumbers();
+        saveToStorage();
+      }, 80);
     });
     var editorWrap = document.querySelector('.code-editor-wrap');
     editorWrap.addEventListener('scroll', syncScroll);
