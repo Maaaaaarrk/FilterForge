@@ -937,6 +937,54 @@
                 <span class="grail-progress" id="grail-progress">0 / 0 found</span>
               </div>
               <input type="text" class="grail-search" id="grail-search" placeholder="Search uniques..." aria-label="Search uniques">
+
+              <details class="grail-style-details">
+                <summary>Customize Display</summary>
+                <div class="grail-style-options">
+                  <div class="grail-style-row">
+                    <label>Color</label>
+                    <select id="grail-color" aria-label="Grail highlight color">
+                      <option value="%PURPLE%" selected>Purple</option>
+                      <option value="%RED%">Red</option>
+                      <option value="%ORANGE%">Orange</option>
+                      <option value="%YELLOW%">Yellow</option>
+                      <option value="%GREEN%">Green</option>
+                      <option value="%BLUE%">Blue</option>
+                      <option value="%GOLD%">Gold</option>
+                      <option value="%WHITE%">White</option>
+                      <option value="%TEAL%">Teal</option>
+                    </select>
+                  </div>
+                  <div class="grail-style-row">
+                    <label>Prefix</label>
+                    <input type="text" id="grail-prefix" value="** GRAIL: " placeholder="e.g. ** GRAIL: " aria-label="Text before item name">
+                  </div>
+                  <div class="grail-style-row">
+                    <label>Suffix</label>
+                    <input type="text" id="grail-suffix" value=" **" placeholder="e.g.  **" aria-label="Text after item name">
+                  </div>
+                  <div class="grail-style-row">
+                    <label>Notification</label>
+                    <select id="grail-notify" aria-label="Grail notification type">
+                      <option value="%BORDER-05%" selected>Border (large)</option>
+                      <option value="%MAP-05%">Map icon (medium)</option>
+                      <option value="%DOT-05%">Dot (small)</option>
+                      <option value="">None</option>
+                    </select>
+                  </div>
+                  <div class="grail-style-row">
+                    <label>Sound</label>
+                    <select id="grail-sound" aria-label="Grail drop sound">
+                      <option value="" selected>None</option>
+                      <option value="%SOUNDID-4716%">4716 — Mirror of Kalandra</option>
+                      <option value="%SOUNDID-4715%">4715 — Divine Orb</option>
+                      <option value="%SOUNDID-4719%">4719 — Chaos Orb</option>
+                      <option value="%SOUNDID-4714%">4714 — Exalted Orb</option>
+                    </select>
+                  </div>
+                  <div class="grail-style-preview" id="grail-style-preview"></div>
+                </div>
+              </details>
             </div>
             <div class="grail-list" id="grail-list"></div>
           </div>

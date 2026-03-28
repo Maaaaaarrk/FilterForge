@@ -1384,7 +1384,22 @@
       }
     });
 
+    function getGrailStyle() {
+      return {
+        color: document.getElementById('grail-color').value,
+        prefix: document.getElementById('grail-prefix').value,
+        suffix: document.getElementById('grail-suffix').value,
+        notify: document.getElementById('grail-notify').value,
+        sound: document.getElementById('grail-sound').value
+      };
+    }
+
+    function buildGrailLine(itemName, itemCode, style) {
+      return 'ItemDisplay[UNI !ID ' + itemCode + ']: ' + style.color + style.prefix + itemName + style.suffix + style.notify + style.sound;
+    }
+
     function buildGrailLines() {
+      var style = getGrailStyle();
       var lines = [];
       lines.push('// ============================================================');
       lines.push('// HOLY GRAIL — Highlight unfound uniques');
@@ -1393,7 +1408,7 @@
         GRAIL_DATA[category].forEach(function (item) {
           var key = category + ':' + item.name;
           if (!found[key]) {
-            lines.push('ItemDisplay[UNI !ID ' + item.code + ']: %PURPLE%** GRAIL: ' + item.name + ' **%BORDER-05%');
+            lines.push(buildGrailLine(item.name, item.code, style));
           }
         });
       });
@@ -1401,6 +1416,18 @@
       lines.push('// END HOLY GRAIL');
       lines.push('// ============================================================');
       return lines;
+    }
+
+    function updateGrailPreview() {
+      var style = getGrailStyle();
+      var example = buildGrailLine('Harlequin Crest', 'uap', style);
+      var previewEl = document.getElementById('grail-style-preview');
+      // Render colored preview
+      var colorMap = {'%PURPLE%':'#a000c8','%RED%':'#ff4040','%ORANGE%':'#ff8000','%YELLOW%':'#ffff40','%GREEN%':'#00c000','%BLUE%':'#6464ff','%GOLD%':'#c8a040','%WHITE%':'#ffffff','%TEAL%':'#008080'};
+      var displayColor = colorMap[style.color] || '#a000c8';
+      var displayText = style.prefix + 'Harlequin Crest' + style.suffix;
+      previewEl.innerHTML = '<span style="color:' + displayColor + '">' + displayText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
+      previewEl.title = example;
     }
 
     function removeGrailSection(code) {
@@ -1459,7 +1486,14 @@
       saveToStorage();
     });
 
+    // Wire style options to live preview
+    ['grail-color','grail-prefix','grail-suffix','grail-notify','grail-sound'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', updateGrailPreview);
+    });
+
     renderGrail('');
+    updateGrailPreview();
   }
 
   function initTabs() {
