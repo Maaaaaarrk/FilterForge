@@ -313,7 +313,7 @@
     'base-eth-ap': { code: 'utp', name: 'Archon Plate', flags: ['NMAG', 'ELT', 'ETH', 'SUP', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 524, SOCKETS: 4, ED: 15, RUNE: 0, GOLD: 0, GEM: 0 } },
     'base-monarch-4': { code: 'uit', name: 'Monarch', flags: ['NMAG', 'ELT', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 72, DEF: 133, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
     'base-pb-5': { code: '7cr', name: 'Phase Blade', flags: ['NMAG', 'ELT', 'SWORD', 'WEAPON', '1H'], values: { ILVL: 73, SOCKETS: 5, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-eth-thresh': { code: '7s7', name: 'Balrog Spear', flags: ['NMAG', 'ELT', 'ETH', 'POLEARM', 'WEAPON', '2H'], values: { ILVL: 85, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'base-eth-thresh': { code: '7s7', name: 'Thresher', flags: ['NMAG', 'ELT', 'ETH', 'POLEARM', 'WEAPON', '2H'], values: { ILVL: 85, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
     'base-eth-zerker': { code: '7wa', name: 'Berserker Axe', flags: ['NMAG', 'ELT', 'ETH', 'AXE', 'WEAPON', '1H'], values: { ILVL: 85, SOCKETS: 5, RUNE: 0, GOLD: 0, GEM: 0 } },
     'base-eth-cb': { code: '7gd', name: 'Colossus Blade', flags: ['NMAG', 'ELT', 'ETH', 'SWORD', 'WEAPON', '2H'], values: { ILVL: 85, SOCKETS: 6, RUNE: 0, GOLD: 0, GEM: 0 } },
     'base-diadem-0': { code: 'ci3', name: 'Diadem', flags: ['NMAG', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, SOCKETS: 0, MAXSOCKETS: 3, RUNE: 0, GOLD: 0, GEM: 0 } },
