@@ -419,7 +419,6 @@
   flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 6px;
-  overflow: hidden;
 }
 
 /* Tabs */
@@ -469,15 +468,14 @@
 
 /* Code editor */
 .code-editor-wrap {
-  flex: 1;
-  overflow: visible;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: visible;
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
 }
 
 .line-numbers {
-  padding: 0 0.5rem;
+  padding: 0.75rem 0.5rem;
   background: rgba(0, 0, 0, 0.2);
   color: var(--text-secondary);
   font-family: var(--font-mono);
@@ -486,13 +484,15 @@
   text-align: right;
   user-select: none;
   min-width: 3rem;
+  flex-shrink: 0;
   border-right: 1px solid var(--border);
-  overflow: hidden;
   white-space: pre;
 }
 
 .code-editor-container {
   position: relative;
+  flex: 1;
+  min-width: 0;
 }
 
 .code-highlight {
@@ -524,9 +524,8 @@
 .code-highlight .hl-warn { text-decoration: wavy underline var(--warning); text-underline-offset: 3px; }
 
 .code-editor {
-  position: relative;
+  display: block;
   width: 100%;
-  min-height: 100%;
   padding: 0.75rem;
   background: transparent;
   color: transparent;
@@ -539,9 +538,8 @@
   resize: none;
   tab-size: 4;
   white-space: pre;
-  overflow-wrap: normal;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
+  position: relative;
   z-index: 1;
 }
 
