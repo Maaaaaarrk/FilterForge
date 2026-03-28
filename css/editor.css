@@ -470,12 +470,11 @@
 /* Code editor */
 .code-editor-wrap {
   flex: 1;
-  display: flex;
-  align-items: flex-start;
-  overflow-x: auto;
-  overflow-y: auto;
+  overflow: auto;
   max-height: calc(100vh - 120px);
   position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
 }
 
 .line-numbers {
@@ -491,17 +490,10 @@
   border-right: 1px solid var(--border);
   overflow: hidden;
   white-space: pre;
-  position: sticky;
-  left: 0;
-  top: 0;
-  align-self: stretch;
-  z-index: 2;
 }
 
 .code-editor-container {
-  flex: 0 0 auto;
   position: relative;
-  min-width: 0;
   min-height: 400px;
 }
 
