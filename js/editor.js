@@ -856,6 +856,7 @@
   // ==========================================
   var cachedLineCount = 0;
   var statsTimer = null;
+  var highlightTimer = null;
 
   // Compute line height once (in px) for virtual line number rendering
   var lineHeightPx = 0;
@@ -891,8 +892,15 @@
       }, 500);
     }
 
-    // Update syntax highlighting
-    if (typeof highlightCode === 'function') highlightCode();
+    // Update syntax highlighting (debounced for large filters)
+    clearTimeout(highlightTimer);
+    if (typeof highlightCode === 'function') {
+      if (count < 500) {
+        highlightCode();
+      } else {
+        highlightTimer = setTimeout(highlightCode, 150);
+      }
+    }
 
     // Auto-resize textarea to content
     codeEditor.style.height = 'auto';
