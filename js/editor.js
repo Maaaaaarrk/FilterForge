@@ -1568,8 +1568,15 @@
     // Remove descriptions {} for inline display
     text = text.replace(/\{[^}]*\}/g, '');
 
-    // Convert colors to spans (default D2 text color is orange)
-    var currentColor = '#ff8000';
+    // Convert colors to spans — start with item's rarity color
+    var rarityColor = '#ff8000'; // default orange
+    if (item.flags.indexOf('UNI') !== -1) rarityColor = '#c8a040';
+    else if (item.flags.indexOf('SET') !== -1) rarityColor = '#00c000';
+    else if (item.flags.indexOf('RARE') !== -1) rarityColor = '#ffff40';
+    else if (item.flags.indexOf('CRAFT') !== -1) rarityColor = '#ff8000';
+    else if (item.flags.indexOf('MAG') !== -1) rarityColor = '#6464ff';
+    else if (item.flags.indexOf('NMAG') !== -1) rarityColor = '#ffffff';
+    var currentColor = rarityColor;
     var result = '';
     // Split by color tokens — but also handle adjacent tokens carefully
     // Process character by character to avoid regex split issues
