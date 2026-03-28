@@ -721,6 +721,10 @@
 
     // Update syntax highlighting
     if (typeof highlightCode === 'function') highlightCode();
+
+    // Auto-resize textarea to content
+    codeEditor.style.height = 'auto';
+    codeEditor.style.height = codeEditor.scrollHeight + 'px';
   }
 
   function countRules(text) {
@@ -863,9 +867,8 @@
   }
 
   function syncScroll() {
-    lineNumbers.scrollTop = codeEditor.scrollTop;
-    highlightEl.scrollTop = codeEditor.scrollTop;
-    highlightEl.scrollLeft = codeEditor.scrollLeft;
+    var wrap = document.querySelector('.code-editor-wrap');
+    lineNumbers.scrollTop = wrap.scrollTop;
     renderVisibleLineNumbers();
   }
 
@@ -3834,11 +3837,18 @@
     initAuthorImport();
 
     // Code editor events
+    function autoResizeEditor() {
+      codeEditor.style.height = 'auto';
+      codeEditor.style.height = codeEditor.scrollHeight + 'px';
+    }
+
     codeEditor.addEventListener('input', function () {
       updateLineNumbers();
+      autoResizeEditor();
       saveToStorage();
     });
-    codeEditor.addEventListener('scroll', syncScroll);
+    var editorWrap = document.querySelector('.code-editor-wrap');
+    editorWrap.addEventListener('scroll', syncScroll);
     codeEditor.addEventListener('keydown', handleTab);
 
     // Initial rule generation
