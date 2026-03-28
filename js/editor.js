@@ -773,17 +773,29 @@
     var val = codeEditor.value;
     var pos = codeEditor.selectionStart;
 
-    // Find start of current line
-    var before = val.substring(0, pos);
-    var after = val.substring(pos);
+    // Find the boundaries of the current line
+    var lineStart = val.lastIndexOf('\n', pos - 1) + 1;
+    var lineEnd = val.indexOf('\n', pos);
+    if (lineEnd === -1) lineEnd = val.length;
+    var currentLine = val.substring(lineStart, lineEnd);
 
-    // Insert on new line
-    var prefix = before.length > 0 && !before.endsWith('\n') ? '\n' : '';
-    var suffix = after.length > 0 && !after.startsWith('\n') ? '\n' : '';
-
-    codeEditor.value = before + prefix + rule + suffix + after;
-    var newPos = before.length + prefix.length + rule.length;
-    codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
+    // If the current line has content, insert on a new line below it
+    if (currentLine.trim().length > 0) {
+      var before = val.substring(0, lineEnd);
+      var after = val.substring(lineEnd);
+      var suffix = after.length > 0 && !after.startsWith('\n') ? '\n' : '';
+      codeEditor.value = before + '\n' + rule + suffix + after;
+      var newPos = lineEnd + 1 + rule.length;
+      codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
+    } else {
+      // Empty line — insert directly here
+      var before = val.substring(0, lineStart);
+      var after = val.substring(lineEnd);
+      var suffix = after.length > 0 && !after.startsWith('\n') ? '\n' : '';
+      codeEditor.value = before + rule + suffix + after;
+      var newPos = lineStart + rule.length;
+      codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
+    }
     codeEditor.focus();
     updateLineNumbers();
     saveToStorage();
