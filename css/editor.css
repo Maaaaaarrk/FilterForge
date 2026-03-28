@@ -108,7 +108,6 @@
 .editor-layout {
   display: flex;
   gap: 1rem;
-  min-height: calc(100vh - var(--nav-height) - 140px);
 }
 
 /* Sidebar - Rule Builder */
@@ -415,8 +414,6 @@
 .editor-main {
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 6px;
 }
@@ -451,9 +448,6 @@
 
 /* Editor pane */
 .editor-pane {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 .editor-meta {
@@ -470,7 +464,6 @@
 .code-editor-wrap {
   display: flex;
   overflow-x: auto;
-  overflow-y: visible;
   position: relative;
 }
 
