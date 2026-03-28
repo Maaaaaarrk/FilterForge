@@ -1428,12 +1428,12 @@
 
     function updateGrailPreview() {
       var style = getGrailStyle();
-      var example = buildGrailLine('Harlequin Crest', 'uap', style);
+      var example = buildGrailLine("Mang Song's Lesson", '7s8', style);
       var previewEl = document.getElementById('grail-style-preview');
       // Render colored preview
       var colorMap = {'%PURPLE%':'#a000c8','%RED%':'#ff4040','%ORANGE%':'#ff8000','%YELLOW%':'#ffff40','%GREEN%':'#00c000','%BLUE%':'#6464ff','%GOLD%':'#c8a040','%WHITE%':'#ffffff','%TEAL%':'#008080'};
       var displayColor = colorMap[style.color] || '#a000c8';
-      var displayText = style.prefix + 'Harlequin Crest' + style.suffix;
+      var displayText = style.prefix + "Mang Song's Lesson" + style.suffix;
       previewEl.innerHTML = '<span style="color:' + displayColor + '">' + displayText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
       previewEl.title = example;
     }
