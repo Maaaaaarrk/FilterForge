@@ -642,11 +642,63 @@
     if (soundSelect) {
       soundSelect.addEventListener('change', function () { updateGeneratedRule(); });
     }
+
+    var allTiersCheck = document.getElementById('item-code-alltiers');
+    if (allTiersCheck) {
+      allTiersCheck.addEventListener('change', function () { updateGeneratedRule(); });
+    }
   }
 
   // ==========================================
   // Generate rule from builder state
   // ==========================================
+  // Tier mapping: each code maps to [norm, exc, elite] variants
+  var ITEM_TIER_GROUPS = [
+    // Helms
+    ['cap','xap','uap'],['skp','xkp','ukp'],['hlm','xlm','ulm'],['fhl','xhl','uhl'],['ghm','xhm','uhm'],['crn','xrn','urn'],['msk','xsk','usk'],
+    // Armor
+    ['qui','xui','uui'],['lea','xea','uea'],['hla','xla','ula'],['stu','xtu','utu'],['rng','xng','ung'],['scl','xmg','umg'],['chn','xcl','ucl'],
+    ['brs','xhn','uhn'],['spl','xrs','urs'],['plt','xpl','upl'],['fld','xlt','ult'],['gth','xld','uld'],['ful','xth','uth'],['aar','xul','uul'],['ltp','xar','uar'],
+    // Shields
+    ['buc','xuc','uit'],['sml','xml','uow'],['lrg','xrg','uts'],['kit','xts','ush'],['tow','xsh','ush'],
+    // Gloves
+    ['lgl','xlg','ulg'],['vgl','xvg','uvg'],['mgl','xmb','umb'],['tgl','xtg','utg'],['hgl','xhg','uhg'],
+    // Boots
+    ['lbt','xlb','ulb'],['vbt','xvb','uvb'],['mbt','xmb','umb'],['tbt','xtb','utb'],['hbt','xhb','uhb'],
+    // Belts
+    ['lbl','zlb','ulc'],['vbl','zvb','uvc'],['mbl','zmb','umc'],['tbl','ztb','utc'],['hbl','zhb','uhc'],
+    // Axes
+    ['hax','9ha','7wa'],['axe','9ax','72a'],['2ax','92a','72a'],['mpi','9mp','7bt'],['wax','9wa','7ga'],['lax','9la','7gi'],['bax','9ba','7la'],['btx','9bt','7bt'],['gax','9ga','7ga'],['gix','9gi','7gi'],
+    // Maces
+    ['clb','9cl','7wh'],['spc','9sp','7wh'],['mac','9ma','7m7'],['mst','9mt','7m7'],['fla','9fl','7gm'],['whm','9wh','7wh'],['mau','9m9','7m7'],['gma','9gm','7gm'],
+    // Swords
+    ['ssd','9ss','7cr'],['scm','9sm','7cr'],['sbr','9sb','7fb'],['flc','9fc','7fb'],['crs','9cr','7cr'],['bsd','9bs','7ls'],['lsd','9ls','7ls'],['wsd','9wd','7gd'],['2hs','92h','7fb'],['clm','9cm','7gd'],['gis','9gs','7gd'],['bsw','9b9','7gd'],['flb','9fb','7fb'],['gsd','9gd','7gd'],
+    // Daggers
+    ['dgr','9dg','7dg'],['dir','9di','7di'],['kri','9kr','7kr'],['bld','9bl','7bl'],
+    // Spears
+    ['spr','9sr','7s7'],['tri','9tr','7s7'],['brn','9br','7s7'],['spt','9st','7p7'],['pik','9p9','7p7'],
+    // Polearms
+    ['bar','9b7','7pa'],['vou','9vo','7pa'],['scy','9s8','7s8'],['pax','9pa','7pa'],['hal','9h9','7p7'],['wsc','9wc','7s8'],
+    // Javelins
+    ['jav','9ja','7ja'],['pil','9pi','7pi'],['ssp','9s9','7s9'],['glv','9gl','7gl'],['tsp','9ts','7ts'],
+    // Throwing
+    ['tkf','9tk','7tk'],['tax','9ta','7ta'],['bkf','9bk','7bk'],['bal','9b8','7b8'],
+    // Bows
+    ['sbw','9sb','6lw'],['hbw','9lw','6sw'],['lbw','9sw','6lw'],['cbw','9cb','6lw'],
+    // Crossbows
+    ['lxb','9lx','6mx'],['mxb','9mx','6mx'],['hxb','9hx','6rx'],['rxb','9rx','6rx'],
+    // Staves
+    ['sst','9ss','6ws'],['lst','9ls','6ls'],['cst','9cs','6cs'],['bst','9bs','6bs'],['wst','9ws','6ws'],
+    // Scepters
+    ['scp','9qs','7ws'],['gsc','9sc','7ws'],['wsp','9ws','7ws']
+  ];
+  var ITEM_TIER_MAP = {};
+  ITEM_TIER_GROUPS.forEach(function (group) {
+    group.forEach(function (code) {
+      ITEM_TIER_MAP[code] = group;
+    });
+  });
+
   function updateGeneratedRule() {
     var conditions = [];
 
@@ -694,9 +746,19 @@
       builderState.negate.forEach(function (n) { conditions.push(n); });
     }
 
-    // Item code
+    // Item code (with optional all-tiers expansion)
     var itemCode = document.getElementById('item-code-input').value.trim();
-    if (itemCode) conditions.push(itemCode);
+    var allTiers = document.getElementById('item-code-alltiers').checked;
+    if (itemCode && allTiers) {
+      var tierCodes = ITEM_TIER_MAP[itemCode];
+      if (tierCodes && tierCodes.length > 1) {
+        conditions.push('(' + tierCodes.join(' OR ') + ')');
+      } else {
+        conditions.push(itemCode);
+      }
+    } else if (itemCode) {
+      conditions.push(itemCode);
+    }
 
     // Value conditions
     var vcContainer = document.getElementById('value-conditions');
