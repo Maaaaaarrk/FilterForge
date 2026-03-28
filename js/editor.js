@@ -1664,14 +1664,6 @@
     document.getElementById('btn-insert-rule').addEventListener('click', insertRule);
     document.getElementById('btn-insert-end').addEventListener('click', insertRuleAtEnd);
 
-    document.getElementById('btn-copy-rule').addEventListener('click', function () {
-      navigator.clipboard.writeText(generatedCode.textContent).then(function () {
-        var btn = document.getElementById('btn-copy-rule');
-        btn.textContent = 'Copied!';
-        setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
-      });
-    });
-
     document.getElementById('btn-clear-builder').addEventListener('click', function () {
       // Reset all chips
       document.querySelectorAll('.chip.active').forEach(function (c) { c.classList.remove('active'); });
