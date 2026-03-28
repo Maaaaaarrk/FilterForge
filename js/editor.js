@@ -654,7 +654,14 @@
     if (builderState.quality) conditions.push(builderState.quality);
 
     // Tier
-    if (builderState.tier) conditions.push(builderState.tier);
+    // Tier (multi-select: wraps in OR group)
+    if (builderState.tier && builderState.tier.length) {
+      if (builderState.tier.length === 1) {
+        conditions.push(builderState.tier[0]);
+      } else {
+        conditions.push('(' + builderState.tier.join(' OR ') + ')');
+      }
+    }
 
     // Properties (multi)
     if (builderState.properties && builderState.properties.length) {
@@ -1868,7 +1875,7 @@
 
       // Reset state
       builderState.quality = '';
-      builderState.tier = '';
+      builderState.tier = [];
       builderState.properties = [];
       builderState.itemcat = [];
       builderState.equipment = '';
