@@ -857,6 +857,7 @@
   var cachedLineCount = 0;
   var statsTimer = null;
   var highlightTimer = null;
+  var resizeTimer = null;
 
   // Compute line height once (in px) for virtual line number rendering
   var lineHeightPx = 0;
@@ -875,16 +876,22 @@
     }
     cachedLineCount = count;
 
-    // Only render visible line numbers (virtual scroll)
-    renderVisibleLineNumbers();
+    // Line numbers — only rebuild if count changed
+    if (lineNumbers._lastCount !== count) {
+      lineNumbers._lastCount = count;
+      renderVisibleLineNumbers();
+    }
 
-    // Update simple stats immediately
+    // Update simple stats immediately (cheap DOM writes)
     lineCount.textContent = 'Lines: ' + count;
     charCount.textContent = 'Chars: ' + text.length;
 
-    // Debounce the expensive rule count for large files
+    // Debounce everything expensive for large files
+    var isLarge = count > 300;
+
+    // Rule count
     clearTimeout(statsTimer);
-    if (count < 2000) {
+    if (!isLarge) {
       ruleCount.textContent = 'Rules: ' + countRules(text);
     } else {
       statsTimer = setTimeout(function () {
@@ -892,19 +899,22 @@
       }, 500);
     }
 
-    // Update syntax highlighting (debounced for large filters)
+    // Syntax highlighting
     clearTimeout(highlightTimer);
     if (typeof highlightCode === 'function') {
-      if (count < 500) {
+      if (!isLarge) {
         highlightCode();
       } else {
-        highlightTimer = setTimeout(highlightCode, 150);
+        highlightTimer = setTimeout(highlightCode, 200);
       }
     }
 
-    // Auto-resize textarea to content
-    codeEditor.style.height = 'auto';
-    codeEditor.style.height = codeEditor.scrollHeight + 'px';
+    // Auto-resize textarea (debounced — avoids forced reflow per keystroke)
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      codeEditor.style.height = 'auto';
+      codeEditor.style.height = codeEditor.scrollHeight + 'px';
+    }, isLarge ? 200 : 50);
   }
 
   function countRules(text) {
