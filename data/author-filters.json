@@ -66,7 +66,48 @@
       {"name": "Hiim_Only_Filter.filter", "displayName": "Only A Filter", "description": "All-in-one filter with no item display changes — filtering only, no annotations or re-naming.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Only_Filter.filter", "size": 190498},
       {"name": "Hiim_Hyper.filter", "displayName": "Style — Hyper", "description": "All-in-one filter with a Hyper visual theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Hyper.filter", "size": 696423},
       {"name": "Hiim_TalRasha_Themed.filter", "displayName": "Style — TalRasha", "description": "All-in-one filter with a TalRasha color theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_TalRasha_Themed.filter", "size": 695227},
-      {"name": "Hiim_Vanilla_Plus.filter", "displayName": "Vanilla Plus", "description": "All-in-one filter without item re-naming (e.g. identified rares and unidentified uniques show their original names).", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Vanilla_Plus.filter", "size": 609129}
+      {"name": "Hiim_Vanilla_Plus.filter", "displayName": "Vanilla Plus", "description": "All-in-one filter without item re-naming (e.g. identified rares and unidentified uniques show their original names).", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Vanilla_Plus.filter", "size": 609129},
+      {"name": "Hiim_Closed_Beta.filter", "displayName": "Closed Beta", "description": "Filter for closed beta testing.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Closed_Beta.filter", "size": 695339}
+    ]
+  },
+  {
+    "name": "eqN's PD2 Filters",
+    "author": "eqN",
+    "repo": "eqNj/eqN-PD2-Filter",
+    "files": [
+      {"name": "eqN-All-In-One.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-All-In-One.filter", "size": 1050813},
+      {"name": "eqN-Potionless.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Potionless.filter", "size": 1052580},
+      {"name": "eqN-Specialized-LLD.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-LLD.filter", "size": 5339620},
+      {"name": "eqN-Specialized-SSF.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-SSF.filter", "size": 1054432}
+    ]
+  },
+  {
+    "name": "DarkHumility + ADev Filter",
+    "author": "ADevDH",
+    "repo": "DarkHumility/DHFilter",
+    "files": [
+      {"name": "dark.filter", "url": "https://raw.githubusercontent.com/DarkHumility/DHFilter/main/dark.filter", "size": 337513}
+    ]
+  },
+  {
+    "name": "PiLLLa Filter",
+    "author": "PiLLLa",
+    "repo": "PiLLLaa/pd2",
+    "files": [
+      {"name": "S12_Blank.filter", "url": "https://raw.githubusercontent.com/PiLLLaa/pd2/main/S12_Blank.filter", "size": 1768449},
+      {"name": "S12_Hype.filter", "url": "https://raw.githubusercontent.com/PiLLLaa/pd2/main/S12_Hype.filter", "size": 1771318},
+      {"name": "S12_Hype_POEsound.filter", "url": "https://raw.githubusercontent.com/PiLLLaa/pd2/main/S12_Hype_POEsound.filter", "size": 1543768},
+      {"name": "S12_NoBlank.filter", "url": "https://raw.githubusercontent.com/PiLLLaa/pd2/main/S12_NoBlank.filter", "size": 1743449},
+      {"name": "S12_PurpleGold_hide.filter", "url": "https://raw.githubusercontent.com/PiLLLaa/pd2/main/S12_PurpleGold_hide.filter", "size": 1736547},
+      {"name": "S12_Starter.filter", "url": "https://raw.githubusercontent.com/PiLLLaa/pd2/main/S12_Starter.filter", "size": 1695620}
+    ]
+  },
+  {
+    "name": "Roofoo's Filter",
+    "author": "Roofoo",
+    "repo": "RoofooEvazan/Roofoo-s-PD2-Loot-Filter",
+    "files": [
+      {"name": "Roofoo.filter", "url": "https://raw.githubusercontent.com/RoofooEvazan/Roofoo-s-PD2-Loot-Filter/main/Roofoo.filter", "size": 737758}
     ]
   },
   {
