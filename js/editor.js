@@ -1028,28 +1028,23 @@
     return escapeForHtml(line);
   }
 
-  var HL_MAX_LINES = 500;
   var hlCache = [];
+
+  function showHighlight() {
+    highlightEl.style.display = '';
+    codeEditor.style.color = 'transparent';
+  }
+
+  function hideHighlight() {
+    highlightEl.style.display = 'none';
+    codeEditor.style.color = 'var(--text-primary)';
+  }
+
   function highlightCode() {
     var text = codeEditor.value;
     var lines = text.split('\n');
-
-    // Disable highlighting for large files — show plain text instead
-    if (lines.length > HL_MAX_LINES) {
-      if (highlightEl.style.display !== 'none') {
-        highlightEl.style.display = 'none';
-        codeEditor.style.color = 'var(--text-primary)';
-      }
-      return;
-    }
-
-    // Re-enable if we dropped below the threshold
-    if (highlightEl.style.display === 'none') {
-      highlightEl.style.display = '';
-      codeEditor.style.color = 'transparent';
-    }
-
     var changed = false;
+
     if (lines.length !== hlCache.length) {
       hlCache = lines.map(function (l) { return { src: l, html: highlightLine(l) }; });
       changed = true;
@@ -1065,6 +1060,7 @@
     if (changed) {
       highlightEl.innerHTML = hlCache.map(function (c) { return c.html; }).join('\n') + '\n';
     }
+    showHighlight();
   }
 
   function syncScroll() {
@@ -4511,20 +4507,17 @@
     initAuthorImport();
 
     // Code editor events
-    var saveTimer = null;
+    var inputDebounce = null;
     codeEditor.addEventListener('input', function () {
-      // For small files: highlight immediately so typed text is visible
-      // For large files: highlighting is disabled, textarea text is visible directly
-      if (typeof highlightCode === 'function' && cachedLineCount <= HL_MAX_LINES) {
-        highlightCode();
-      }
+      // Immediately hide highlight so typed characters show in plain text
+      hideHighlight();
 
-      // Debounce everything else (stats, resize, save)
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(function () {
+      // After 500ms idle: re-highlight, update stats, save
+      clearTimeout(inputDebounce);
+      inputDebounce = setTimeout(function () {
         updateLineNumbers();
         saveToStorage();
-      }, 150);
+      }, 500);
     });
     var editorWrap = document.querySelector('.code-editor-wrap');
     editorWrap.addEventListener('scroll', syncScroll);
