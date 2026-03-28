@@ -879,6 +879,17 @@
   color: var(--text-secondary);
 }
 
+.wiz-color-example {
+  display: block;
+  margin-top: 0.3rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem !important;
+  letter-spacing: 0.02em;
+}
+
 .wizard-nav {
   display: flex;
   justify-content: space-between;

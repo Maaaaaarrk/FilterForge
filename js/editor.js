@@ -1434,7 +1434,6 @@
 
   function renderOutput(output, item) {
     var text = output;
-
     // %NAME% is resolved by matchItem during %CONTINUE% processing
     // Only replace if there are still unresolved %NAME% tokens (non-CONTINUE rules)
     if (text.indexOf('%NAME%') !== -1) {
@@ -1478,8 +1477,7 @@
     text = text.replace(/%RANGE%/g, '0');
     text = text.replace(/%WPNSPD%/g, '0');
     text = text.replace(/%MULTI[^%]*%/g, '0');
-    // Strip any remaining unknown %TOKEN% patterns (but preserve color tokens)
-    text = text.replace(/%(?!WHITE|GRAY|RED|GREEN|DARK_GREEN|BLUE|GOLD|YELLOW|ORANGE|PURPLE|TAN|BLACK|CORAL|SAGE|TEAL|LIGHT_GRAY)[A-Z_0-9]+%/g, '');
+    // Unknown %TOKEN% patterns are handled by the char-by-char color parser (skipped silently)
 
     // Convert ÿcX color codes (Kassahi/ANSI format) to %COLOR% format
     var yColorMap = {
