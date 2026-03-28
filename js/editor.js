@@ -859,7 +859,7 @@
   var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7'];
   var KNOWN_NEGATES = KNOWN_FLAGS.map(function (f) { return '!' + f; });
   var KNOWN_VALUE_CODES = ['SOCKETS','SOCK','DEF','ED','EDEF','EDAM','ILVL','CLVL','ALVL','QLVL','RUNE','GOLD','PRICE','SELLPRICE','FRES','CRES','LRES','PRES','RES','STR','DEX','LIFE','MANA','FCR','IAS','FHR','FRW','MFIND','LVLREQ','MAXSOCKETS','GEMLEVEL','GEM','GEMTYPE','FILTLVL','DIFF','MAPID','MAPTIER','ALLSK','QTY','TABSK0','TABSK1','TABSK2','TABSK3','TABSK4','TABSK5','TABSK6','CHARSTAT'];
-  var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY'];
+  var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY','LVLREQ'];
 
   function escapeForHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -2031,7 +2031,7 @@
         arrows: 'Arrows', stars: 'Stars', diamonds: 'Diamonds', pipes: 'Pipes', exclaim: 'Exclaim',
         circles: 'Circles', dots: 'Dots', crosses: 'Crosses', middot: 'Middle Dots',
         sockets: 'Socket Count', ilvl: 'Item Level', price: 'Vendor Price',
-        crafting: 'Crafting Info', eth: 'Ethereal Tag', shortnames: 'Short Names', uniquenames: 'Reveal Uniques', staffmods: 'Staffmods',
+        crafting: 'Crafting Info', eth: 'Ethereal Tag', shortnames: 'Short Names', uniquenames: 'Reveal Uniques', staffmods: 'Staffmods', wpnspeed: 'Weapon Speed',
         'all-rw': 'All Good Bases', 'eth-rw': 'Eth Bases Only', 'none-rw': 'None',
         hidegold: 'Hide Low Gold', hidekeys: 'Hide Keys',
         hidescrolls: 'Hide Scrolls', hidepots: 'Hide Small Potions',
@@ -2156,6 +2156,7 @@
       var wantShortNames = c.extras.indexOf('shortnames') !== -1;
       var wantUniqueNames = c.extras.indexOf('uniquenames') !== -1;
       var wantStaffmods = c.extras.indexOf('staffmods') !== -1;
+      var wantWpnSpeed = c.extras.indexOf('wpnspeed') !== -1;
       var rwBases = c.rwbases || 'none';
       var wantSocketRecipe = c.tooltips.indexOf('socketrecipe') !== -1;
       var wantSellValue = c.tooltips.indexOf('sellvalue') !== -1;
@@ -2952,6 +2953,15 @@
         lines.push('');
       });
       } // end wantStaffmods
+
+      // 13d. WEAPON BASE SPEED & RANGE
+      if (wantWpnSpeed) {
+        lines.push('// ============================================================');
+        lines.push('// WEAPON BASE SPEED & RANGE');
+        lines.push('// ============================================================');
+        lines.push('ItemDisplay[WEAPON !BOW !XBOW !WAND !SOR]: %NAME%{%CL%%WHITE%Base Speed: %WPNSPD% || Range: +%RANGE%}%CONTINUE%');
+        lines.push('ItemDisplay[WEAPON (BOW OR XBOW)]: %NAME%{%CL%%WHITE%Base Speed: %WPNSPD%}%CONTINUE%');
+      }
       lines.push('');
 
       // ==========================
