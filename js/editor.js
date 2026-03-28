@@ -996,7 +996,7 @@
       });
 
       // Highlight color tokens in output with their actual color, validate others
-      var highlightedOutput = escapeForHtml(output).replace(/%([A-Z_0-9]+(?:-[A-Z0-9]+)?)%/g, function (m, tok) {
+      var highlightedOutput = escapeForHtml(output).replace(/%([A-Z_0-9+,]+(?:-[A-Z0-9]+)?)%/g, function (m, tok) {
         var colorKey = '%' + tok + '%';
         if (D2_COLORS[colorKey]) {
           return '<span class="hl-color-token" style="color:' + D2_COLORS[colorKey] + '">' + m + '</span>';
@@ -1020,11 +1020,12 @@
       return '<span class="hl-keyword">' + escapeForHtml(line) + '</span>';
     }
 
-    // Non-empty, non-comment, non-rule line — possibly broken
-    if (trimmed.length > 0) {
+    // Only flag lines that look like broken rules (start with ItemDisplay but malformed)
+    if (trimmed.indexOf('ItemDisplay') === 0 && !trimmed.match(/^ItemDisplay\s*\[/)) {
       return '<span class="hl-error">' + escapeForHtml(line) + '</span>';
     }
 
+    // Everything else: plain text (don't flag unknown lines as errors)
     return escapeForHtml(line);
   }
 
