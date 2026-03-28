@@ -288,7 +288,6 @@
     'uni-torch': { code: 'cm2', name: 'Large Charm', flags: ['UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'uni-gheeds': { code: 'cm3', name: 'Grand Charm', flags: ['UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     // Set items (!ID — unidentified, %NAME% shows base type name)
-    'set-shako': { code: 'uap', name: 'Shako', flags: ['SET', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 66, DEF: 98, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'set-ik-armor': { code: 'uth', name: 'Lacquered Plate', flags: ['SET', 'ELT', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 487, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'set-tal-amu': { code: 'amu', name: 'Amulet', flags: ['SET', 'JEWELRY'], values: { ILVL: 26, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'set-lbt': { code: 'lbt', name: 'Boots', flags: ['SET', 'NORM', 'BOOTS', 'ARMOR', 'EQ5'], values: { ILVL: 45, DEF: 12, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
