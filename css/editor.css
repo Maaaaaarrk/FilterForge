@@ -470,8 +470,8 @@
 /* Code editor */
 .code-editor-wrap {
   flex: 1;
-  overflow: auto;
-  max-height: calc(100vh - 120px);
+  overflow-x: auto;
+  overflow-y: visible;
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -494,7 +494,6 @@
 
 .code-editor-container {
   position: relative;
-  min-height: 400px;
 }
 
 .code-highlight {
