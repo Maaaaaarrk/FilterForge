@@ -1109,6 +1109,264 @@
   // ==========================================
   // Tabs
   // ==========================================
+  // ==========================================
+  // Holy Grail
+  // ==========================================
+  var GRAIL_DATA = {
+    'Helms': [
+      {code:'uap',name:'Shako'},{code:'urn',name:'Crown of Ages'},{code:'ci3',name:"Griffon's Eye"},
+      {code:'ci2',name:"Kira's Guardian"},{code:'uhm',name:'Steel Shade'},{code:'bae',name:'Vampire Gaze'},
+      {code:'7pa',name:'Veil of Steel'},{code:'xrn',name:"Blackhorn's Face"},{code:'bhm',name:'Rockstopper'},
+      {code:'xh9',name:'Stealskull'},{code:'xlm',name:'Darksight Helm'},{code:'cap',name:'Biggin\'s Bonnet'},
+      {code:'skp',name:'Tarnhelm'},{code:'hlm',name:'Coif of Glory'},{code:'fhl',name:'Duskdeep'},
+      {code:'ghm',name:'Howltusk'},{code:'crn',name:'Peasant Crown'},{code:'msk',name:'Wormskull'},
+      {code:'xap',name:'The Face of Horror'},{code:'xkp',name:'Sander\'s Paragon'},
+      {code:'xlm',name:'Crown of Thieves'},{code:'xhl',name:'Vampire Gaze'}
+    ],
+    'Body Armor': [
+      {code:'utp',name:"Tyrael's Might"},{code:'uar',name:'Chains of Honor'},{code:'uui',name:"Ormus' Robes"},
+      {code:'umc',name:'Guardian Angel'},{code:'uul',name:"Gladiator's Bane"},{code:'uhc',name:"Templar's Might"},
+      {code:'ulm',name:'Steel Carapace'},{code:'xhn',name:"Duriel's Shell"},{code:'xui',name:"Skullder's Ire"},
+      {code:'zlb',name:"Arkaine's Valor"},{code:'xla',name:'The Spirit Shroud'},{code:'xrs',name:'Skin of the Vipermagi'},
+      {code:'xpl',name:'Iron Pelt'},{code:'ltp',name:'Greyform'},{code:'brs',name:'Blinkbat\'s Form'},
+      {code:'mpl',name:'The Centurion'},{code:'fld',name:'Twitchthroe'},{code:'gth',name:'Darkglow'},
+      {code:'chn',name:'Sparking Mail'},{code:'plt',name:'Venom Ward'},{code:'stu',name:'Iceblink'},
+      {code:'aar',name:'Silks of the Victor'},{code:'ful',name:'Heavenly Garb'},{code:'dra',name:'Goldskin'}
+    ],
+    'Shields': [
+      {code:'uit',name:'Stormshield'},{code:'nef',name:'Lidless Wall'},{code:'xsh',name:"Head Hunter's Glory"},
+      {code:'pa9',name:'Herald of Zakarum'},{code:'8mx',name:'Alma Negra'},{code:'scl',name:"Tiamat's Rebuke"},
+      {code:'buc',name:'Pelta Lunata'},{code:'sml',name:'Umbral Disk'},{code:'lrg',name:'Stormguild'},
+      {code:'kit',name:'Swordback Hold'},{code:'tow',name:'Steelclash'},{code:'gts',name:'Bverrit Keep'},
+      {code:'bsh',name:'The Ward'},{code:'spk',name:'Lance Guard'},{code:'xts',name:'Tiamat\'s Rebuke'}
+    ],
+    'Gloves': [
+      {code:'upl',name:'Steelrend'},{code:'umg',name:"Dracul's Grasp"},{code:'uhg',name:'Laying of Hands'},
+      {code:'uvg',name:"Magefist"},{code:'xvg',name:"Trang-Oul's Claws"},{code:'xlg',name:'Ghoulhide'},
+      {code:'lgl',name:'The Hand of Broc'},{code:'vgl',name:'Bloodfist'},{code:'mgl',name:'Chance Guards'},
+      {code:'hgl',name:'Magefist'},{code:'tgl',name:'Frostburn'}
+    ],
+    'Boots': [
+      {code:'uts',name:'Shadow Dancer'},{code:'utg',name:'Gore Rider'},{code:'ztb',name:'Sandstorm Trek'},
+      {code:'uh9',name:'War Traveler'},{code:'utu',name:'Marrowwalk'},{code:'xtb',name:'Waterwalk'},
+      {code:'xhb',name:'Infernostride'},{code:'xlb',name:'Silkweave'},{code:'lbt',name:'Hotspur'},
+      {code:'vbt',name:'Gorefoot'},{code:'mbt',name:'Treads of Cthon'},{code:'hbt',name:'Goblin Toe'},
+      {code:'tbt',name:'Tearhaunch'}
+    ],
+    'Belts': [
+      {code:'ulc',name:'Arachnid Mesh'},{code:'uvc',name:"Verdungo's Hearty Cord"},
+      {code:'uvg',name:"Thundergod's Vigor"},{code:'uow',name:'Spike Thorn'},
+      {code:'zhb',name:'String of Ears'},{code:'zvb',name:'Razortail'},
+      {code:'zlb',name:'Gloom\'s Trap'},{code:'lbl',name:'Lenymo'},{code:'vbl',name:'Snakecord'},
+      {code:'mbl',name:'Nightsmoke'},{code:'hbl',name:'Goldwrap'},{code:'tbl',name:'Bladebuckle'}
+    ],
+    'Weapons - Swords': [
+      {code:'7gm',name:'Doombringer'},{code:'7gd',name:'Ethereal Edge'},{code:'9gm',name:'The Grandfather'},
+      {code:'7cr',name:'Demon Limb'},{code:'7ls',name:'Flamebellow'},{code:'8rx',name:'Headstriker'},
+      {code:'7bs',name:'Lightsabre'},{code:'7fb',name:'Azurewrath'}
+    ],
+    'Weapons - Axes & Maces': [
+      {code:'7gw',name:'Death Cleaver'},{code:'7wh',name:'Windhammer'},{code:'7ws',name:'Cranebeak'},
+      {code:'7b7',name:'Stormlash'},{code:'7b8',name:"Horizon's Tornado"},{code:'7mp',name:"Baranar's Star"},
+      {code:'7wc',name:'Earth Shifter'},{code:'7m7',name:'The Cranium Basher'}
+    ],
+    'Weapons - Polearms & Spears': [
+      {code:'9la',name:'Tomb Reaver'},{code:'7p7',name:"Astreon's Iron Ward"},
+      {code:'xhb',name:'Viperfork'},{code:'7fl',name:'Rift'}
+    ],
+    'Weapons - Bows & Crossbows': [
+      {code:'amf',name:'Windforce'},{code:'aar',name:"Lycander's Aim"},{code:'9bw',name:'Eaglehorn'},
+      {code:'6lw',name:"Gargoyle's Bite"},{code:'6rx',name:'Buriza-Do Kyanon'}
+    ],
+    'Weapons - Staves & Wands': [
+      {code:'7s8',name:"Mang Song's Lesson"},{code:'7xf',name:"Death's Fathom"},
+      {code:'xlt',name:'The Oculus'},{code:'8sb',name:'Ondal\'s Wisdom'}
+    ],
+    'Weapons - Throwing': [
+      {code:'6bs',name:'Lacerator'},{code:'6ws',name:'Warshrike'},{code:'6sw',name:'Gimmershred'},
+      {code:'ama',name:"Titan's Revenge"},{code:'7ts',name:'Thunderstroke'}
+    ],
+    'Class Items - Amazon': [
+      {code:'ama',name:"Titan's Revenge"},{code:'aar',name:"Lycander's Aim"},
+      {code:'amf',name:"Lycander's Flank"}
+    ],
+    'Class Items - Sorceress': [
+      {code:'xlt',name:'The Oculus'},{code:'7xf',name:"Death's Fathom"},
+      {code:'7s8',name:"Mang Song's Lesson"}
+    ],
+    'Class Items - Necromancer': [
+      {code:'nee',name:'Homunculus'},{code:'ned',name:'Boneflame'},{code:'nef',name:'Darkforce Spawn'}
+    ],
+    'Class Items - Paladin': [
+      {code:'pa9',name:'Herald of Zakarum'},{code:'8mx',name:'Alma Negra'},
+      {code:'paf',name:"Griswold's Honor"}
+    ],
+    'Class Items - Barbarian': [
+      {code:'8cb',name:"Arreat's Face"},{code:'bae',name:'Vampire Gaze'},
+      {code:'drd',name:"Cerebus' Bite"}
+    ],
+    'Class Items - Druid': [
+      {code:'dre',name:'Spirit Keeper'},{code:'drd',name:"Cerebus' Bite"},
+      {code:'zvb',name:"Jalal's Mane"},{code:'zhb',name:'Ravenlore'},{code:'drc',name:'Wolfhowl'}
+    ],
+    'Class Items - Assassin': [
+      {code:'obf',name:"Bartuc's Cut-Throat"},{code:'9gi',name:"Firelizard's Talons"},
+      {code:'9lw',name:'Jade Talon'}
+    ],
+    'Jewelry': [
+      {code:'rin',name:'The Stone of Jordan'},{code:'rin',name:'Bul-Kathos\' Wedding Band'},
+      {code:'rin',name:'Wisp Projector'},{code:'rin',name:'Raven Frost'},
+      {code:'rin',name:'Dwarf Star'},{code:'rin',name:'Nature\'s Peace'},
+      {code:'amu',name:"Mara's Kaleidoscope"},{code:'amu',name:'The Cat\'s Eye'},
+      {code:'amu',name:"Highlord's Wrath"},{code:'amu',name:'Atma\'s Scarab'},
+      {code:'amu',name:'The Rising Sun'},{code:'amu',name:'Seraph\'s Hymn'},
+      {code:'amu',name:'Metalgrid'},{code:'amu',name:'Crescent Moon'},
+      {code:'amu',name:'Nokozan Relic'},{code:'amu',name:'The Eye of Etlich'},
+      {code:'amu',name:'Saracen\'s Chance'},{code:'amu',name:'The Mahim-Oak Curio'},
+      {code:'jew',name:'Rainbow Facet'}
+    ],
+    'Charms': [
+      {code:'cm3',name:"Gheed's Fortune"},{code:'cm3',name:'Hellfire Torch'},
+      {code:'cm1',name:'Annihilus'}
+    ]
+  };
+
+  function initGrail() {
+    var grailList = document.getElementById('grail-list');
+    var grailSearch = document.getElementById('grail-search');
+    var grailProgress = document.getElementById('grail-progress');
+    var btnGenerate = document.getElementById('btn-grail-generate');
+    var btnReset = document.getElementById('btn-grail-reset');
+
+    // Load found items from localStorage
+    var found = {};
+    try { found = JSON.parse(localStorage.getItem('filterforge-grail') || '{}'); } catch (e) {}
+
+    var totalItems = 0;
+    Object.keys(GRAIL_DATA).forEach(function (cat) { totalItems += GRAIL_DATA[cat].length; });
+
+    function saveGrail() {
+      localStorage.setItem('filterforge-grail', JSON.stringify(found));
+    }
+
+    function countFound() {
+      return Object.keys(found).filter(function (k) { return found[k]; }).length;
+    }
+
+    function updateProgress() {
+      grailProgress.textContent = countFound() + ' / ' + totalItems + ' found';
+    }
+
+    function renderGrail(filter) {
+      grailList.innerHTML = '';
+      var filterLower = (filter || '').toLowerCase();
+
+      Object.keys(GRAIL_DATA).forEach(function (category) {
+        var items = GRAIL_DATA[category];
+        var filtered = items.filter(function (item) {
+          return !filterLower || item.name.toLowerCase().indexOf(filterLower) !== -1;
+        });
+        if (filtered.length === 0) return;
+
+        var catDiv = document.createElement('div');
+        catDiv.className = 'grail-category';
+
+        var header = document.createElement('div');
+        header.className = 'grail-category-header';
+        header.textContent = category + ' (' + filtered.filter(function (it) { return found[category + ':' + it.name]; }).length + '/' + filtered.length + ')';
+        catDiv.appendChild(header);
+
+        var itemsDiv = document.createElement('div');
+        itemsDiv.className = 'grail-items';
+
+        filtered.forEach(function (item) {
+          var key = category + ':' + item.name;
+          var el = document.createElement('label');
+          el.className = 'grail-item' + (found[key] ? ' found' : '');
+          el.innerHTML = '<span class="grail-check">' + (found[key] ? '&#9745;' : '&#9744;') + '</span> ' + item.name;
+          el.addEventListener('click', function () {
+            found[key] = !found[key];
+            saveGrail();
+            el.className = 'grail-item' + (found[key] ? ' found' : '');
+            el.querySelector('.grail-check').innerHTML = found[key] ? '&#9745;' : '&#9744;';
+            updateProgress();
+            header.textContent = category + ' (' + items.filter(function (it) { return found[category + ':' + it.name]; }).length + '/' + items.length + ')';
+          });
+          itemsDiv.appendChild(el);
+        });
+
+        catDiv.appendChild(itemsDiv);
+        grailList.appendChild(catDiv);
+      });
+
+      updateProgress();
+    }
+
+    grailSearch.addEventListener('input', function () {
+      renderGrail(grailSearch.value);
+    });
+
+    btnReset.addEventListener('click', function () {
+      if (confirm('Reset all Holy Grail progress? This cannot be undone.')) {
+        found = {};
+        saveGrail();
+        renderGrail(grailSearch.value);
+      }
+    });
+
+    btnGenerate.addEventListener('click', function () {
+      var lines = [];
+      lines.push('');
+      lines.push('// ============================================================');
+      lines.push('// HOLY GRAIL — Highlight unfound uniques');
+      lines.push('// ============================================================');
+
+      Object.keys(GRAIL_DATA).forEach(function (category) {
+        GRAIL_DATA[category].forEach(function (item) {
+          var key = category + ':' + item.name;
+          if (!found[key]) {
+            // Unfound: add a highlight rule
+            lines.push('ItemDisplay[UNI !ID ' + item.code + ']: %PURPLE%** GRAIL: ' + item.name + ' **%BORDER-05%%CONTINUE%');
+          }
+        });
+      });
+
+      if (lines.length <= 3) {
+        alert('All items found! No grail rules needed.');
+        return;
+      }
+
+      lines.push('');
+
+      // Remove existing grail section if present
+      var currentCode = codeEditor.value;
+      var grailStart = currentCode.indexOf('// HOLY GRAIL');
+      if (grailStart !== -1) {
+        var lineStart = currentCode.lastIndexOf('\n', grailStart);
+        var sectionEnd = currentCode.indexOf('// =====', grailStart + 20);
+        if (sectionEnd !== -1) {
+          var lineEnd = currentCode.indexOf('\n', sectionEnd);
+          if (lineEnd === -1) lineEnd = currentCode.length;
+          currentCode = currentCode.substring(0, lineStart) + currentCode.substring(lineEnd);
+        }
+      }
+
+      // Insert at top of filter
+      codeEditor.value = lines.join('\n') + '\n' + currentCode;
+      updateLineNumbers();
+      saveToStorage();
+
+      // Switch to code tab
+      document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
+      document.querySelector('[data-tab="code"]').classList.add('active');
+      document.getElementById('pane-code').style.display = 'block';
+      document.getElementById('pane-preview').style.display = 'none';
+      document.getElementById('pane-grail').style.display = 'none';
+    });
+
+    renderGrail('');
+  }
+
   function initTabs() {
     document.querySelectorAll('.editor-tab').forEach(function (tab) {
       tab.addEventListener('click', function () {
@@ -1118,6 +1376,7 @@
 
         document.getElementById('pane-code').style.display = target === 'code' ? 'block' : 'none';
         document.getElementById('pane-preview').style.display = target === 'preview' ? 'flex' : 'none';
+        document.getElementById('pane-grail').style.display = target === 'grail' ? 'block' : 'none';
 
         // Auto-run preview test when switching to Live Preview
         if (target === 'preview') {
@@ -4019,6 +4278,7 @@
     initImportExport();
     initTemplates();
     initTabs();
+    initGrail();
     initPreview();
     initBuilderActions();
     initWizard();

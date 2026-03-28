@@ -805,6 +805,100 @@
   border-color: var(--accent-primary);
 }
 
+/* Holy Grail */
+.grail-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.grail-header h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.grail-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+}
+
+.grail-progress {
+  font-size: 0.82rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.grail-search {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  margin-top: 0.4rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
+.grail-list {
+  padding: 0.5rem 1rem;
+}
+
+.grail-category {
+  margin-bottom: 0.75rem;
+}
+
+.grail-category-header {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.3rem;
+  cursor: pointer;
+}
+
+.grail-category-header:hover {
+  color: var(--text-primary);
+}
+
+.grail-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+.grail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.grail-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.grail-item.found {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.grail-item.found .grail-check {
+  color: var(--success);
+}
+
+.grail-check {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
 /* Item Code Finder */
 .itemcode-tabs {
   display: flex;

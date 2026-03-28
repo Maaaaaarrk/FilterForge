@@ -748,6 +748,7 @@
           <div class="editor-tabs">
             <button class="editor-tab active" data-tab="code">Code Editor</button>
             <button class="editor-tab" data-tab="preview">Live Preview</button>
+            <button class="editor-tab" data-tab="grail">Holy Grail</button>
           </div>
 
           <!-- Generated Rule (from Rule Builder) -->
@@ -916,6 +917,21 @@
             <div class="preview-results" id="preview-results">
               <p class="text-muted text-center">Select an item and click Test to see how your filter handles it.</p>
             </div>
+          </div>
+
+          <!-- Pane: Holy Grail -->
+          <div class="editor-pane" id="pane-grail" style="display:none">
+            <div class="grail-header">
+              <h3>Holy Grail Tracker</h3>
+              <p class="text-muted">Check off unique items as you find them. Unfound items will be highlighted in your filter.</p>
+              <div class="grail-actions">
+                <button class="btn btn-primary" id="btn-grail-generate">Insert Grail Rules into Filter</button>
+                <button class="btn btn-secondary" id="btn-grail-reset">Reset All</button>
+                <span class="grail-progress" id="grail-progress">0 / 0 found</span>
+              </div>
+              <input type="text" class="grail-search" id="grail-search" placeholder="Search uniques..." aria-label="Search uniques">
+            </div>
+            <div class="grail-list" id="grail-list"></div>
           </div>
         </div>
 
