@@ -1118,6 +1118,11 @@
 
         document.getElementById('pane-code').style.display = target === 'code' ? 'block' : 'none';
         document.getElementById('pane-preview').style.display = target === 'preview' ? 'flex' : 'none';
+
+        // Auto-run preview test when switching to Live Preview
+        if (target === 'preview') {
+          testAllItems();
+        }
       });
     });
   }
