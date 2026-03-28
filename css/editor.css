@@ -497,8 +497,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
   padding: 0.75rem;
   background: var(--code-bg);
   font-family: var(--font-mono);
@@ -523,7 +523,8 @@
 
 .code-editor {
   display: block;
-  width: 100%;
+  min-width: 100%;
+  width: max-content;
   padding: 0.75rem;
   background: transparent;
   color: transparent;
