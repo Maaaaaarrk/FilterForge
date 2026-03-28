@@ -3487,10 +3487,10 @@
       ['r31s','Jah'],['r32s','Cham'],['r33s','Zod']
     ],
     pd2: [
-      ['wss','Worldstone Shard'],['lbox','Larzuks Puzzlebox'],['lpp','Larzuks Puzzlepiece'],['rkey','Skeleton Key'],
+      ['wss','Worldstone Shard'],['lbox','Larzuk\'s Puzzlebox'],['lpp','Larzuk\'s Puzzlepiece'],['rkey','Skeleton Key'],
       ['tes','Twisted Essence of Suffering'],['ceh','Charged Essense of Hatred'],['bet','Burning Essence of Terror'],['fed','Festering Essence of Destruction'],
       ['toa','Token of Absolution'],['pk1','Key of Terror'],['pk2','Key of Hate'],['pk3','Key of Destruction'],
-      ['mbr','Mephistos Brain'],['dhn','Diablos Horn'],['bey','Baals Eye'],['std','Standard of Heroes'],
+      ['mbr','Mephisto\'s Brain'],['dhn','Diablo\'s Horn'],['bey','Baal\'s Eye'],['std','Standard of Heroes'],
       ['dcho','Dclone Heart'],['dcso','Dclone Soul'],['dcbl','Dclone Blood'],['dcma','Dclone Matter'],
       ['rtmo','Rathma Material 1'],['rtmv','Rathma Material 2'],['cwss','Corrupted WSS'],['rid','Rathma ID'],['rtp','Rathma TP'],
       ['jewf','Jewel Fragment'],['crfb','Blood Craft Infusion'],['crfc','Caster Craft Infusion'],['crfs','Safety Craft Infusion'],
@@ -3508,8 +3508,10 @@
       ['clb','Club'],['spc','Spiked Club'],['mac','Mace'],['mst','Morning Star'],['fla','Flail'],['whm','War Hammer'],['mau','Maul'],['gma','Great Maul'],
       ['ssd','Short Sword'],['scm','Scimitar'],['sbr','Sabre'],['flc','Falchion'],['crs','Crystal Sword'],['bsd','Broad Sword'],['lsd','Long Sword'],['wsd','War Sword'],['2hs','Two-Handed Sword'],['clm','Claymore'],['gis','Giant Sword'],['bsw','Bastard Sword'],['flb','Flamberge'],['gsd','Great Sword'],
       ['dgr','Dagger'],['dir','Dirk'],['kri','Kris'],['bld','Blade'],
+      ['jav','Javelin'],['pil','Pilum'],['ssp','Short Spear'],['glv','Glaive'],['tsp','Throwing Spear'],
       ['spr','Spear'],['tri','Trident'],['brn','Brandistock'],['spt','Spetum'],['pik','Pike'],
       ['bar','Bardiche'],['vou','Voulge'],['scy','Scythe'],['pax','Poleaxe'],['hal','Halberd'],['wsc','War Scythe'],
+      ['tkf','Throwing Knife'],['tax','Throwing Axe'],['bkf','Balanced Knife'],['bal','Balanced Axe'],
       ['sst','Short Staff'],['lst','Long Staff'],['cst','Gnarled Staff'],['bst','Battle Staff'],['wst','War Staff'],
       ['wnd','Wand'],['ywn','Yew Wand'],['bwn','Bone Wand'],['gwn','Grim Wand'],
       ['scp','Scepter'],['gsc','Grand Scepter'],['wsp','War Scepter'],
@@ -3527,7 +3529,19 @@
       ['xlg','Demonhide Gloves'],['xvg','Sharkskin Gloves'],['xmb','Heavy Bracers'],['xtg','Battle Gauntlets'],['xhg','War Gauntlets'],
       ['xlb','Demonhide Boots'],['xvb','Sharkskin Boots'],['xmb','Mesh Boots'],['xtb','Battle Boots'],['xhb','War Boots'],
       ['zlb','Demonhide Sash'],['zvb','Sharkskin Belt'],['zmb','Mesh Belt'],['ztb','Battle Belt'],['zhb','War Belt'],
-      ['ci0','Circlet'],['ci1','Coronet'],['ci2','Tiara'],['ci3','Diadem']
+      ['ci0','Circlet'],['ci1','Coronet'],['ci2','Tiara'],['ci3','Diadem'],
+      ['9ha','Hatchet'],['9ax','Cleaver'],['92a','Twin Axe'],['9mp','Crowbill'],['9wa','Naga'],['9la','Military Axe'],['9ba','Bearded Axe'],['9bt','Tabar'],['9ga','Gothic Axe'],['9gi','Ancient Axe'],
+      ['9cl','Cudgel'],['9sp','Barbed Club'],['9ma','Flanged Mace'],['9mt','Jagged Star'],['9fl','Knout'],['9wh','Battle Hammer'],['9m9','War Club'],['9gm','Martel de Fer'],
+      ['9ss','Gladius'],['9sm','Cutlass'],['9sb','Shamshir'],['9fc','Tulwar'],['9cr','Dimensional Blade'],['9bs','Battle Sword'],['9ls','Rune Sword'],['9wd','Ancient Sword'],['92h','Espandon'],['9cm','Dacian Falx'],['9gs','Tusk Sword'],['9b9','Highland Blade'],['9fb','Conquest Sword'],['9gd','Cryptic Sword'],
+      ['9dg','Poignard'],['9di','Rondel'],['9kr','Cinquedeas'],['9bl','Stiletto'],
+      ['9sr','War Spear'],['9tr','Fuscina'],['9br','War Fork'],['9st','Yari'],['9p9','Lance'],
+      ['9b7','Lochaber Axe'],['9vo','Bill'],['9s8','Battle Scythe'],['9pa','Partizan'],['9h9','Bec-de-Corbin'],['9wc','Grim Scythe'],
+      ['9ja','War Javelin'],['9pi','Great Pilum'],['9s9','Simbilan'],['9gl','Spiculum'],['9ts','Harpoon'],
+      ['9tk','Battle Dart'],['9ta','Francisca'],['9bk','War Knife'],['9b8','Hurlbat'],
+      ['9lw','Razor Bow'],['9sw','Cedar Bow'],['9cb','Double Bow'],['9sb','Short Siege Bow'],['9lb','Large Siege Bow'],['9cw','Rune Bow'],['9lx','Gorgon Crossbow'],['9mx','Eagle Horn'],['9hx','Colossus Crossbow'],['9rx','Demon Crossbow'],
+      ['9ss','Ward Bow'],['9ws','Ashwood Bow'],
+      ['9qs','Holy Water Sprinkler'],['9sc','Divine Scepter'],['9ws','Caduceus'],
+      ['9sb','Jo Staff'],['9ls','Quarterstaff'],['9cs','Cedar Staff'],['9bs','Gothic Staff'],['9ws','Rune Staff']
     ],
     elt: [
       ['uap','Shako/War Hat'],['ukp','Hydraskull'],['ulm','Armet'],['uhl','Giant Conch'],['uhm','Spired Helm'],['urn','Corona'],['usk','Demonhead'],['uh9','Bone Visage'],
@@ -3544,6 +3558,11 @@
       ['7ws','Caduceus'],['7qs','Seraph Rod'],
       ['6lw','Hydra Bow'],['6sw','Ward Bow'],['6mx','Gorgon Crossbow'],['6rx','Demon Crossbow'],
       ['7xf','War Fist'],['7ar','Suwayyah'],['7qr','Scissors Suwayyah'],
+      ['7ja','Hyperion Javelin'],['7pi','Stygian Pilum'],['7s9','Balrog Spear'],['7gl','Ghost Glaive'],['7ts','Winged Harpoon'],
+      ['7tk','Flying Knife'],['7ta','Flying Axe'],['7bk','Winged Knife'],['7b8','Winged Axe'],
+      ['7dg','Fanged Knife'],['7di','Legend Spike'],['7kr','Mythical Spike'],
+      ['7wn','Petrified Wand'],['7yw','Tomb Wand'],['7bw','Lich Wand'],['7gw','Unearthed Wand'],
+      ['7ss','Ataghan'],['7sm','Elegant Blade'],['7sb','Tusk Sword'],['7fc','Hydra Edge'],
       ['aqv3','Elite Arrow Quiver'],['cqv3','Elite Bolt Quiver']
     ],
     uni: [
@@ -3568,6 +3587,35 @@
       ['urn','Crown of Ages base (IK Helm)'],['xap','Guillaume\'s Face'],['uhm','IK Helm'],
       ['uar','Natalya\'s Shadow'],['uts','Natalya\'s Mark'],
       ['lbt','Aldur\'s Advance / Natalya\'s Soul']
+    ],
+    classitems: [
+      // Amazon
+      ['ajv','Maiden Javelin'],['ajs','Ceremonial Javelin'],['aje','Matriarchal Javelin'],
+      ['asp','Maiden Spear'],['ass','Ceremonial Spear'],['ase','Matriarchal Spear'],
+      ['apk','Maiden Pike'],['aps','Ceremonial Pike'],['ape','Matriarchal Pike'],
+      ['asb','Stag Bow'],['asw','Reflex Bow'],['ase','Ashwood Bow'],
+      ['acb','Great Bow'],['acw','Grand Matron Bow'],['ace','Diamond Bow'],
+      // Sorceress
+      ['oba','Swirling Crystal'],['obl','Dimensional Shard'],['obs','Crystalline Globe'],['obd','Cloudy Sphere'],['obf','Sparkling Ball'],
+      // Necromancer
+      ['ne1','Preserved Head'],['ne2','Zombie Head'],['ne3','Unraveller Head'],['ne4','Gargoyle Head'],['ne5','Demon Head'],
+      ['ne6','Mummified Trophy'],['ne7','Fetish Trophy'],['ne8','Sexton Trophy'],['ne9','Cantor Trophy'],['ned','Hierophant Trophy'],
+      ['nea','Minion Skull'],['neb','Hellspawn Skull'],['nec','Overseer Skull'],['nee','Succubus Skull'],['nef','Bloodlord Skull'],
+      // Paladin
+      ['pa1','Targe'],['pa2','Rondache'],['pa3','Heraldic Shield'],['pa4','Aerin Shield'],['pa5','Crown Shield'],
+      ['pa6','Akaran Targe'],['pa7','Akaran Rondache'],['pa8','Protector Shield'],['pa9','Gilded Shield'],['pad','Royal Shield'],
+      ['paa','Sacred Targe'],['pab','Sacred Rondache'],['pac','Kurast Shield'],['pae','Zakarum Shield'],['paf','Vortex Shield'],
+      // Barbarian
+      ['ba1','Jawbone Cap'],['ba2','Fanged Helm'],['ba3','Horned Helm'],['ba4','Assault Helmet'],['ba5','Avenger Guard'],
+      ['ba6','Jawbone Visor'],['ba7','Lion Helm'],['ba8','Rage Mask'],['ba9','Savage Helmet'],['bad','Slayer Guard'],
+      ['baa','Carnage Helm'],['bab','Fury Visor'],['bac','Destroyer Helm'],['bae','Conqueror Crown'],['baf','Guardian Crown'],
+      // Druid
+      ['dr1','Wolf Head'],['dr2','Hawk Helm'],['dr3','Antlers'],['dr4','Falcon Mask'],['dr5','Spirit Mask'],
+      ['dr6','Alpha Helm'],['dr7','Griffon Headress'],['dr8','Hunter\'s Guise'],['dr9','Sacred Feathers'],['drd','Totemic Mask'],
+      ['dra','Blood Spirit'],['drb','Sun Spirit'],['drc','Earth Spirit'],['dre','Sky Spirit'],['drf','Dream Spirit'],
+      // Assassin
+      ['9ar','Katar'],['9wa','Wrist Blade'],['9wb','Hatchet Hands'],['9wc','Cestus'],['9wd','Claws'],['9we','Blade Talons'],['9wf','Scissors Katar'],
+      ['7ar','Suwayyah'],['7wb','Wrist Sword'],['7wc','War Fist'],['7wd','Battle Cestus'],['7we','Feral Claws'],['7wf','Runic Talons'],['7qr','Scissors Suwayyah']
     ],
     misc: [
       ['hp1','Minor Healing'],['hp2','Light Healing'],['hp3','Healing'],['hp4','Greater Healing'],['hp5','Super Healing'],
