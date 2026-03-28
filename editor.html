@@ -416,6 +416,7 @@
                   <button class="chip" data-value="ELT">Elite</button>
                 </div>
 
+                <hr class="builder-divider">
                 <label class="builder-label">Properties</label>
                 <div class="chip-group" data-field="properties" data-multi="true">
                   <button class="chip" data-value="ETH">Ethereal</button>
@@ -426,6 +427,7 @@
                   <button class="chip" data-value="GEMMED">Gemmed</button>
                 </div>
 
+                <hr class="builder-divider">
                 <label class="builder-label">Item Category</label>
                 <div class="chip-group" data-field="itemcat" data-multi="true">
                   <button class="chip" data-value="ARMOR">Armor</button>
@@ -482,10 +484,11 @@
                   <button class="chip" data-value="CLASS">Any Class</button>
                 </div>
 
+                <hr class="builder-divider">
                 <label class="builder-label">Value Conditions</label>
                 <div class="value-conditions" id="value-conditions">
                   <div class="value-row">
-                    <select class="value-code">
+                    <select class="value-code" aria-label="Value code">
                       <option value="">-- Code --</option>
                       <optgroup label="Common">
                         <option value="SOCKETS">SOCKETS</option>
@@ -530,13 +533,13 @@
                         <option value="ALLSK">All Skills</option>
                       </optgroup>
                     </select>
-                    <select class="value-op">
+                    <select class="value-op" aria-label="Comparison operator">
                       <option value=">">&gt;</option>
                       <option value="<">&lt;</option>
                       <option value="=">=</option>
                       <option value="~">~ (between)</option>
                     </select>
-                    <input type="text" class="value-val" placeholder="value" size="6">
+                    <input type="text" class="value-val" placeholder="value" size="6" aria-label="Condition value">
                     <button class="btn-icon btn-remove-value" title="Remove">&times;</button>
                   </div>
                 </div>
@@ -605,23 +608,23 @@
 
                   <label class="builder-label">Color</label>
                   <div class="color-grid" data-field="color">
-                    <button class="color-chip" data-value="" title="Default" style="background:#ccc;"></button>
-                    <button class="color-chip" data-value="%WHITE%" title="White" style="background:#fff;"></button>
-                    <button class="color-chip" data-value="%GRAY%" title="Gray" style="background:#808080;"></button>
-                    <button class="color-chip" data-value="%RED%" title="Red" style="background:#ff4040;"></button>
-                    <button class="color-chip" data-value="%GREEN%" title="Green" style="background:#00c000;"></button>
-                    <button class="color-chip" data-value="%DARK_GREEN%" title="Dark Green" style="background:#008000;"></button>
-                    <button class="color-chip" data-value="%BLUE%" title="Blue" style="background:#6464ff;"></button>
-                    <button class="color-chip" data-value="%GOLD%" title="Gold" style="background:#c8a040;"></button>
-                    <button class="color-chip" data-value="%YELLOW%" title="Yellow" style="background:#ffff40;"></button>
-                    <button class="color-chip" data-value="%ORANGE%" title="Orange" style="background:#ff8000;"></button>
-                    <button class="color-chip" data-value="%PURPLE%" title="Purple" style="background:#a000c8;"></button>
-                    <button class="color-chip" data-value="%TAN%" title="Tan" style="background:#b0a080;"></button>
-                    <button class="color-chip" data-value="%BLACK%" title="Black" style="background:#000; border:1px solid #555;"></button>
-                    <button class="color-chip" data-value="%CORAL%" title="Coral (HD)" style="background:#ff7f50;"></button>
-                    <button class="color-chip" data-value="%SAGE%" title="Sage (HD)" style="background:#80b080;"></button>
-                    <button class="color-chip" data-value="%TEAL%" title="Teal (HD)" style="background:#008080;"></button>
-                    <button class="color-chip" data-value="%LIGHT_GRAY%" title="Light Gray (HD)" style="background:#c0c0c0;"></button>
+                    <button class="color-chip" data-value="" title="Default" aria-label="Default color" style="background:#ccc;"></button>
+                    <button class="color-chip" data-value="%WHITE%" title="White" aria-label="White" style="background:#fff;"></button>
+                    <button class="color-chip" data-value="%GRAY%" title="Gray" aria-label="Gray" style="background:#808080;"></button>
+                    <button class="color-chip" data-value="%RED%" title="Red" aria-label="Red" style="background:#ff4040;"></button>
+                    <button class="color-chip" data-value="%GREEN%" title="Green" aria-label="Green" style="background:#00c000;"></button>
+                    <button class="color-chip" data-value="%DARK_GREEN%" title="Dark Green" aria-label="Dark Green" style="background:#008000;"></button>
+                    <button class="color-chip" data-value="%BLUE%" title="Blue" aria-label="Blue" style="background:#6464ff;"></button>
+                    <button class="color-chip" data-value="%GOLD%" title="Gold" aria-label="Gold" style="background:#c8a040;"></button>
+                    <button class="color-chip" data-value="%YELLOW%" title="Yellow" aria-label="Yellow" style="background:#ffff40;"></button>
+                    <button class="color-chip" data-value="%ORANGE%" title="Orange" aria-label="Orange" style="background:#ff8000;"></button>
+                    <button class="color-chip" data-value="%PURPLE%" title="Purple" aria-label="Purple" style="background:#a000c8;"></button>
+                    <button class="color-chip" data-value="%TAN%" title="Tan" aria-label="Tan" style="background:#b0a080;"></button>
+                    <button class="color-chip" data-value="%BLACK%" title="Black" aria-label="Black" style="background:#000; border:1px solid #555;"></button>
+                    <button class="color-chip" data-value="%CORAL%" title="Coral (HD)" aria-label="Coral" style="background:#ff7f50;"></button>
+                    <button class="color-chip" data-value="%SAGE%" title="Sage (HD)" aria-label="Sage" style="background:#80b080;"></button>
+                    <button class="color-chip" data-value="%TEAL%" title="Teal (HD)" aria-label="Teal" style="background:#008080;"></button>
+                    <button class="color-chip" data-value="%LIGHT_GRAY%" title="Light Gray (HD)" aria-label="Light Gray" style="background:#c0c0c0;"></button>
                   </div>
 
                   <label class="builder-label">Prepend to Name</label>
@@ -701,22 +704,27 @@
 
         <!-- Center: Code Editor -->
         <div class="editor-main">
-          <!-- Generated Rule (from Rule Builder) -->
-          <div class="generated-rule-bar" id="generated-panel">
-            <pre class="generated-rule"><code id="generated-code">ItemDisplay[]: %NAME%</code></pre>
-            <div class="builder-actions">
-              <button class="btn btn-primary" id="btn-insert-top" title="Insert at line 1 — this rule will override all others below it">Insert at Top</button>
-              <button class="btn btn-primary" id="btn-insert-rule">Insert at Cursor</button>
-              <button class="btn btn-primary" id="btn-insert-end" title="Insert at the end of the filter">Insert at End</button>
-              <button class="btn btn-secondary" id="btn-copy-rule">Copy</button>
-              <button class="btn btn-secondary" id="btn-clear-builder">Clear</button>
-            </div>
-            <p class="text-muted" style="font-size:0.7rem; margin:0.3rem 0 0;">Inserting at the top will override all other matching rules below it.</p>
-          </div>
-
           <div class="editor-tabs">
             <button class="editor-tab active" data-tab="code">Code Editor</button>
             <button class="editor-tab" data-tab="preview">Live Preview</button>
+          </div>
+
+          <!-- Generated Rule (from Rule Builder) -->
+          <div class="generated-rule-bar" id="generated-panel">
+            <div class="generated-rule-header">
+              <span class="generated-rule-label">Generated Rule</span>
+              <div class="builder-actions">
+                <div class="insert-group">
+                  <button class="btn btn-primary" id="btn-insert-rule" title="Insert at cursor position">Insert</button>
+                  <button class="btn btn-secondary btn-small" id="btn-insert-top" title="Insert at line 1 — overrides all rules below">Top</button>
+                  <button class="btn btn-secondary btn-small" id="btn-insert-end" title="Insert at the end of the filter">End</button>
+                </div>
+                <button class="btn btn-secondary" id="btn-copy-rule">Copy</button>
+                <button class="btn btn-secondary" id="btn-clear-builder">Clear</button>
+              </div>
+            </div>
+            <pre class="generated-rule"><code id="generated-code" class="empty-state">Use the Rule Builder to generate a rule</code></pre>
+            <p class="generated-rule-warning">Note: Inserting at Top will override all other matching rules below it.</p>
           </div>
 
           <!-- Code editor -->
@@ -728,7 +736,7 @@
             </div>
             <div class="code-editor-wrap">
               <div class="line-numbers" id="line-numbers"></div>
-              <textarea class="code-editor" id="code-editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+              <textarea class="code-editor" id="code-editor" aria-label="Filter code editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
                 placeholder="// Start typing your filter rules here, or use the Rule Builder on the left.
 //
 // Example:
@@ -745,7 +753,7 @@
               <p class="text-muted">Preview shows how your rules will display items on the ground. All magic, rare, unique, and set items are unidentified (!ID). Select an item and adjust the filter level to test.</p>
             </div>
             <div class="preview-test-bar">
-              <select id="preview-item-type">
+              <select id="preview-item-type" aria-label="Preview item type">
                 <optgroup label="Runes">
                   <option value="rune-zod">Zod Rune (r33)</option>
                   <option value="rune-ber" selected>Ber Rune (r30)</option>

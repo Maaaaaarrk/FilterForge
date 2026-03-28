@@ -455,18 +455,33 @@
     document.querySelectorAll('.builder-group-header[data-toggle]').forEach(function (header) {
       var targetId = header.getAttribute('data-toggle');
       var panel = document.getElementById(targetId);
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
 
       // Open conditions and output by default
       if (targetId === 'conditions-panel' || targetId === 'output-panel') {
         panel.classList.add('open');
         header.querySelector('.chevron').style.transform = 'rotate(90deg)';
+        header.setAttribute('aria-expanded', 'true');
+      } else {
+        header.setAttribute('aria-expanded', 'false');
       }
 
-      header.addEventListener('click', function () {
+      function togglePanel() {
         panel.classList.toggle('open');
+        var isOpen = panel.classList.contains('open');
+        header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         var chevron = header.querySelector('.chevron');
         if (chevron) {
-          chevron.style.transform = panel.classList.contains('open') ? 'rotate(90deg)' : '';
+          chevron.style.transform = isOpen ? 'rotate(90deg)' : '';
+        }
+      }
+
+      header.addEventListener('click', togglePanel);
+      header.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          togglePanel();
         }
       });
     });
@@ -661,6 +676,7 @@
 
     var rule = 'ItemDisplay[' + condStr + ']: ' + output;
     generatedCode.textContent = rule;
+    generatedCode.classList.remove('empty-state');
   }
 
   // ==========================================
@@ -1712,7 +1728,8 @@
         rows[0].querySelector('.value-val').value = '';
       }
 
-      updateGeneratedRule();
+      generatedCode.textContent = 'Use the Rule Builder to generate a rule';
+      generatedCode.classList.add('empty-state');
     });
   }
 
