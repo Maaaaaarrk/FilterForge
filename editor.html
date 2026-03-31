@@ -102,9 +102,8 @@
             <!-- Step 1: Class -->
             <div class="wizard-step" id="wiz-step-1">
               <h3>What class are you playing?</h3>
-              <p class="text-muted">This highlights class-specific items and skills for your build.</p>
-              <div class="wizard-options" data-wiz="class" data-multi="false">
-                <button class="wizard-opt" data-value="all">All Classes / Multiple</button>
+              <p class="text-muted">This adds class-specific items, weapons, and set pieces to your filter at higher strictness levels. <strong>You don't have to pick one</strong> — skip this step if you don't need class-specific enrichment. <strong>Select all that apply.</strong></p>
+              <div class="wizard-options" data-wiz="class" data-multi="true">
                 <button class="wizard-opt" data-value="amazon">Amazon</button>
                 <button class="wizard-opt" data-value="sorceress">Sorceress</button>
                 <button class="wizard-opt" data-value="necromancer">Necromancer</button>
@@ -117,25 +116,14 @@
 
             <!-- Step 2: Filter Strictness -->
             <div class="wizard-step" id="wiz-step-2" style="display:none">
-              <h3>How strict should your filter be?</h3>
-              <p class="text-muted">This controls how aggressively items are hidden from the ground.</p>
-              <div class="wizard-options" data-wiz="experience" data-multi="false">
-                <button class="wizard-opt" data-value="new">
-                  <strong>Relaxed</strong>
-                  <span>Show almost everything — nothing important gets hidden.</span>
-                </button>
-                <button class="wizard-opt" data-value="casual">
-                  <strong>Light</strong>
-                  <span>Hide obvious junk but keep anything potentially useful.</span>
-                </button>
-                <button class="wizard-opt" data-value="experienced">
-                  <strong>Moderate</strong>
-                  <span>Hide low-value items. Show only gear worth picking up.</span>
-                </button>
-                <button class="wizard-opt" data-value="endgame">
-                  <strong>Strict</strong>
-                  <span>Very aggressive — only show items worth picking up in maps.</span>
-                </button>
+              <h3>About Filter Levels</h3>
+              <p class="text-muted">Your filter includes <strong>4 strictness levels</strong> you can switch between in-game using the filter level hotkey. No selection needed here — just press Next to continue.</p>
+              <div style="margin:1em 0;line-height:1.7">
+                <p><strong>Level 1 — Relaxed:</strong> Shows almost everything. Good for new characters and early leveling.</p>
+                <p><strong>Level 2 — Normal:</strong> Hides low gold, junk white/magic items, scrolls, and keys. The default for most gameplay.</p>
+                <p><strong>Level 3 — Strict:</strong> Hides exceptional whites, low-tier uniques/sets, and most rares. For experienced players farming specific content.</p>
+                <p><strong>Level 4 — Very Strict:</strong> Only shows high-value items. Hides nearly all non-elite gear. For endgame map farming.</p>
+                <p class="text-muted" style="margin-top:0.5em"><em>Note: All runes are always shown regardless of filter level.</em></p>
               </div>
             </div>
 
