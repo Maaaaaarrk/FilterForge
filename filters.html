@@ -20,7 +20,7 @@
 <body>
   <nav class="nav">
     <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
@@ -28,23 +28,23 @@
       <li><a href="editor.html">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
   </nav>
 
   <main class="main-content">
     <div class="container">
       <div class="page-title">
         <h1>Community Filters</h1>
-        <p class="text-muted">Filters available in the PD2 launcher, maintained by the community</p>
+        <p class="text-muted">Filters available in the PD2 Launcher, maintained by the community</p>
       </div>
 
-      <div class="faq-search-wrap">
-        <input type="text" class="search-input" id="filter-search" placeholder="Search by filter or author..." autocomplete="off">
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="filter-search" placeholder="Search by filter or author..." autocomplete="off" aria-label="Search filters">
       </div>
 
       <div class="filter-grid" id="filter-grid"></div>
       <div class="filters-loading" id="filters-loading">Loading filters...</div>
-      <div class="filters-error" id="filters-error" style="display:none;">
+      <div class="filters-error" id="filters-error" style="display:none;" role="alert">
         Could not load filters. <a href="https://github.com/Project-Diablo-2/LootFilters" target="_blank" rel="noopener">View on GitHub</a>
       </div>
     </div>

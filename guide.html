@@ -20,7 +20,7 @@
 <body>
   <nav class="nav">
     <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
@@ -28,7 +28,7 @@
       <li><a href="editor.html">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
   </nav>
 
   <main class="main-content">
@@ -40,7 +40,7 @@
 
       <!-- Step 1 -->
       <section class="guide-step" id="what-are-filters">
-        <div class="step-number">1</div>
+        <div class="step-number" aria-hidden="true">1</div>
         <h2>What Are Item Filters?</h2>
         <p>Item filters are text files that control how items appear on the ground in Project Diablo 2. They can:</p>
         <ul>
@@ -57,7 +57,7 @@
 
       <!-- Step 2 -->
       <section class="guide-step" id="installing-a-filter">
-        <div class="step-number">2</div>
+        <div class="step-number" aria-hidden="true">2</div>
         <h2>Installing a Filter</h2>
         <p>The easiest way to use a filter is through the <strong>PD2 Launcher</strong>:</p>
         <ol>
@@ -77,7 +77,7 @@
 
       <!-- Step 3 -->
       <section class="guide-step" id="using-in-game">
-        <div class="step-number">3</div>
+        <div class="step-number" aria-hidden="true">3</div>
         <h2>Using Filters In-Game</h2>
         <p>Once a filter is installed:</p>
         <ol>
@@ -94,7 +94,7 @@
 
       <!-- Step 4 -->
       <section class="guide-step" id="how-filters-work">
-        <div class="step-number">4</div>
+        <div class="step-number" aria-hidden="true">4</div>
         <h2>How Filters Work</h2>
         <p>Every filter rule follows this pattern:</p>
         <pre><code>ItemDisplay[conditions]: output</code></pre>
@@ -127,7 +127,7 @@ ItemDisplay[]: %NAME%</code></pre>
 
       <!-- Step 5 -->
       <section class="guide-step" id="editing-a-filter">
-        <div class="step-number">5</div>
+        <div class="step-number" aria-hidden="true">5</div>
         <h2>Making Your First Edit</h2>
         <p>Let's say you want to customize an existing filter. Here's how:</p>
         <ol>
@@ -158,13 +158,12 @@ ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%MAP%%SOUNDID-4718%</code></pre>
 
       <!-- Step 6 -->
       <section class="guide-step" id="next-steps">
-        <div class="step-number">6</div>
+        <div class="step-number" aria-hidden="true">6</div>
         <h2>Next Steps</h2>
         <ul>
           <li><a href="faq.html">FAQ</a> — Answers to common questions and troubleshooting</li>
           <li><a href="https://wiki.projectdiablo2.com/wiki/Item_Filtering" target="_blank" rel="noopener">PD2 Wiki — Syntax Reference</a> — Full documentation of every condition, output, and keyword</li>
           <li><a href="filters.html">Community Filters</a> — Browse filters to use or learn from</li>
-          <li><a href="https://wiki.projectdiablo2.com/wiki/Item_Filtering" target="_blank" rel="noopener">PD2 Wiki</a> — Official item filtering documentation</li>
         </ul>
 
         <div class="callout success">

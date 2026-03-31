@@ -20,7 +20,7 @@
 <body>
   <nav class="nav">
     <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
@@ -28,7 +28,7 @@
       <li><a href="editor.html">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
   </nav>
 
   <main class="main-content">
@@ -50,11 +50,11 @@
       </div>
 
       <!-- Import from Author modal -->
-      <div class="modal-overlay" id="author-modal" style="display:none">
+      <div class="modal-overlay" id="author-modal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="author-modal-title">
         <div class="modal">
           <div class="modal-header">
-            <h2>Import from Community Author</h2>
-            <button class="btn-icon modal-close" id="author-modal-close">&times;</button>
+            <h2 id="author-modal-title">Import from Community Author</h2>
+            <button class="btn-icon modal-close" id="author-modal-close" aria-label="Close">&times;</button>
           </div>
           <div class="modal-body">
             <p class="text-muted mb-2">Select an author, then choose a .filter file from their repository.</p>
@@ -77,7 +77,7 @@
 
             <!-- Step 3: Loading/confirm -->
             <div id="author-step-3" style="display:none">
-              <div class="text-center" style="padding:2rem 0;">
+              <div class="text-center" style="padding:2rem 0">
                 <p id="author-loading-msg">Downloading filter...</p>
               </div>
             </div>
@@ -86,18 +86,18 @@
       </div>
 
       <!-- Build My Filter wizard modal -->
-      <div class="modal-overlay" id="wizard-modal" style="display:none">
+      <div class="modal-overlay" id="wizard-modal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="wizard-modal-title">
         <div class="modal modal-wide">
           <div class="modal-header">
-            <h2>Build My Filter</h2>
-            <button class="btn-icon modal-close" id="wizard-modal-close">&times;</button>
+            <h2 id="wizard-modal-title">Build My Filter</h2>
+            <button class="btn-icon modal-close" id="wizard-modal-close" aria-label="Close">&times;</button>
           </div>
           <div class="modal-body">
             <!-- Progress bar -->
             <div class="wizard-progress">
-              <div class="wizard-progress-bar" id="wizard-progress-bar" style="width:14%"></div>
+              <div class="wizard-progress-bar" id="wizard-progress-bar" style="width:10%"></div>
             </div>
-            <div class="wizard-step-label" id="wizard-step-label">Step 1 of 7</div>
+            <div class="wizard-step-label" id="wizard-step-label">Step 1 of 10</div>
 
             <!-- Step 1: Class -->
             <div class="wizard-step" id="wiz-step-1">
@@ -118,12 +118,12 @@
             <div class="wizard-step" id="wiz-step-2" style="display:none">
               <h3>About Filter Levels</h3>
               <p class="text-muted">Your filter includes <strong>4 strictness levels</strong> you can switch between in-game using the filter level hotkey. No selection needed here — just press Next to continue.</p>
-              <div style="margin:1em 0;line-height:1.7">
+              <div class="mt-2 mb-2" style="line-height:1.7">
                 <p><strong>Level 1 — Relaxed:</strong> Shows almost everything. Good for new characters and early leveling.</p>
                 <p><strong>Level 2 — Normal:</strong> Hides low gold, junk white/magic items, scrolls, and keys. The default for most gameplay.</p>
                 <p><strong>Level 3 — Strict:</strong> Hides exceptional whites, low-tier uniques/sets, and most rares. For experienced players farming specific content.</p>
                 <p><strong>Level 4 — Very Strict:</strong> Only shows high-value items. Hides nearly all non-elite gear. For endgame map farming.</p>
-                <p class="text-muted" style="margin-top:0.5em"><em>Note: All runes are always shown regardless of filter level.</em></p>
+                <p class="text-muted mt-1"><em>Note: All runes are always shown regardless of filter level.</em></p>
               </div>
             </div>
 
@@ -309,7 +309,7 @@
               </div>
             </div>
 
-            <!-- Step 6: Gold & Potions -->
+            <!-- Step 8: Gold & Potions -->
             <div class="wizard-step" id="wiz-step-8" style="display:none">
               <h3>What about gold, potions, and consumables?</h3>
               <p class="text-muted">These settings control clutter from common drops. <strong>Select all that apply.</strong></p>
@@ -341,7 +341,7 @@
               </div>
             </div>
 
-            <!-- Step 7: Tooltips & Recipes -->
+            <!-- Step 9: Tooltips & Recipes -->
             <div class="wizard-step" id="wiz-step-9" style="display:none">
               <h3>Item tooltips and recipes?</h3>
               <p class="text-muted">Add useful info to item descriptions when you hover over them. <strong>Select all that apply.</strong></p>
@@ -365,7 +365,7 @@
               </div>
             </div>
 
-            <!-- Step 8: Confirm -->
+            <!-- Step 10: Confirm -->
             <div class="wizard-step" id="wiz-step-10" style="display:none">
               <h3>Ready to build your filter!</h3>
               <p class="text-muted">Here's a summary of your choices:</p>
@@ -386,16 +386,16 @@
       <div class="editor-layout">
 
         <!-- Left: Rule Builder panel -->
-        <aside class="editor-sidebar" id="editor-sidebar">
+        <aside class="editor-sidebar" id="editor-sidebar" aria-label="Rule Builder">
           <div class="sidebar-section">
             <h3>Rule Builder</h3>
-            <p class="text-muted" style="font-size:0.82rem; margin-bottom:0.75rem;">Build a rule visually, then insert it into the editor.</p>
+            <p class="text-muted builder-hint" style="margin-bottom:0.75rem;">Build a rule visually, then insert it into the editor.</p>
 
             <!-- Conditions -->
             <div class="builder-group">
               <div class="builder-group-header" data-toggle="conditions-panel">
                 <span>Conditions</span>
-                <span class="chevron">&#9654;</span>
+                <span class="chevron" aria-hidden="true">&#9654;</span>
               </div>
               <div class="builder-panel" id="conditions-panel">
 
@@ -540,7 +540,7 @@
                       <option value="~">~ (between)</option>
                     </select>
                     <input type="text" class="value-val" placeholder="value" size="6" aria-label="Condition value">
-                    <button class="btn-icon btn-remove-value" title="Remove">&times;</button>
+                    <button class="btn-icon btn-remove-value" title="Remove" aria-label="Remove condition">&times;</button>
                   </div>
                 </div>
                 <button class="btn btn-small btn-add-value" id="btn-add-value">+ Add Condition</button>
@@ -572,10 +572,10 @@
                       <option value="2">2</option>
                       <option value="3">3</option>
                     </select>
-                    <button class="btn-icon btn-remove-skill" title="Remove">&times;</button>
+                    <button class="btn-icon btn-remove-skill" title="Remove" aria-label="Remove skill">&times;</button>
                   </div>
                 </div>
-                <button class="btn btn-small" id="btn-add-skill">+ Add Skill</button>
+                <button class="btn btn-small btn-add-skill" id="btn-add-skill">+ Add Skill</button>
 
                 <hr class="builder-divider">
                 <label class="builder-label">Negate (NOT)</label>
@@ -587,12 +587,12 @@
                   <button class="chip" data-value="!RW">!RW</button>
                 </div>
 
-                <label class="builder-label">Item Code (3-char)</label>
+                <label class="builder-label" for="item-code-input">Item Code (3-char)</label>
                 <div class="itemcode-input-wrap">
                   <input type="text" class="builder-input" id="item-code-input" placeholder="Type name or code..." maxlength="20" autocomplete="off">
                   <div class="itemcode-dropdown" id="itemcode-dropdown"></div>
                 </div>
-                <label style="font-size:0.75rem; color:var(--text-secondary); display:flex; align-items:center; gap:0.3rem; margin-top:0.3rem; cursor:pointer;">
+                <label class="builder-checkbox" for="item-code-alltiers">
                   <input type="checkbox" id="item-code-alltiers"> Include all tiers (norm/exc/elite)
                 </label>
               </div>
@@ -602,10 +602,10 @@
             <div class="builder-group">
               <div class="builder-group-header" data-toggle="itemcode-panel">
                 <span>Item Code Finder</span>
-                <span class="chevron">&#9654;</span>
+                <span class="chevron" aria-hidden="true">&#9654;</span>
               </div>
               <div class="builder-panel" id="itemcode-panel">
-                <input type="text" class="builder-input" id="itemcode-search" placeholder="Search by name or code...">
+                <input type="text" class="builder-input" id="itemcode-search" placeholder="Search by name or code..." aria-label="Search item codes">
                 <div class="itemcode-tabs">
                   <button class="itemcode-tab active" data-cat="runes">Runes</button>
                   <button class="itemcode-tab" data-cat="pd2">PD2</button>
@@ -625,7 +625,7 @@
             <div class="builder-group">
               <div class="builder-group-header" data-toggle="output-panel">
                 <span>Output</span>
-                <span class="chevron">&#9654;</span>
+                <span class="chevron" aria-hidden="true">&#9654;</span>
               </div>
               <div class="builder-panel" id="output-panel">
 
@@ -641,11 +641,11 @@
                     <button class="chip active" data-value="%NAME%">Default Name</button>
                     <button class="chip" data-value="custom">Custom Text</button>
                   </div>
-                  <input type="text" class="builder-input" id="custom-name-input" placeholder="Custom item text" style="display:none">
+                  <input type="text" class="builder-input" id="custom-name-input" placeholder="Custom item text" style="display:none" aria-label="Custom item text">
 
                   <label class="builder-label">Color</label>
                   <div class="color-grid" data-field="color">
-                    <button class="color-chip" data-value="" title="Default" aria-label="Default color" style="background:#ccc;"></button>
+                    <button class="color-chip" data-value="" title="Default" aria-label="Default" style="background:#ccc;"></button>
                     <button class="color-chip" data-value="%WHITE%" title="White" aria-label="White" style="background:#fff;"></button>
                     <button class="color-chip" data-value="%GRAY%" title="Gray" aria-label="Gray" style="background:#808080;"></button>
                     <button class="color-chip" data-value="%RED%" title="Red" aria-label="Red" style="background:#ff4040;"></button>
@@ -664,12 +664,12 @@
                     <button class="color-chip" data-value="%LIGHT_GRAY%" title="Light Gray (HD)" aria-label="Light Gray" style="background:#c0c0c0;"></button>
                   </div>
 
-                  <label class="builder-label">Prepend to Name</label>
+                  <label class="builder-label" for="prepend-text">Prepend to Name</label>
                   <input type="text" class="builder-input" id="prepend-text" placeholder="e.g. eth or GG">
 
-                  <label class="builder-label">Append to Name</label>
+                  <label class="builder-label" for="append-text">Append to Name</label>
                   <input type="text" class="builder-input" id="append-text" placeholder="e.g. [%SOCKETS%] or !">
-                  <a href="https://www.asciiart.eu/ascii-dividers/gallery" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--text-secondary); display:block; margin-top:0.2rem;">ASCII art ideas for decorations &rarr;</a>
+                  <a href="https://www.asciiart.eu/ascii-dividers/gallery" target="_blank" rel="noopener" class="builder-hint-link" style="margin-top:0.2rem;">ASCII art ideas for decorations &rarr;</a>
 
                   <label class="builder-label">Map Icon</label>
                   <div class="chip-group" data-field="mapIcon">
@@ -680,12 +680,12 @@
                     <button class="chip" data-value="%PX%">Pixel (xs)</button>
                   </div>
 
-                  <label class="builder-label">Map Icon Color (hex)</label>
-                  <a href="https://wiki.projectdiablo2.com/wiki/File:MapNotificationColors.png" target="_blank" rel="noopener" style="font-size:0.72rem; color:var(--text-secondary); display:block; margin-bottom:0.2rem;">Color chart reference &rarr;</a>
+                  <label class="builder-label" for="map-icon-color">Map Icon Color (hex)</label>
+                  <a href="https://wiki.projectdiablo2.com/wiki/File:MapNotificationColors.png" target="_blank" rel="noopener" class="builder-hint-link">Color chart reference &rarr;</a>
                   <input type="text" class="builder-input" id="map-icon-color" placeholder="e.g. 0A, FF, 1F (optional)" maxlength="2">
 
-                  <label class="builder-label">Sound</label>
-                  <p class="text-muted" style="font-size:0.72rem; margin:0 0 0.3rem;">To hear sounds in-game: type <code>/sound XXXX</code> in chat (e.g. <code>/sound 4716</code>)</p>
+                  <label class="builder-label" for="sound-select">Sound</label>
+                  <p class="text-muted builder-hint">To hear sounds in-game: type <code>/sound XXXX</code> in chat (e.g. <code>/sound 4716</code>)</p>
                   <select class="builder-select" id="sound-select">
                     <option value="">None</option>
                     <option value="4714">4714 — Exalted Orb</option>
@@ -718,7 +718,7 @@
                     <button class="chip" data-value="%CONTINUE%">%CONTINUE%</button>
                   </div>
 
-                  <label class="builder-label">Description (in braces)</label>
+                  <label class="builder-label" for="description-input">Description (in braces)</label>
                   <input type="text" class="builder-input" id="description-input" placeholder="e.g. iLvl: %ILVL%%NL%Price: %PRICE%">
                 </div>
               </div>
@@ -728,7 +728,7 @@
             <div class="builder-group">
               <div class="builder-group-header" data-toggle="templates-panel">
                 <span>Templates</span>
-                <span class="chevron">&#9654;</span>
+                <span class="chevron" aria-hidden="true">&#9654;</span>
               </div>
               <div class="builder-panel" id="templates-panel">
                 <button class="template-btn" data-template="starter">Starter Filter</button>
@@ -792,7 +792,7 @@
           <!-- Preview pane -->
           <div class="editor-pane" id="pane-preview" style="display:none">
             <div class="preview-header">
-              <p class="text-muted">Preview shows how your rules will display items on the ground. All magic, rare, unique, and set items are unidentified (!ID). Select an item and adjust the filter level to test. For a more advanced preview, try <a href="https://equa1itype4ce.github.io/filterbird/index.html?v=PD2&amp;fromweb=true" target="_blank" rel="noopener" style="color:var(--accent-primary);">FilterBird &rarr;</a></p>
+              <p class="text-muted">Preview shows how your rules will display items on the ground. All magic, rare, unique, and set items are unidentified (!ID). Select an item and adjust the filter level to test. For a more advanced preview, try <a href="https://equa1itype4ce.github.io/filterbird/index.html?v=PD2&amp;fromweb=true" target="_blank" rel="noopener" >FilterBird &rarr;</a></p>
             </div>
             <div class="preview-test-bar">
               <select id="preview-item-type" aria-label="Preview item type">
@@ -821,7 +821,7 @@
                   <option value="uni-gheeds">Unid Gheed's Fortune (cm3)</option>
                 </optgroup>
                 <optgroup label="Set Items (unid)">
-                  <option value="set-ik-armor">Unid Set Sacred Armor (uth)</option>
+                  <option value="set-ik-armor">Unid Set Lacquered Plate (uth)</option>
                   <option value="set-tal-amu">Unid Set Amulet (amu)</option>
                   <option value="set-lbt">Unid Set Boots (lbt)</option>
                 </optgroup>
@@ -838,7 +838,7 @@
                   <option value="mag-ring">Magic Ring (rin)</option>
                   <option value="mag-amu">Magic Amulet (amu)</option>
                   <option value="mag-jewel">Magic Jewel (jew)</option>
-                  <option value="mag-gc-90">Magic GC ilvl91 (cm3)</option>
+                  <option value="mag-gc-91">Magic GC ilvl91 (cm3)</option>
                   <option value="mag-gc">Magic Grand Charm (cm3)</option>
                   <option value="mag-sc">Magic Small Charm (cm1)</option>
                   <option value="mag-lc">Magic Large Charm (cm2)</option>
@@ -924,7 +924,7 @@
               <p class="text-muted">Check off unique items as you find them. Unfound items will be highlighted in your filter.</p>
               <div class="grail-actions">
                 <button class="btn btn-primary" id="btn-grail-generate">Insert Grail Rules</button>
-                <button class="btn btn-primary" id="btn-grail-update">Update Grail Rules</button>
+                <button class="btn btn-secondary" id="btn-grail-update">Update Grail Rules</button>
                 <button class="btn btn-secondary" id="btn-grail-reset">Reset All</button>
                 <span class="grail-progress" id="grail-progress">0 / 0 found</span>
               </div>
@@ -934,7 +934,7 @@
                 <summary>Customize Display</summary>
                 <div class="grail-style-options">
                   <div class="grail-style-row">
-                    <label>Color</label>
+                    <label for="grail-color">Color</label>
                     <select id="grail-color" aria-label="Grail highlight color">
                       <option value="%PURPLE%" selected>Purple</option>
                       <option value="%RED%">Red</option>
@@ -948,15 +948,15 @@
                     </select>
                   </div>
                   <div class="grail-style-row">
-                    <label>Prefix</label>
+                    <label for="grail-prefix">Prefix</label>
                     <input type="text" id="grail-prefix" value="** GRAIL: " placeholder="e.g. ** GRAIL: " aria-label="Text before item name">
                   </div>
                   <div class="grail-style-row">
-                    <label>Suffix</label>
+                    <label for="grail-suffix">Suffix</label>
                     <input type="text" id="grail-suffix" value=" **" placeholder="e.g.  **" aria-label="Text after item name">
                   </div>
                   <div class="grail-style-row">
-                    <label>Notification</label>
+                    <label for="grail-notify">Notification</label>
                     <select id="grail-notify" aria-label="Grail notification type">
                       <option value="%BORDER-05%" selected>Border (large)</option>
                       <option value="%MAP-05%">Map icon (medium)</option>
@@ -965,7 +965,7 @@
                     </select>
                   </div>
                   <div class="grail-style-row">
-                    <label>Sound</label>
+                    <label for="grail-sound">Sound</label>
                     <select id="grail-sound" aria-label="Grail drop sound">
                       <option value="" selected>None</option>
                       <option value="%SOUNDID-4716%">4716 — Mirror of Kalandra</option>

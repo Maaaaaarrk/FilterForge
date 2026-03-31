@@ -303,7 +303,7 @@
     'mag-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 45, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 85, CRAFTALVL: 90, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'mag-gc-90': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 91, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'mag-gc-91': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 91, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-gc': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-sc': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-lc': { code: 'cm2', name: 'Large Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
@@ -2377,7 +2377,6 @@
     var currentStep = 1;
     var choices = {
       'class': [],
-      experience: '',
       notifications: '',
       colorprofile: '',
       decoration: '',

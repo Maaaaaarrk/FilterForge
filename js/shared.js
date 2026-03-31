@@ -18,8 +18,11 @@
   const hamburger = document.querySelector('.nav-hamburger');
   const navLinks = document.querySelector('.nav-links');
   if (hamburger && navLinks) {
+    hamburger.setAttribute('aria-expanded', 'false');
     hamburger.addEventListener('click', function () {
       navLinks.classList.toggle('open');
+      var expanded = navLinks.classList.contains('open');
+      hamburger.setAttribute('aria-expanded', String(expanded));
     });
     // Close on link click
     navLinks.querySelectorAll('a').forEach(function (link) {

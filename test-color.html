@@ -1,7 +1,15 @@
 <!DOCTYPE html>
-<html><head><title>Color Parser Test</title></head>
-<body style="background:#1a1a2e;color:#e0e0e0;font-family:monospace;padding:2rem;">
-<h2>Color Parser Test</h2>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Parser Test — Filter Forge</title>
+  <style>
+    body { background: #1a1a2e; color: #e0e0e0; font-family: monospace; padding: 2rem; }
+  </style>
+</head>
+<body>
+<h1>Color Parser Test</h1>
 <div id="output"></div>
 <script>
 var D2_COLORS = {
@@ -72,5 +80,7 @@ script.src = 'js/editor.js?v=' + Date.now();
 script.onerror = function() {
   out.innerHTML += '<div style="color:red;">Failed to load editor.js</div>';
 };
+document.body.appendChild(script);
 </script>
-</body></html>
+</body>
+</html>

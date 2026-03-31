@@ -20,7 +20,7 @@
 <body>
   <nav class="nav">
     <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
@@ -28,7 +28,7 @@
       <li><a href="editor.html">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
   </nav>
 
   <main class="main-content">
@@ -37,13 +37,13 @@
         <h1>Frequently Asked Questions</h1>
       </div>
 
-      <div class="faq-search-wrap">
-        <input type="text" class="search-input" id="faq-search" placeholder="Search questions, answers, and tags..." autocomplete="off">
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="faq-search" placeholder="Search questions, answers, and tags..." autocomplete="off" aria-label="Search FAQ">
       </div>
-      <div class="faq-result-count" id="faq-result-count"></div>
+      <div class="faq-result-count" id="faq-result-count" aria-live="polite"></div>
 
       <div id="faq-container"></div>
-      <div class="faq-no-results" id="faq-no-results">No questions match your search.</div>
+      <div class="faq-no-results" id="faq-no-results" aria-live="polite">No questions match your search.</div>
     </div>
   </main>
 

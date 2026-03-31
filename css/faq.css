@@ -3,12 +3,7 @@
    ============================================ */
 
 /* Search */
-.faq-search-wrap {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.faq-search-wrap .search-input {
+.search-wrap .search-input {
   font-size: 1.25rem;
   padding: 0.85rem 1.25rem;
 }

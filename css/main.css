@@ -232,7 +232,8 @@ pre code {
   transform: translateY(-2px);
 }
 
-.card h3 {
+.card h2 {
+  font-size: 1.17em;
   margin-bottom: 0.5rem;
 }
 
@@ -373,6 +374,11 @@ tr:hover {
   font-family: var(--font-body);
   outline: none;
   transition: border-color 0.2s;
+}
+
+.search-wrap {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .search-input::placeholder {

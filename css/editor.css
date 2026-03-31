@@ -175,6 +175,27 @@
   margin-top: 0;
 }
 
+.builder-checkbox {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+  cursor: pointer;
+}
+
+.builder-hint-link {
+  font-size: 0.73rem;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.builder-hint {
+  font-size: 0.73rem;
+  margin: 0 0 0.3rem;
+}
+
 .builder-divider {
   border: none;
   border-top: 1px solid var(--border);
@@ -277,7 +298,7 @@
   font-family: var(--font-mono);
 }
 
-.btn-add-value, #btn-add-skill {
+.btn-add-value, .btn-add-skill {
   margin-top: 0.35rem;
 }
 
@@ -468,12 +489,9 @@
   border-bottom-color: var(--accent-primary);
 }
 
-/* Editor pane */
-.editor-pane {
-}
-
 /* Preview pane needs flex column for scrollable results */
 #pane-preview.editor-pane {
+  display: flex;
   flex-direction: column;
   min-height: 500px;
 }
@@ -1093,15 +1111,15 @@
    Build My Filter Wizard
    ============================================ */
 .btn-accent {
-  background: linear-gradient(135deg, #c8aa6e, #a08030);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-dark, #a08030));
   color: var(--bg-primary);
-  border: 1px solid #c8aa6e;
+  border: 1px solid var(--accent-primary);
   font-weight: 700;
 }
 
 .btn-accent:hover {
-  background: linear-gradient(135deg, #e0c882, #c8aa6e);
-  border-color: #e0c882;
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-primary));
+  border-color: var(--accent-hover);
 }
 
 .modal-wide {
@@ -1184,7 +1202,7 @@
   background: rgba(0, 0, 0, 0.4);
   border-radius: 3px;
   font-family: var(--font-mono);
-  font-size: 0.85rem !important;
+  font-size: 0.85rem;
   letter-spacing: 0.02em;
 }
 
@@ -1391,24 +1409,6 @@
   font-size: 0.9rem;
   padding: 1rem 0;
   text-align: center;
-}
-
-/* Mobile sidebar toggle */
-.editor-sidebar-toggle {
-  display: none;
-  position: fixed;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  background: var(--accent-primary);
-  color: var(--bg-primary);
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  font-size: 1.25rem;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* Responsive */
