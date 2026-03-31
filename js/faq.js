@@ -141,6 +141,7 @@
       });
       resultCount.textContent = '';
       noResults.classList.add('hidden');
+      if (faqData) highlightMatches([]);
       history.replaceState(null, '', window.location.pathname);
       return;
     }
