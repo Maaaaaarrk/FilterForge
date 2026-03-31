@@ -381,6 +381,11 @@ tr:hover {
   margin-bottom: 1.5rem;
 }
 
+.search-wrap .search-input {
+  font-size: 1.25rem;
+  padding: 0.85rem 1.25rem;
+}
+
 .search-input::placeholder {
   color: var(--text-secondary);
 }
@@ -391,7 +396,6 @@ tr:hover {
 
 /* Utility */
 .text-muted { color: var(--text-secondary); }
-.text-gold { color: var(--accent-primary); }
 .text-center { text-align: center; }
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
