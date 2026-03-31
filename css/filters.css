@@ -55,8 +55,16 @@
   text-decoration: none;
 }
 
-.filter-card.hidden {
+.filter-card.hidden,
+.filters-no-results.hidden {
   display: none;
+}
+
+.filters-no-results {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 3rem 0;
+  font-size: 1.1rem;
 }
 
 .filters-loading {

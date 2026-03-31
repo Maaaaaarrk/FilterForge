@@ -53,14 +53,17 @@
       groupEl.setAttribute('data-group', gi);
 
       var header = document.createElement('button');
+      header.type = 'button';
       header.className = 'faq-group-header';
+      header.setAttribute('aria-expanded', 'false');
       header.innerHTML =
         '<span>' + escapeHtml(group.title) +
         '<span class="faq-group-count">(' + group.questions.length + ')</span></span>' +
-        '<span class="chevron">&#9654;</span>';
+        '<span class="chevron" aria-hidden="true">&#9654;</span>';
 
       header.addEventListener('click', function () {
         groupEl.classList.toggle('open');
+        header.setAttribute('aria-expanded', String(groupEl.classList.contains('open')));
       });
 
       var body = document.createElement('div');
@@ -74,11 +77,14 @@
         if (q.id) item.id = q.id;
 
         var btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'faq-question';
-        btn.innerHTML = '<span class="q-chevron">&#9654;</span><span class="q-text">' + escapeHtml(q.question) + '</span>';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.innerHTML = '<span class="q-chevron" aria-hidden="true">&#9654;</span><span class="q-text">' + escapeHtml(q.question) + '</span>';
 
         btn.addEventListener('click', function () {
           item.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(item.classList.contains('open')));
         });
 
         var answer = document.createElement('div');
@@ -102,6 +108,7 @@
       var btn = document.createElement('button');
       btn.className = 'copy-btn';
       btn.textContent = 'Copy';
+      btn.setAttribute('aria-label', 'Copy code');
       btn.addEventListener('click', function () {
         navigator.clipboard.writeText(codeBlock.textContent).then(function () {
           btn.textContent = 'Copied!';
@@ -122,10 +129,18 @@
 
     if (!query.trim()) {
       // Reset: show all, collapse all
-      groups.forEach(function (g) { g.classList.remove('hidden', 'open'); });
-      items.forEach(function (i) { i.classList.remove('hidden', 'open'); });
+      groups.forEach(function (g) {
+        g.classList.remove('hidden', 'open');
+        var hdr = g.querySelector('.faq-group-header');
+        if (hdr) hdr.setAttribute('aria-expanded', 'false');
+      });
+      items.forEach(function (i) {
+        i.classList.remove('hidden', 'open');
+        var qBtn = i.querySelector('.faq-question');
+        if (qBtn) qBtn.setAttribute('aria-expanded', 'false');
+      });
       resultCount.textContent = '';
-      noResults.style.display = 'none';
+      noResults.classList.add('hidden');
       history.replaceState(null, '', window.location.pathname);
       return;
     }
@@ -151,27 +166,35 @@
       if (matchSet[key]) {
         item.classList.remove('hidden');
         groupsWithMatches[gi] = true;
+        var qBtn = item.querySelector('.faq-question');
         // Auto-expand if 3 or fewer results
         if (matchCount <= 3) {
           item.classList.add('open');
+          if (qBtn) qBtn.setAttribute('aria-expanded', 'true');
         } else {
           item.classList.remove('open');
+          if (qBtn) qBtn.setAttribute('aria-expanded', 'false');
         }
       } else {
         item.classList.add('hidden');
         item.classList.remove('open');
+        var qBtnH = item.querySelector('.faq-question');
+        if (qBtnH) qBtnH.setAttribute('aria-expanded', 'false');
       }
     });
 
     // Hide/show groups
     groups.forEach(function (group) {
       var gi = group.getAttribute('data-group');
+      var gHdr = group.querySelector('.faq-group-header');
       if (groupsWithMatches[gi]) {
         group.classList.remove('hidden');
         group.classList.add('open');
+        if (gHdr) gHdr.setAttribute('aria-expanded', 'true');
       } else {
         group.classList.add('hidden');
         group.classList.remove('open');
+        if (gHdr) gHdr.setAttribute('aria-expanded', 'false');
       }
     });
 
@@ -181,10 +204,10 @@
     // Update result count
     if (matchCount === 0) {
       resultCount.textContent = '';
-      noResults.style.display = 'block';
+      noResults.classList.remove('hidden');
     } else {
       resultCount.textContent = matchCount + ' result' + (matchCount === 1 ? '' : 's') + ' for "' + query.trim() + '"';
-      noResults.style.display = 'none';
+      noResults.classList.add('hidden');
     }
 
     // Update URL
@@ -225,8 +248,14 @@
         var target = document.getElementById(window.location.hash.slice(1));
         if (target && target.classList.contains('faq-item')) {
           var group = target.closest('.faq-group');
-          if (group) group.classList.add('open');
+          if (group) {
+            group.classList.add('open');
+            var ghdr = group.querySelector('.faq-group-header');
+            if (ghdr) ghdr.setAttribute('aria-expanded', 'true');
+          }
           target.classList.add('open');
+          var tBtn = target.querySelector('.faq-question');
+          if (tBtn) tBtn.setAttribute('aria-expanded', 'true');
           setTimeout(function () {
             target.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }, 100);

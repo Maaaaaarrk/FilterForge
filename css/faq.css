@@ -152,11 +152,11 @@
   color: var(--text-secondary);
   padding: 3rem 0;
   font-size: 1.1rem;
-  display: none;
 }
 
 /* Hidden by search */
 .faq-group.hidden,
-.faq-item.hidden {
+.faq-item.hidden,
+.faq-no-results.hidden {
   display: none;
 }

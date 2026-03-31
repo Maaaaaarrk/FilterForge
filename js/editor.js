@@ -318,7 +318,7 @@
     'base-diadem-0': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'NMAG', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, SOCKETS: 0, MAXSOCKETS: 3, RUNE: 0, GOLD: 0, GEM: 0 } },
     'base-flail-4': { code: 'fla', name: 'Flail', flags: ['GROUND', 'NMAG', 'NORM', 'MACE', 'WEAPON', '1H'], values: { ILVL: 36, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
     'base-crystal-4': { code: 'crs', name: 'Crystal Sword', flags: ['GROUND', 'NMAG', 'NORM', 'SWORD', 'WEAPON', '1H'], values: { ILVL: 26, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-pala-45res': { code: 'pa5', name: 'Crown Shield', flags: ['GROUND', 'NMAG', 'EXC', 'DIN', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 85, SOCKETS: 4, RES: 45, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'base-pala-45res': { code: 'pab', name: 'Sacred Targe', flags: ['GROUND', 'NMAG', 'ELT', 'DIN', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 85, SOCKETS: 4, RES: 45, RUNE: 0, GOLD: 0, GEM: 0 } },
     // Normal items
     'norm-cap': { code: 'cap', name: 'Cap', flags: ['GROUND', 'NMAG', 'NORM', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 1, DEF: 3, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'norm-belt-elt': { code: 'uhc', name: 'Colossus Girdle', flags: ['GROUND', 'NMAG', 'ELT', 'BELT', 'ARMOR', 'EQ6'], values: { ILVL: 85, DEF: 71, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
@@ -338,16 +338,16 @@
     'id-scroll': { code: 'isc', name: 'Scroll of Identify', flags: ['GROUND', 'NMAG', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'key': { code: 'key', name: 'Key', flags: ['GROUND', 'NMAG', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     // Gems
-    'gem-perf-ame': { code: 'gpv', name: 'Perfect Amethyst', flags: ['GROUND', 'MISC'], values: { GEM: 5, GEMLEVEL: 5, GEMTYPE: 1, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
-    'gem-flaw-dia': { code: 'glw', name: 'Flawless Diamond', flags: ['GROUND', 'MISC'], values: { GEM: 4, GEMLEVEL: 4, GEMTYPE: 2, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
-    'gem-chip-ruby': { code: 'gcr', name: 'Chipped Ruby', flags: ['GROUND', 'MISC'], values: { GEM: 1, GEMLEVEL: 1, GEMTYPE: 4, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
+    'gem-perf-ame': { code: 'gpvs', name: 'Perfect Amethyst', flags: ['GROUND', 'MISC'], values: { GEM: 5, GEMLEVEL: 5, GEMTYPE: 1, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
+    'gem-flaw-dia': { code: 'glws', name: 'Flawless Diamond', flags: ['GROUND', 'MISC'], values: { GEM: 4, GEMLEVEL: 4, GEMTYPE: 2, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
+    'gem-chip-ruby': { code: 'gcrs', name: 'Chipped Ruby', flags: ['GROUND', 'MISC'], values: { GEM: 1, GEMLEVEL: 1, GEMTYPE: 4, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
     // PD2 Special
     'pd2-wss': { code: 'wss', name: 'Worldstone Shard', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'pd2-pbox': { code: 'lbox', name: 'Larzuks Puzzlebox', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'pd2-pbox': { code: 'lbox', name: "Larzuk's Puzzlebox", flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'pd2-essence': { code: 'tes', name: 'Twisted Essence of Suffering', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'pd2-token': { code: 'toa', name: 'Token of Absolution', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'pd2-key': { code: 'pk1', name: 'Key of Terror', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'pd2-organ': { code: 'mbr', name: 'Mephistos Brain', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'pd2-organ': { code: 'mbr', name: "Mephisto's Brain", flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'pd2-rkey': { code: 'rkey', name: 'Skeleton Key', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'pd2-map-t1': { code: 't12', name: 'T1 Map', flags: ['GROUND', 'NMAG', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, MAPTIER: 1 } },
     'pd2-map-t3-rare': { code: 't34', name: 'T3 Rare Map', flags: ['GROUND', 'RARE', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, MAPTIER: 3 } }

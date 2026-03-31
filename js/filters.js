@@ -11,6 +11,7 @@
   var loading = document.getElementById('filters-loading');
   var errorEl = document.getElementById('filters-error');
   var searchInput = document.getElementById('filter-search');
+  var noResults = document.getElementById('filters-no-results');
   var filters = [];
 
   function apiUrlToRepoUrl(apiUrl) {
@@ -49,13 +50,18 @@
     var terms = query.toLowerCase().split(/\s+/).filter(Boolean);
     var cards = grid.querySelectorAll('.filter-card');
 
+    var visibleCount = 0;
     cards.forEach(function (card) {
       var idx = parseInt(card.getAttribute('data-index'), 10);
       var f = filters[idx];
       var text = (f.name + ' ' + f.author).toLowerCase();
       var visible = terms.length === 0 || terms.every(function (t) { return text.indexOf(t) !== -1; });
       card.classList.toggle('hidden', !visible);
+      if (visible) visibleCount++;
     });
+    if (noResults) {
+      noResults.classList.toggle('hidden', visibleCount > 0 || terms.length === 0);
+    }
   }
 
   if (searchInput) {

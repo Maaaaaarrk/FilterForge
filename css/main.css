@@ -10,6 +10,7 @@
   --bg-card: #1e1e3a;
   --accent-primary: #c8aa6e;
   --accent-hover: #e0c882;
+  --accent-dark: #a08030;
   --text-primary: #e0e0e0;
   --text-secondary: #a0a0a0;
   --text-heading: #c8aa6e;
@@ -290,9 +291,6 @@ pre code {
   border-left-color: var(--warning);
 }
 
-.callout.error {
-  border-left-color: var(--error);
-}
 
 .callout.success {
   border-left-color: var(--success);
