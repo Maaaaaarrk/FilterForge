@@ -2402,6 +2402,9 @@
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('wizard') === 'true') {
       openWizard();
+      urlParams.delete('wizard');
+      var nextSearch = urlParams.toString();
+      history.replaceState(null, '', window.location.pathname + (nextSearch ? '?' + nextSearch : '') + window.location.hash);
     }
 
     // Wire up option buttons
