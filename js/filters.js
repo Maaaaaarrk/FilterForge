@@ -34,7 +34,8 @@
         '<div class="filter-card-name">' + escapeHtml(f.name) + '</div>' +
         '<div class="filter-card-author">by ' + escapeHtml(f.author) + '</div>' +
         '<div class="filter-card-links">' +
-          '<a href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener">GitHub</a>' +
+          '<a href="editor.html?author=' + encodeURIComponent(f.author) + '" class="filter-card-load">Load in Editor</a>' +
+          '<a href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener" aria-label="GitHub repository for ' + escapeHtml(f.name) + '">GitHub</a>' +
         '</div>';
       grid.appendChild(card);
     });

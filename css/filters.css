@@ -55,6 +55,11 @@
   text-decoration: none;
 }
 
+.filter-card-load {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
 .filter-card.hidden,
 .filters-no-results.hidden {
   display: none;

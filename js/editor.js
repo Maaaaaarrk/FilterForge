@@ -4975,6 +4975,21 @@
       });
     }
 
+    // Auto-open to a specific author (from ?author= URL param)
+    function openToAuthor(authorName) {
+      loadAuthorList();
+      var match = authorFilters.find(function (f) {
+        return f.author.toLowerCase() === authorName.toLowerCase();
+      });
+      if (match) {
+        showModal();
+        selectAuthor(match);
+      }
+    }
+
+    // Expose for URL param handling
+    initAuthorImport.openToAuthor = openToAuthor;
+
     function downloadFilterFile(file, author) {
       showStep(3);
       loadingMsg.textContent = 'Downloading ' + file.name + '...';
@@ -5032,6 +5047,13 @@
     initItemCodeFinder();
     initItemCodeAutocomplete();
     initAuthorImport();
+
+    // Auto-open author import if ?author= in URL
+    var urlParams2 = new URLSearchParams(window.location.search);
+    var authorParam = urlParams2.get('author');
+    if (authorParam && initAuthorImport.openToAuthor) {
+      initAuthorImport.openToAuthor(authorParam);
+    }
 
     // Code editor events
     var inputDebounce = null;
