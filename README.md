@@ -1,5 +1,7 @@
 # Filter Forge
 
+![Filter Forge](splash.png)
+
 The complete unofficial guide to Project Diablo 2 item filters.
 
 **[Live Site](https://maaaaaarrk.github.io/FilterForge/)** | **[Report an Issue](https://github.com/Maaaaaarrk/FilterForge/issues)**

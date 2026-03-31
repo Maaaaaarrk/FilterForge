@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Filter Forge Splash</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+
+  .splash {
+    width: 800px;
+    height: 450px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    position: relative;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+  }
+
+  .splash::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200, 170, 110, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200, 170, 110, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .corner-tl, .corner-br {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(200, 170, 110, 0.15);
+  }
+  .corner-tl { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+  .corner-br { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+
+  .glow {
+    position: absolute;
+    width: 400px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(200, 170, 110, 0.07) 0%, transparent 70%);
+    top: 40%;
+    left: 22%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Left side: branding */
+  .left {
+    position: relative;
+    z-index: 1;
+    width: 340px;
+    padding: 36px 0 36px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .pd2 {
+    font-size: 10px;
+    color: rgba(160, 160, 160, 0.5);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .title {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #e0c882 0%, #c8aa6e 50%, #a08030 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.05;
+    padding-bottom: 4px;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    overflow: visible;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: #a0a0a0;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+  .subtitle em { color: #c8aa6e; font-style: normal; font-weight: 600; }
+
+  .features-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .pill {
+    font-size: 9.5px;
+    color: #c0c0c0;
+    background: rgba(200, 170, 110, 0.08);
+    border: 1px solid rgba(200, 170, 110, 0.2);
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .url {
+    font-size: 11px;
+    color: rgba(200, 170, 110, 0.45);
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+
+  /* Right side: editor preview */
+  .right {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 28px 28px 0;
+  }
+
+  .editor-preview {
+    width: 100%;
+    height: 100%;
+    background: #0d1117;
+    border-radius: 10px;
+    border: 1px solid rgba(200, 170, 110, 0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.4),
+      0 0 60px rgba(200, 170, 110, 0.04);
+  }
+
+  .editor-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #161b22;
+    border-bottom: 1px solid #21262d;
+  }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .editor-titlebar-text {
+    font-size: 10px;
+    color: #484f58;
+    margin-left: 6px;
+    font-family: 'Consolas', 'Fira Code', monospace;
+  }
+
+  .editor-tabs {
+    display: flex;
+    background: #161b22;
+    border-bottom: 1px solid #21262d;
+  }
+  .editor-tab-item {
+    font-size: 9px;
+    color: #484f58;
+    padding: 5px 12px;
+    font-family: -apple-system, sans-serif;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+  }
+  .editor-tab-item.active {
+    color: #c8aa6e;
+    border-bottom-color: #c8aa6e;
+  }
+
+  .editor-body {
+    flex: 1;
+    padding: 10px 0;
+    overflow: hidden;
+    font-family: 'Consolas', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 10.5px;
+    line-height: 1.65;
+  }
+
+  .code-line {
+    display: flex;
+    padding: 0 12px;
+  }
+  .code-line:hover { background: rgba(200, 170, 110, 0.03); }
+
+  .ln {
+    width: 28px;
+    text-align: right;
+    color: #484f58;
+    padding-right: 10px;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .code { white-space: pre; color: #e6e6e6; }
+
+  /* Syntax colors */
+  .c-comment { color: #6a737d; }
+  .c-keyword { color: #c8aa6e; }
+  .c-cond { color: #79c0ff; }
+  .c-output { color: #e6e6e6; }
+  .c-color { color: #a000c8; }
+  .c-red { color: #ff4040; }
+  .c-gold { color: #c8a040; }
+  .c-green { color: #00c000; }
+  .c-orange { color: #ff8000; }
+  .c-purple { color: #a000c8; }
+  .c-blue { color: #6464ff; }
+  .c-yellow { color: #ffff40; }
+  .c-white { color: #ffffff; }
+
+  /* Preview result bar at bottom */
+  .preview-bar {
+    background: #161b22;
+    border-top: 1px solid #21262d;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .preview-label {
+    font-size: 8px;
+    color: #484f58;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .preview-item {
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .preview-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+  <div class="splash">
+    <div class="corner-tl"></div>
+    <div class="corner-br"></div>
+    <div class="glow"></div>
+
+    <!-- Left: branding -->
+    <div class="left">
+      <div class="pd2">Project Diablo 2</div>
+      <div class="title">Filter<br>Forge</div>
+      <div class="subtitle">The complete <em>item filter</em><br>resource for PD2</div>
+      <div class="features-row">
+        <span class="pill">Build My Filter</span>
+        <span class="pill">Filter Editor</span>
+        <span class="pill">Community Filters</span>
+        <span class="pill">Holy Grail</span>
+        <span class="pill">FAQ & Guide</span>
+      </div>
+      <div class="url">maaaaaarrk.github.io/FilterForge</div>
+    </div>
+
+    <!-- Right: editor mockup -->
+    <div class="right">
+      <div class="editor-preview">
+        <div class="editor-titlebar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="editor-titlebar-text">my-filter.filter</span>
+        </div>
+        <div class="editor-tabs">
+          <span class="editor-tab-item active">Code Editor</span>
+          <span class="editor-tab-item">Live Preview</span>
+          <span class="editor-tab-item">Holy Grail</span>
+        </div>
+        <div class="editor-body">
+          <div class="code-line"><span class="ln">1</span><span class="code c-comment">// Runes — high value with sound</span></div>
+          <div class="code-line"><span class="ln">2</span><span class="code"><span class="c-keyword">ItemDisplay</span>[<span class="c-cond">RUNE>29</span>]: <span class="c-red">%RED%</span>xXx <span class="c-gold">%RUNENAME%</span><span class="c-white"> Rune</span> xXx<span class="c-output">%BORDER%%SOUNDID-4716%</span></span></div>
+          <div class="code-line"><span class="ln">3</span><span class="code"><span class="c-keyword">ItemDisplay</span>[<span class="c-cond">RUNE>19</span>]: <span class="c-gold">%GOLD%%RUNENAME%</span><span class="c-white"> Rune</span><span class="c-output">%MAP%%SOUNDID-4718%</span></span></div>
+          <div class="code-line"><span class="ln">4</span><span class="code"></span></div>
+          <div class="code-line"><span class="ln">5</span><span class="code c-comment">// Unique items — purple highlight</span></div>
+          <div class="code-line"><span class="ln">6</span><span class="code"><span class="c-keyword">ItemDisplay</span>[<span class="c-cond">UNI</span>]: <span class="c-purple">%PURPLE%</span>*** <span class="c-white">%NAME%</span><span class="c-output">%MAP%</span></span></div>
+          <div class="code-line"><span class="ln">7</span><span class="code"></span></div>
+          <div class="code-line"><span class="ln">8</span><span class="code c-comment">// Crafting bases</span></div>
+          <div class="code-line"><span class="ln">9</span><span class="code"><span class="c-keyword">ItemDisplay</span>[<span class="c-cond">MAG ELT ETH</span>]: <span class="c-green">%GREEN%</span>CRAFT <span class="c-white">%NAME%</span><span class="c-output">%DOT%</span></span></div>
+          <div class="code-line"><span class="ln">10</span><span class="code"></span></div>
+          <div class="code-line"><span class="ln">11</span><span class="code c-comment">// Hide junk</span></div>
+          <div class="code-line"><span class="ln">12</span><span class="code"><span class="c-keyword">ItemDisplay</span>[<span class="c-cond">NMAG NORM CLVL>30</span>]:</span></div>
+          <div class="code-line"><span class="ln">13</span><span class="code"><span class="c-keyword">ItemDisplay</span>[<span class="c-cond">GOLD&lt;100</span>]:</span></div>
+          <div class="code-line"><span class="ln">14</span><span class="code"><span class="c-keyword">ItemDisplay</span>[<span class="c-cond">key</span>]:</span></div>
+        </div>
+        <div class="preview-bar">
+          <span class="preview-label">Preview</span>
+          <span class="preview-item">
+            <span class="preview-dot" style="background:#c8a040; box-shadow: 0 0 6px #c8a040;"></span>
+            <span style="color:#c8a040; font-weight: 600;">Ber Rune</span>
+          </span>
+          <span style="color:#21262d; font-size:10px;">|</span>
+          <span class="preview-item">
+            <span class="preview-dot" style="background:#a000c8; box-shadow: 0 0 6px #a000c8;"></span>
+            <span style="color:#a000c8;">Shako</span>
+          </span>
+          <span style="color:#21262d; font-size:10px;">|</span>
+          <span class="preview-item">
+            <span class="preview-dot" style="background:#00c000; box-shadow: 0 0 6px #00c000;"></span>
+            <span style="color:#00c000;">Eth AP [4]</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
