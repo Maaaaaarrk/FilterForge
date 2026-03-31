@@ -39,6 +39,8 @@
         '</div>';
       grid.appendChild(card);
     });
+
+    filterCards(searchInput ? searchInput.value : '');
   }
 
   function escapeHtml(str) {
