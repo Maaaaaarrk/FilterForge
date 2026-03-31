@@ -2465,7 +2465,7 @@
         arrows: 'Arrows', stars: 'Stars', diamonds: 'Diamonds', pipes: 'Pipes', exclaim: 'Exclaim',
         circles: 'Circles', dots: 'Dots', crosses: 'Crosses', middot: 'Middle Dots',
         sockets: 'Socket Count', ilvl: 'Item Level', price: 'Vendor Price',
-        crafting: 'Crafting Info', eth: 'Ethereal Tag', shortnames: 'Short Names', uniquenames: 'Reveal Uniques', staffmods: 'Staffmods', wpnspeed: 'Weapon Speed',
+        crafting: 'Crafting Info', eth: 'Ethereal Tag', shortnames: 'Short Names', charmshort: 'Charm Short Names', uniquenames: 'Reveal Uniques', staffmods: 'Staffmods', wpnspeed: 'Weapon Speed',
         'all-rw': 'All Good Bases', 'eth-rw': 'Eth Bases Only', 'none-rw': 'None',
         hidegold: 'Hide Low Gold', hidekeys: 'Hide Keys',
         hidescrolls: 'Hide Scrolls', hidepots: 'Hide Small Potions',
@@ -2588,6 +2588,7 @@
       var wantCrafting = c.extras.indexOf('crafting') !== -1;
       var wantEthTag = c.extras.indexOf('eth') !== -1;
       var wantShortNames = c.extras.indexOf('shortnames') !== -1;
+      var wantCharmShort = c.extras.indexOf('charmshort') !== -1;
       var wantUniqueNames = c.extras.indexOf('uniquenames') !== -1;
       var wantStaffmods = c.extras.indexOf('staffmods') !== -1;
       var wantWpnSpeed = c.extras.indexOf('wpnspeed') !== -1;
@@ -3102,13 +3103,16 @@
       lines.push('// CHARMS');
       lines.push('// ============================================================');
       // Grand charms: highlight high-ilvl ones for skillers
-      lines.push('ItemDisplay[cm3 MAG !ID ILVL>90]: %BLUE%Grand Charm %NAME%' + ilvlStr + charmNotify);
-      lines.push('ItemDisplay[cm3 MAG !ID]: %BLUE%Grand Charm %NAME%' + ilvlStr);
+      var gcName = wantCharmShort ? 'GC' : '%NAME%';
+      var lcName = wantCharmShort ? 'LC' : '%NAME%';
+      var scName = wantCharmShort ? 'SC' : '%NAME%';
+      lines.push('ItemDisplay[cm3 MAG !ID ILVL>90]: %BLUE%' + gcName + ilvlStr + charmNotify);
+      lines.push('ItemDisplay[cm3 MAG !ID]: %BLUE%' + gcName + ilvlStr);
       // Large charms
-      lines.push('ItemDisplay[cm2 MAG !ID]: %BLUE%Large Charm %NAME%');
+      lines.push('ItemDisplay[cm2 MAG !ID]: %BLUE%' + lcName);
       // Small charms: show ilvl for max-roll hunting
-      lines.push('ItemDisplay[cm1 MAG !ID ILVL>90]: %BLUE%Small Charm %NAME%' + ilvlStr + charmNotify);
-      lines.push('ItemDisplay[cm1 MAG !ID]: %BLUE%Small Charm %NAME%' + ilvlStr);
+      lines.push('ItemDisplay[cm1 MAG !ID ILVL>90]: %BLUE%' + scName + ilvlStr + charmNotify);
+      lines.push('ItemDisplay[cm1 MAG !ID]: %BLUE%' + scName + ilvlStr);
       lines.push('');
 
       // ==========================
