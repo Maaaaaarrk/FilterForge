@@ -2495,7 +2495,8 @@
         hidegold: 'Hide Low Gold', hidekeys: 'Hide Keys',
         hidescrolls: 'Hide Scrolls', hidepots: 'Hide Small Potions',
         hideallhp: 'Hide ALL HP', hideallmp: 'Hide ALL MP',
-        socketrecipe: 'Socket Recipes', sellvalue: 'Sell Value $', upgraderecipe: 'Upgrade Recipes', imbue: 'Imbue/Slam Tips'
+        socketrecipe: 'Socket Recipes', sellvalue: 'Sell Value $', upgraderecipe: 'Upgrade Recipes', imbue: 'Imbue/Slam Tips',
+        shopping: 'Shopping: Crafting', skillbases: 'Shopping: Skill Bases'
       };
       return labels[val] || val;
     }
@@ -2618,6 +2619,8 @@
       var wantSellValue = c.tooltips.indexOf('sellvalue') !== -1;
       var wantUpgradeRecipe = c.tooltips.indexOf('upgraderecipe') !== -1;
       var wantImbue = c.tooltips.indexOf('imbue') !== -1;
+      var wantShopping = c.tooltips.indexOf('shopping') !== -1;
+      var wantSkillBases = c.tooltips.indexOf('skillbases') !== -1;
 
       // Class code mapping
       var classMap = {
@@ -4391,6 +4394,104 @@
         lines.push('// Non-eth bases can be slammed');
         lines.push('ItemDisplay[NMAG !ETH !RW SOCK=0 ELT (WEAPON OR ARMOR)]: %NAME%{%RED%Slam %WHITE%for chance of %YELLOW%Rare item%CL%%NAME%}%CONTINUE%');
         lines.push('');
+      }
+
+      // ==========================
+      // 15g. SHOPPING — Affordable Crafting Bases
+      // ==========================
+      if (wantShopping) {
+        lines.push('// ============================================================');
+        lines.push('// SHOPPING — Affordable Crafting Bases');
+        lines.push('// ============================================================');
+        lines.push("ItemDisplay[SHOP MAG BUYPRICE<60000 FILTLVL>2 FILTLVL<8 (CHEST OR STAFF OR SCEPTER OR WAND OR SIN OR CLUB OR bhm OR xh9 OR bsh OR xsh OR lbt OR xlb OR vbt OR xvb)]: %NAME%%SAGE%{%SAGE%Affordable Crafting Base%CL%%NAME%}%CONTINUE%");
+        lines.push('');
+      }
+
+      // ==========================
+      // 15h. SHOPPING — Skill Base Tooltips (+5/6/7 to skill)
+      // ==========================
+      if (wantSkillBases) {
+        lines.push('// ============================================================');
+        lines.push('// SHOPPING — Skill Base Tooltips (+5/6/7 to skill)');
+        lines.push('// ============================================================');
+
+        var skillData = {
+          SOR: [
+            {id:49,tab:9,name:'Lightning'},{id:48,tab:9,name:'Nova'},{id:53,tab:9,name:'Chain Lightning'},
+            {id:38,tab:9,name:'Charged Bolt'},{id:63,tab:9,name:'Lightning Mastery'},{id:57,tab:9,name:'Thunder Storm'},
+            {id:44,tab:10,name:'Frost Nova'},{id:59,tab:10,name:'Blizzard'},{id:64,tab:10,name:'Frozen Orb'},
+            {id:369,tab:10,name:'Ice Barrage'},{id:65,tab:10,name:'Cold Mastery'},{id:40,tab:10,name:'Cold Enchant'},
+            {id:52,tab:8,name:'Fire Enchant'},{id:376,tab:8,name:'Combustion'},{id:62,tab:8,name:'Hydra'},
+            {id:56,tab:8,name:'Meteor'},{id:61,tab:8,name:'Fire Mastery'}
+          ],
+          NEC: [
+            {id:381,tab:16,name:'Dark Pact'},{id:66,tab:16,name:'Amp Damage'},{id:91,tab:16,name:'Lower Res'},
+            {id:83,tab:17,name:'Desecrate'},{id:92,tab:17,name:'Psn Nova'},{id:74,tab:17,name:'Corpse Explosion'},
+            {id:67,tab:17,name:'Teeth'},{id:84,tab:17,name:'Bone Spear'},{id:93,tab:17,name:'Bone Spirit'},
+            {id:94,tab:18,name:'Fire Golem'},{id:75,tab:18,name:'Clay Golem'},{id:85,tab:18,name:'Blood Golem'},
+            {id:69,tab:18,name:'Skele Mastery'},{id:70,tab:18,name:'Skele Warrior'},{id:89,tab:18,name:'Skele Archers'},
+            {id:80,tab:18,name:'Skele Mages'}
+          ],
+          DIN: [
+            {id:102,tab:25,name:'Holy Fire'},{id:114,tab:25,name:'Holy Freeze'},{id:118,tab:25,name:'Holy Shock'},
+            {id:119,tab:25,name:'Sanctuary'},{id:122,tab:25,name:'Fanaticism'},{id:123,tab:25,name:'Conviction'},
+            {id:113,tab:25,name:'Concentration'},{id:364,tab:24,name:'Holy Nova'},{id:101,tab:24,name:'Holy Bolt'},
+            {id:112,tab:24,name:'Blessed Hammer'},{id:111,tab:24,name:'Vengeance'},{id:117,tab:24,name:'Holy Shield'}
+          ],
+          BAR: [
+            {id:149,tab:34,name:'Battle Orders'},{id:154,tab:34,name:'War Cry'},{id:155,tab:34,name:'Battle Command'},
+            {id:150,tab:34,name:'Grim Ward'},{id:146,tab:34,name:'Battle Cry'},{id:368,tab:33,name:'Deep Wounds'}
+          ],
+          DRU: [
+            {id:245,tab:42,name:'Tornado'},{id:240,tab:42,name:'Twister'},{id:229,tab:42,name:'Molten Boulder'},
+            {id:234,tab:42,name:'Fissure'},{id:244,tab:42,name:'Volcano'},{id:249,tab:42,name:'Armageddon'},
+            {id:250,tab:42,name:'Hurricane'},{id:222,tab:40,name:'Poison Creeper'},{id:221,tab:40,name:'Raven'},
+            {id:226,tab:40,name:'Oak Sage'},{id:247,tab:40,name:'Grizzly'},{id:227,tab:40,name:'Spirit Wolf'},
+            {id:237,tab:40,name:'Dire Wolf'},{id:236,tab:40,name:'Heart of Wolverine'}
+          ],
+          SIN: [
+            {id:280,tab:50,name:'Phoenix Strike'},{id:254,tab:50,name:'Tiger Strike'},{id:265,tab:50,name:'Cobra Strike'},
+            {id:269,tab:50,name:'Claws of Thunder'},{id:259,tab:50,name:'Fists of Fire'},{id:274,tab:50,name:'Blades of Ice'},
+            {id:263,tab:48,name:'Venom'},{id:252,tab:48,name:'Weapon Block'},{id:271,tab:48,name:'Shadow Master'},
+            {id:267,tab:48,name:'Mind Blast'},{id:277,tab:48,name:'Blade Fury'},{id:264,tab:48,name:'Fade'},
+            {id:258,tab:48,name:'Burst of Speed'},{id:253,tab:48,name:'Claw Mastery'}
+          ],
+          ZON: [
+            {id:6,tab:0,name:'Guided Arrow'},{id:11,tab:0,name:'Strafe'},{id:7,tab:0,name:'Multi Shot'},
+            {id:22,tab:2,name:'Lightning Fury'},{id:14,tab:2,name:'Plague Javelin'},{id:10,tab:2,name:'Power Strike'},
+            {id:20,tab:2,name:'Lightning Strike'},{id:24,tab:2,name:'Charged Strike'}
+          ]
+        };
+
+        // Class ID mapping for MULTI83 condition
+        var classIdMap = {SOR:1, NEC:2, DIN:3, BAR:4, DRU:5, SIN:6, ZON:0};
+
+        selectedClasses.forEach(function(cls) {
+          var skills = skillData[cls];
+          if (!skills) return;
+          var cid = classIdMap[cls];
+          lines.push('// --- ' + cls + ' Skill Tooltips ---');
+          skills.forEach(function(sk) {
+            for (var total = 7; total >= 5; total--) {
+              lines.push('ItemDisplay[!RW !UNI !SET ID SK' + sk.id + '>0 (MULTI188,' + sk.tab + '+MULTI83,' + cid + '+MULTI107,' + sk.id + '+STAT127=' + total + ')]: %CONTINUE%%NAME%%BORDER-ED%{%PURPLE%> > > >   +' + total + ' ' + sk.name + '   < < < <%CL%%NAME%}');
+            }
+          });
+          lines.push('');
+        });
+        // If no classes selected, emit all
+        if (selectedClasses.length === 0) {
+          Object.keys(skillData).forEach(function(cls) {
+            var skills = skillData[cls];
+            var cid = classIdMap[cls];
+            lines.push('// --- ' + cls + ' Skill Tooltips ---');
+            skills.forEach(function(sk) {
+              for (var total = 7; total >= 5; total--) {
+                lines.push('ItemDisplay[!RW !UNI !SET ID SK' + sk.id + '>0 (MULTI188,' + sk.tab + '+MULTI83,' + cid + '+MULTI107,' + sk.id + '+STAT127=' + total + ')]: %CONTINUE%%NAME%%BORDER-ED%{%PURPLE%> > > >   +' + total + ' ' + sk.name + '   < < < <%CL%%NAME%}');
+              }
+            });
+            lines.push('');
+          });
+        }
       }
 
       // ==========================
