@@ -2206,8 +2206,12 @@
       return lookup[code] || '';
     });
 
-    // Remove descriptions {} for inline display
-    text = text.replace(/\{[^}]*\}/g, '');
+    // Extract descriptions {} for display as dimmed suffix
+    var descriptions = [];
+    text = text.replace(/\{([^}]*)\}/g, function(m, desc) {
+      if (desc.trim()) descriptions.push(desc);
+      return '';
+    });
 
     // Convert colors to spans — start with item's rarity color
     var rarityColor = '#ffffff'; // default white
@@ -2251,6 +2255,10 @@
       if (chunk) {
         result += '<span style="color:' + currentColor + '">' + escapeHtml(chunk) + '</span>';
       }
+    }
+
+    if (descriptions.length) {
+      result += ' <span style="color:#888;font-size:0.85em">{' + escapeHtml(descriptions.join(' | ')) + '}</span>';
     }
 
     return result || escapeHtml(item.name);
