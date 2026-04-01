@@ -608,6 +608,7 @@
         firstRow.querySelector('.skill-op').value = '=';
         firstRow.querySelector('.skill-level').value = '1';
       }
+      addBtn.style.display = '';
       updateGeneratedRule();
     });
 
@@ -618,6 +619,7 @@
       populateSkills(row);
       row.querySelector('.btn-remove-skill').addEventListener('click', function () {
         row.remove();
+        addBtn.style.display = '';
         updateGeneratedRule();
       });
       if (container.querySelectorAll('.skill-row').length >= MAX_SKILLS) {
