@@ -2889,16 +2889,17 @@
       lines.push('// --- Mid Runes (Lem - Mal) ---');
       lines.push('ItemDisplay[RUNE>19 RUNE<24]: ' + colorMidRune + decoLow_L + '%RUNENAME% Rune' + decoLow_R + ' (#%RUNENUM%)' + midRuneNotify);
 
-      // Rune stacking display (from Wolfie/HiimFilter)
-      lines.push('// --- Rune Stack Display ---');
-      lines.push('ItemDisplay[RUNE>0 QTY>1]: %NAME% %TAN%x%QTY%{%NAME%}%CONTINUE%');
-      lines.push('');
-
       // Tier 4: Low Runes (El #1 through Fal #19)
       lines.push('// --- Low Runes (El - Fal) ---');
       lines.push('ItemDisplay[RUNE>14 RUNE<20]: ' + colorLowRune + '%RUNENAME% Rune (#%RUNENUM%)' + lowRuneDot);
       lines.push('ItemDisplay[RUNE>10 RUNE<15]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
       lines.push('ItemDisplay[RUNE>0 RUNE<11]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
+      lines.push('');
+
+      // Rune stacking display (from Wolfie/HiimFilter)
+      // Must come after all tier rules so CONTINUE doesn't suppress tier decoration
+      lines.push('// --- Rune Stack Display ---');
+      lines.push('ItemDisplay[RUNE>0 QTY>1]: %NAME% %TAN%x%QTY%{%NAME%}%CONTINUE%');
       lines.push('');
 
       // ==========================
