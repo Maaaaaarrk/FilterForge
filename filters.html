@@ -14,6 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Community Filters — Filter Forge</title>
   <meta name="description" content="Browse community-maintained item filters for Project Diablo 2.">
+  <meta property="og:title" content="Community Filters — Filter Forge">
+  <meta property="og:description" content="Browse and import community PD2 loot filters.">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/filters.css">
 </head>
@@ -23,12 +25,12 @@
     <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="faq.html">FAQ</a></li>
-      <li><a href="filters.html">Filters</a></li>
+      <li><a href="filters.html" class="active">Filters</a></li>
       <li><a href="guide.html">Guide</a></li>
       <li><a href="editor.html">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
   </nav>
 
   <main class="main-content">
@@ -42,10 +44,10 @@
         <input type="text" class="search-input" id="filter-search" placeholder="Search by filter or author..." autocomplete="off" aria-label="Search filters">
       </div>
 
-      <div class="filter-grid" id="filter-grid"></div>
+      <div class="filter-grid" id="filter-grid"><p class="text-muted text-center hidden" id="filters-empty">No community filters available.</p></div>
       <div class="filters-no-results hidden" id="filters-no-results" aria-live="polite">No filters match your search.</div>
       <div class="filters-loading" id="filters-loading" role="status">Loading filters...</div>
-      <div class="filters-error" id="filters-error" style="display:none;" role="alert">
+      <div class="filters-error hidden" id="filters-error" role="alert">
         Could not load filters. <a href="https://github.com/Project-Diablo-2/LootFilters" target="_blank" rel="noopener">View on GitHub</a>
       </div>
     </div>

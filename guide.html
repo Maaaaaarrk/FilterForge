@@ -14,6 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Getting Started — Filter Forge</title>
   <meta name="description" content="Step-by-step guide to installing and customizing PD2 item filters.">
+  <meta property="og:title" content="Getting Started — Filter Forge">
+  <meta property="og:description" content="Learn how to create and use PD2 loot filters.">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/guide.css">
 </head>
@@ -24,11 +26,11 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
-      <li><a href="guide.html">Guide</a></li>
+      <li><a href="guide.html" class="active">Guide</a></li>
       <li><a href="editor.html">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
   </nav>
 
   <main class="main-content">
@@ -154,6 +156,7 @@ ItemDisplay[NMAG !SUP CLVL>30]:
 
 // Highlight runes above Lem (#20) with gold + sound
 ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%MAP%%SOUNDID-4718%</code></pre>
+      <p><code>%RUNENAME%</code> displays the rune's name (e.g. "Ber"), <code>%MAP%</code> adds a minimap icon, and <code>%SOUNDID-4718%</code> plays a drop sound.</p>
       </section>
 
       <!-- Step 6 -->

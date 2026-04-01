@@ -21,7 +21,7 @@
   // ==========================================
   var builderState = {
     quality: '',
-    tier: '',
+    tier: [],
     properties: [],
     itemcat: [],
     equipment: '',
@@ -608,6 +608,7 @@
         firstRow.querySelector('.skill-op').value = '=';
         firstRow.querySelector('.skill-level').value = '1';
       }
+      addBtn.style.display = '';
       updateGeneratedRule();
     });
 
@@ -618,6 +619,7 @@
       populateSkills(row);
       row.querySelector('.btn-remove-skill').addEventListener('click', function () {
         row.remove();
+        addBtn.style.display = '';
         updateGeneratedRule();
       });
       if (container.querySelectorAll('.skill-row').length >= MAX_SKILLS) {
@@ -660,9 +662,9 @@
     ['qui','xui','uui'],['lea','xea','uea'],['hla','xla','ula'],['stu','xtu','utu'],['rng','xng','ung'],['scl','xmg','umg'],['chn','xcl','ucl'],
     ['brs','xhn','uhn'],['spl','xrs','urs'],['plt','xpl','upl'],['fld','xlt','ult'],['gth','xld','uld'],['ful','xth','uth'],['aar','xul','uul'],['ltp','xar','uar'],
     // Shields
-    ['buc','xuc','uit'],['sml','xml','uow'],['lrg','xrg','uts'],['kit','xts','ush'],['tow','xsh','ush'],
+    ['buc','xuc','uuc'],['sml','xml','uml'],['lrg','xrg','urg'],['spk','xpk','upk'],['kit','xit','uit'],['bsh','xsh','ush'],['tow','xow','uow'],['gts','xts','uts'],
     // Gloves
-    ['lgl','xlg','ulg'],['vgl','xvg','uvg'],['mgl','xmb','umb'],['tgl','xtg','utg'],['hgl','xhg','uhg'],
+    ['lgl','xlg','ulg'],['vgl','xvg','uvg'],['mgl','xmg','umg'],['tgl','xtg','utg'],['hgl','xhg','uhg'],
     // Boots
     ['lbt','xlb','ulb'],['vbt','xvb','uvb'],['mbt','xmb','umb'],['tbt','xtb','utb'],['hbt','xhb','uhb'],
     // Belts
@@ -824,10 +826,8 @@
 
       if (mapIcon) {
         if (mapIconColor) {
-          output += mapIcon.replace('%', '%').replace(/%$/, '-' + mapIconColor + '%');
-          // Fix: replace e.g. %MAP% with %MAP-0A%
           var iconBase = mapIcon.replace(/%/g, '');
-          output = output.replace(mapIcon, '%' + iconBase + '-' + mapIconColor + '%');
+          output += '%' + iconBase + '-' + mapIconColor + '%';
         } else {
           output += mapIcon;
         }
@@ -1089,6 +1089,7 @@
   // Insert rule into editor
   // ==========================================
   function insertRule() {
+    if (generatedCode.classList.contains('empty-state')) return;
     var rule = generatedCode.textContent;
     var val = codeEditor.value;
     var pos = codeEditor.selectionStart;
@@ -1122,6 +1123,7 @@
   }
 
   function insertRuleAtTop() {
+    if (generatedCode.classList.contains('empty-state')) return;
     var rule = generatedCode.textContent;
     var val = codeEditor.value;
     var suffix = val.length > 0 && !val.startsWith('\n') ? '\n' : '';
@@ -1133,6 +1135,7 @@
   }
 
   function insertRuleAtEnd() {
+    if (generatedCode.classList.contains('empty-state')) return;
     var rule = generatedCode.textContent;
     var val = codeEditor.value;
     var prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
@@ -1234,13 +1237,13 @@
       {code:'skp',name:'Tarnhelm'},{code:'hlm',name:'Coif of Glory'},{code:'fhl',name:'Duskdeep'},
       {code:'ghm',name:'Howltusk'},{code:'crn',name:'Peasant Crown'},{code:'msk',name:'Wormskull'},
       {code:'xap',name:'The Face of Horror'},{code:'xkp',name:'Sander\'s Paragon'},
-      {code:'xlm',name:'Crown of Thieves'},{code:'xhl',name:'Vampire Gaze'}
+      {code:'xrn',name:'Crown of Thieves'}
     ],
     'Body Armor': [
-      {code:'utp',name:"Tyrael's Might"},{code:'uar',name:'Chains of Honor'},{code:'uui',name:"Ormus' Robes"},
+      {code:'utp',name:"Tyrael's Might"},{code:'uui',name:"Ormus' Robes"},
       {code:'umc',name:'Guardian Angel'},{code:'uul',name:"Gladiator's Bane"},{code:'uhc',name:"Templar's Might"},
       {code:'ulm',name:'Steel Carapace'},{code:'xhn',name:"Duriel's Shell"},{code:'xui',name:"Skullder's Ire"},
-      {code:'zlb',name:"Arkaine's Valor"},{code:'xla',name:'The Spirit Shroud'},{code:'xrs',name:'Skin of the Vipermagi'},
+      {code:'upl',name:"Arkaine's Valor"},{code:'xla',name:'The Spirit Shroud'},{code:'xrs',name:'Skin of the Vipermagi'},
       {code:'xpl',name:'Iron Pelt'},{code:'ltp',name:'Greyform'},{code:'brs',name:'Blinkbat\'s Form'},
       {code:'mpl',name:'The Centurion'},{code:'fld',name:'Twitchthroe'},{code:'gth',name:'Darkglow'},
       {code:'chn',name:'Sparking Mail'},{code:'plt',name:'Venom Ward'},{code:'stu',name:'Iceblink'},
@@ -1248,29 +1251,30 @@
     ],
     'Shields': [
       {code:'uit',name:'Stormshield'},{code:'nef',name:'Lidless Wall'},{code:'xsh',name:"Head Hunter's Glory"},
-      {code:'pa9',name:'Herald of Zakarum'},{code:'8mx',name:'Alma Negra'},{code:'scl',name:"Tiamat's Rebuke"},
+      {code:'pa9',name:'Herald of Zakarum'},{code:'8mx',name:'Alma Negra'},
       {code:'buc',name:'Pelta Lunata'},{code:'sml',name:'Umbral Disk'},{code:'lrg',name:'Stormguild'},
       {code:'kit',name:'Swordback Hold'},{code:'tow',name:'Steelclash'},{code:'gts',name:'Bverrit Keep'},
-      {code:'bsh',name:'The Ward'},{code:'spk',name:'Lance Guard'},{code:'xts',name:'Tiamat\'s Rebuke'}
+      {code:'bsh',name:'The Ward'},{code:'spk',name:'Lance Guard'},{code:'xit',name:'Tiamat\'s Rebuke'},
+      {code:'upk',name:'Spike Thorn'}
     ],
     'Gloves': [
       {code:'upl',name:'Steelrend'},{code:'umg',name:"Dracul's Grasp"},{code:'uhg',name:'Laying of Hands'},
-      {code:'uvg',name:"Magefist"},{code:'xvg',name:"Trang-Oul's Claws"},{code:'xlg',name:'Ghoulhide'},
+      {code:'xvg',name:"Trang-Oul's Claws"},{code:'xlg',name:'Ghoulhide'},
       {code:'lgl',name:'The Hand of Broc'},{code:'vgl',name:'Bloodfist'},{code:'mgl',name:'Chance Guards'},
-      {code:'hgl',name:'Magefist'},{code:'tgl',name:'Frostburn'}
+      {code:'tgl',name:'Magefist'},{code:'hgl',name:'Frostburn'}
     ],
     'Boots': [
-      {code:'uts',name:'Shadow Dancer'},{code:'utg',name:'Gore Rider'},{code:'ztb',name:'Sandstorm Trek'},
-      {code:'uh9',name:'War Traveler'},{code:'utu',name:'Marrowwalk'},{code:'xtb',name:'Waterwalk'},
-      {code:'xhb',name:'Infernostride'},{code:'xlb',name:'Silkweave'},{code:'lbt',name:'Hotspur'},
+      {code:'uhb',name:'Shadow Dancer'},{code:'xhb',name:'Gore Rider'},{code:'uvb',name:'Sandstorm Trek'},
+      {code:'xtb',name:'War Traveler'},{code:'umb',name:'Marrowwalk'},{code:'xvb',name:'Waterwalk'},
+      {code:'xlb',name:'Infernostride'},{code:'xmb',name:'Silkweave'},{code:'lbt',name:'Hotspur'},
       {code:'vbt',name:'Gorefoot'},{code:'mbt',name:'Treads of Cthon'},{code:'hbt',name:'Goblin Toe'},
       {code:'tbt',name:'Tearhaunch'}
     ],
     'Belts': [
       {code:'ulc',name:'Arachnid Mesh'},{code:'uvc',name:"Verdungo's Hearty Cord"},
-      {code:'uvg',name:"Thundergod's Vigor"},{code:'uow',name:'Spike Thorn'},
-      {code:'zhb',name:'String of Ears'},{code:'zvb',name:'Razortail'},
-      {code:'zlb',name:'Gloom\'s Trap'},{code:'lbl',name:'Lenymo'},{code:'vbl',name:'Snakecord'},
+      {code:'zhb',name:"Thundergod's Vigor"},
+      {code:'zlb',name:'String of Ears'},{code:'zvb',name:'Razortail'},
+      {code:'zmb',name:'Gloom\'s Trap'},{code:'lbl',name:'Lenymo'},{code:'vbl',name:'Snakecord'},
       {code:'mbl',name:'Nightsmoke'},{code:'hbl',name:'Goldwrap'},{code:'tbl',name:'Bladebuckle'}
     ],
     'Weapons - Swords': [
@@ -1339,7 +1343,7 @@
       {code:'jew',name:'Rainbow Facet'}
     ],
     'Charms': [
-      {code:'cm3',name:"Gheed's Fortune"},{code:'cm3',name:'Hellfire Torch'},
+      {code:'cm3',name:"Gheed's Fortune"},{code:'cm2',name:'Hellfire Torch'},
       {code:'cm1',name:'Annihilus'}
     ]
   };
@@ -1360,7 +1364,9 @@
     Object.keys(GRAIL_DATA).forEach(function (cat) { totalItems += GRAIL_DATA[cat].length; });
 
     function saveGrail() {
-      localStorage.setItem('filterforge-grail', JSON.stringify(found));
+      try {
+        localStorage.setItem('filterforge-grail', JSON.stringify(found));
+      } catch (e) {}
     }
 
     function countFound() {
@@ -1404,7 +1410,7 @@
             el.className = 'grail-item' + (found[key] ? ' found' : '');
             el.querySelector('.grail-check').innerHTML = found[key] ? '&#9745;' : '&#9744;';
             updateProgress();
-            header.textContent = category + ' (' + items.filter(function (it) { return found[category + ':' + it.name]; }).length + '/' + items.length + ')';
+            header.textContent = category + ' (' + filtered.filter(function (it) { return found[category + ':' + it.name]; }).length + '/' + filtered.length + ')';
           });
           itemsDiv.appendChild(el);
         });
@@ -1569,6 +1575,7 @@
     document.querySelector('[data-tab="code"]').classList.add('active');
     document.getElementById('pane-code').style.display = 'block';
     document.getElementById('pane-preview').style.display = 'none';
+    document.getElementById('pane-grail').style.display = 'none';
 
     var text = codeEditor.value;
     var lines = text.split('\n');
@@ -1978,11 +1985,12 @@
     }
 
     // Value condition: CODE<val, CODE>val, CODE=val, CODE~min-max
-    var valueMatch = token.match(/^([A-Z]+)([<>=~])(.+)$/);
+    var valueMatch = token.match(/^([A-Z0-9]+)([<>=~])(.+)$/);
     if (valueMatch) {
       var code = valueMatch[1];
       var op = valueMatch[2];
       var valStr = valueMatch[3];
+      if (code === 'SOCK') code = 'SOCKETS';
       var itemVal = (item.values && item.values[code] !== undefined) ? item.values[code] : 0;
 
       // GOLD conditions only match gold piles (items with code 'gold')
@@ -2306,7 +2314,7 @@
       var showChip = document.querySelector('[data-field="action"] [data-value="show"]');
       var nameChip = document.querySelector('[data-field="nameDisplay"] [data-value="%NAME%"]');
       var noneNotify = document.querySelector('[data-field="notify"] [data-value=""]');
-      var noContinue = document.querySelector('[data-field="continue"] [data-value=""]');
+      var noContinue = document.querySelector('[data-field="continueKw"] [data-value=""]');
       var noMap = document.querySelector('[data-field="mapIcon"] [data-value=""]');
       if (showChip) showChip.classList.add('active');
       if (nameChip) nameChip.classList.add('active');
@@ -2402,6 +2410,7 @@
 
     function openWizard() {
       modal.style.display = 'flex';
+      btnNext.disabled = false;
       goToStep(1);
     }
 
@@ -2453,6 +2462,7 @@
       if (currentStep < totalSteps) {
         goToStep(currentStep + 1);
       } else {
+        btnNext.disabled = true;
         buildFilter();
       }
     });
@@ -2497,7 +2507,7 @@
         { l: 'Color Theme', v: label('', choices.colorprofile) || 'Default' },
         { l: 'Decoration', v: label('', choices.decoration) || 'Arrows' },
         { l: 'Extra Info', v: choices.extras.length ? choices.extras.map(function (x) { return label('', x); }).join(', ') : 'None' },
-        { l: 'Runeword Bases', v: label('', choices.rwbases + '-rw') },
+        { l: 'Runeword Bases', v: choices.rwbases ? label('', choices.rwbases + '-rw') : 'None' },
         { l: 'Hide Consumables', v: choices.consumables.length ? choices.consumables.map(function (x) { return label('', x); }).join(', ') : 'None' },
         { l: 'Tooltips', v: choices.tooltips.length ? choices.tooltips.map(function (x) { return label('', x); }).join(', ') : 'None' }
       ];
@@ -2666,7 +2676,7 @@
       lines.push('// Color Theme: ' + (label('', c.colorprofile) || 'Default'));
       lines.push('// Decoration: ' + (label('', c.decoration) || 'Arrows'));
       lines.push('// Extras: ' + (c.extras.length ? c.extras.map(function (x) { return label('', x); }).join(', ') : 'None'));
-      lines.push('// RW Bases: ' + (label('', c.rwbases + '-rw') || 'None'));
+      lines.push('// RW Bases: ' + (c.rwbases ? label('', c.rwbases + '-rw') : 'None'));
       lines.push('// Consumables: ' + (c.consumables.length ? c.consumables.map(function (x) { return label('', x); }).join(', ') : 'Default'));
       lines.push('// Tooltips: ' + (c.tooltips.length ? c.tooltips.map(function (x) { return label('', x); }).join(', ') : 'None'));
       lines.push('// ============================================================');
@@ -2705,13 +2715,13 @@
       if (wantEthTag || wantSockets) {
         if (wantEthTag && wantSockets) {
           lines.push('// Magic+ items: Eth tag and socket count');
+          lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) !RW ETH SOCK>0]: %NAME% %GRAY%[Eth] [%SOCKETS%]%CONTINUE%');
           lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) ETH]: %NAME% %GRAY%[Eth]%CONTINUE%');
           lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) !RW !ETH SOCK>0]: %NAME% [%SOCKETS%]%CONTINUE%');
-          lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) !RW ETH SOCK>0]: %NAME%[%SOCKETS%]%CONTINUE%');
           lines.push('// Normal items: Eth tag and socket count');
+          lines.push('ItemDisplay[NMAG !RW ETH SOCK>0]: %GRAY%%NAME% [Eth] [%SOCKETS%]%CONTINUE%');
           lines.push('ItemDisplay[NMAG ETH]: %GRAY%%NAME% [Eth]%CONTINUE%');
           lines.push('ItemDisplay[NMAG !RW !ETH SOCK>0]: %GRAY%%NAME% [%SOCKETS%]%CONTINUE%');
-          lines.push('ItemDisplay[NMAG !RW ETH SOCK>0]: %GRAY%%NAME%[%SOCKETS%]%CONTINUE%');
         } else if (wantEthTag) {
           lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) ETH]: %NAME% %GRAY%[Eth]%CONTINUE%');
           lines.push('ItemDisplay[NMAG ETH]: %GRAY%%NAME% [Eth]%CONTINUE%');
@@ -2896,16 +2906,17 @@
       lines.push('// --- Mid Runes (Lem - Mal) ---');
       lines.push('ItemDisplay[RUNE>19 RUNE<24]: ' + colorMidRune + decoLow_L + '%RUNENAME% Rune' + decoLow_R + ' (#%RUNENUM%)' + midRuneNotify);
 
-      // Rune stacking display (from Wolfie/HiimFilter)
-      lines.push('// --- Rune Stack Display ---');
-      lines.push('ItemDisplay[RUNE>0 QTY>1]: %NAME% %TAN%x%QTY%{%NAME%}%CONTINUE%');
-      lines.push('');
-
       // Tier 4: Low Runes (El #1 through Fal #19)
       lines.push('// --- Low Runes (El - Fal) ---');
       lines.push('ItemDisplay[RUNE>14 RUNE<20]: ' + colorLowRune + '%RUNENAME% Rune (#%RUNENUM%)' + lowRuneDot);
       lines.push('ItemDisplay[RUNE>10 RUNE<15]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
       lines.push('ItemDisplay[RUNE>0 RUNE<11]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
+      lines.push('');
+
+      // Rune stacking display (from Wolfie/HiimFilter)
+      // Must come after all tier rules so CONTINUE doesn't suppress tier decoration
+      lines.push('// --- Rune Stack Display ---');
+      lines.push('ItemDisplay[RUNE>0 QTY>1]: %NAME% %TAN%x%QTY%{%NAME%}%CONTINUE%');
       lines.push('');
 
       // ==========================
@@ -3028,8 +3039,8 @@
           ['UNI !ID uld', 'Leviathan'],
           ['UNI !ID uth', 'Dark Abyss'],
           ['UNI !ID uul', 'Steel Carapace'],
-          ['UNI !ID uar !ETH', 'Templars Might or Tyraels Might'],
-          ['UNI !ID uar ETH', 'Templars Might'],
+          ['UNI !ID uar !ETH', 'Templars Might'],
+          ['UNI !ID uar ETH', 'Tyraels Might'],
           // Normal Belts
           ['UNI !ID lbl', 'Lenymo'],
           ['UNI !ID vbl', 'Snakecord'],
@@ -3524,7 +3535,7 @@
         ];
         uniNames.forEach(function (entry) {
           var color = entry[0].indexOf('SET') === 0 ? '%GREEN%' : '%GOLD%';
-          lines.push('ItemDisplay[' + entry[0] + ']: %CONTINUE%' + color + entry[1]);
+          lines.push('ItemDisplay[' + entry[0] + ']: ' + color + entry[1] + '%CONTINUE%');
         });
         lines.push('');
       }
@@ -3622,7 +3633,7 @@
       lines.push('ItemDisplay[(FILTLVL<3 OR (FILTLVL<4 ETH)) !ID RARE (gix OR 9gi OR 7gi OR whm OR 9wh OR 7wh OR gma OR 9gm OR 7gm OR gis OR 9gs OR 7gs OR pil OR 9pi OR 7pi OR ssp OR 9s9 OR 7s7 OR tsp OR 9ts OR 7ts OR ktr OR 9ar OR 7ar OR skr OR 9qr OR 7qr OR am2 OR am7 OR amc) ILVL>84 ALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
       // Catch all & hide
       lines.push('//Catch All Rare');
-      lines.push('ItemDisplay[FILTLVL<3 !ID RARE]:%SHOW%');
+      lines.push('ItemDisplay[FILTLVL<3 !ID RARE]:%NAME%');
       // Crafted always shown
       lines.push('ItemDisplay[CRAFT !ID]: %ORANGE%%NAME%' + descStr);
       lines.push('');
@@ -3686,19 +3697,19 @@
         lines.push('// CRAFTING BASES -- shows CRAFTALVL on good bases');
         lines.push('// ============================================================');
         lines.push('// 2H Axes, Mauls, 2H Swords, Glaives, Pikes, Cestus (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (gax OR 9ga OR 7ga OR mau OR 9m9 OR 7m7 OR flb OR 9fb OR 7fb OR gsd OR 9gd OR 7gd OR glv OR 9gl OR 7gl OR pik OR 9p9 OR 7p7 OR axf OR 9xf OR 7xf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (gax OR 9ga OR 7ga OR mau OR 9m9 OR 7m7 OR flb OR 9fb OR 7fb OR gsd OR 9gd OR 7gd OR glv OR 9gl OR 7gl OR pik OR 9p9 OR 7p7 OR axf OR 9xf OR 7xf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Amazon Bows');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) (am2 OR am7 OR amc) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) (am2 OR am7 OR amc) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Assassin Katars (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (ktr OR 9ar OR 7ar OR skr OR 9qr OR 7qr) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (ktr OR 9ar OR 7ar OR skr OR 9qr OR 7qr) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Giant Axes, War Hammers, Great Mauls, Giant Swords, Pilums, Spears, Throwing Spears (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (gix OR 9gi OR 7gi OR whm OR 9wh OR 7wh OR gma OR 9gm OR 7gm OR gis OR 9gs OR 7gs OR pil OR 9pi OR 7pi OR ssp OR 9s9 OR 7s7 OR tsp OR 9ts OR 7ts) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (gix OR 9gi OR 7gi OR whm OR 9wh OR 7wh OR gma OR 9gm OR 7gm OR gis OR 9gs OR 7gs OR pil OR 9pi OR 7pi OR ssp OR 9s9 OR 7s7 OR tsp OR 9ts OR 7ts) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Battle Axes, Giant Axes (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (btx OR 9bt OR 7bt OR gix OR 9gi OR 7gi) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (btx OR 9bt OR 7bt OR gix OR 9gi OR 7gi) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// 1H Maces, Morning Stars, Flails (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (mac OR 9ma OR 7ma OR mst OR 9mt OR 7mt OR fla OR 9fl OR 7fl) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (mac OR 9ma OR 7ma OR mst OR 9mt OR 7mt OR fla OR 9fl OR 7fl) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Sorceress Orbs');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) (ob5 OR oba OR obf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) (ob5 OR oba OR obf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('');
       }
 
@@ -3951,7 +3962,7 @@
       lines.push('// ============================================================');
       lines.push('// UNID MAGIC & RARE CLASS ITEM DISPLAY');
       lines.push('// ============================================================');
-      var classUpperMap = {ZON:'AMAZON',SOR:'SORCERESS',NEC:'NECROMANCER',DIN:'PALADIN',BAR:'BARBARIAN',DRU:'DRUID',SIN:'ASSASSIN'};
+      var classUpperMap = {ZON:'ZON',SOR:'SOR',NEC:'NEC',DIN:'DIN',BAR:'BAR',DRU:'DRU',SIN:'SIN'};
       var clNumMap = {ZON:'CL7',SOR:'CL6',NEC:'CL4',DIN:'CL3',BAR:'CL2',DRU:'CL1',SIN:'CL5'};
       if (selectedClasses.length > 0) {
         lines.push('// Your class magic items get extra callout');
@@ -3965,13 +3976,13 @@
       if (wantShortNames) {
         // Class item rename on ground at strict levels
         lines.push('// Class item shortnames on ground at strict levels');
-        if (selectedClasses.length === 0 || hasClass('NEC')) lines.push('ItemDisplay[(MAG OR RARE) NEC !ID GROUND FILTLVL>2]: %CONTINUE%Nec Head');
-        if (selectedClasses.length === 0 || hasClass('SOR')) lines.push('ItemDisplay[(MAG OR RARE) SOR !ID GROUND FILTLVL>2]: %CONTINUE%Sorc Orb');
-        if (selectedClasses.length === 0 || hasClass('BAR')) lines.push('ItemDisplay[(MAG OR RARE) BAR !ID GROUND FILTLVL>2]: %CONTINUE%Barb Helm');
-        if (selectedClasses.length === 0 || hasClass('DRU')) lines.push('ItemDisplay[(MAG OR RARE) DRU !ID GROUND FILTLVL>2]: %CONTINUE%Druid Pelt');
-        if (selectedClasses.length === 0 || hasClass('DIN')) lines.push('ItemDisplay[(MAG OR RARE) DIN !ID GROUND FILTLVL>2]: %CONTINUE%Pala Shield');
-        if (selectedClasses.length === 0 || hasClass('SIN')) lines.push('ItemDisplay[(MAG OR RARE) SIN !ID GROUND FILTLVL>2]: %CONTINUE%Asn Claw');
-        if (selectedClasses.length === 0 || hasClass('ZON')) lines.push('ItemDisplay[(MAG OR RARE) ZON !ID GROUND FILTLVL>2]: %CONTINUE%Zon Weapon');
+        if (selectedClasses.length === 0 || hasClass('NEC')) lines.push('ItemDisplay[(MAG OR RARE) NEC !ID GROUND FILTLVL>2]: Nec Head%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('SOR')) lines.push('ItemDisplay[(MAG OR RARE) SOR !ID GROUND FILTLVL>2]: Sorc Orb%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('BAR')) lines.push('ItemDisplay[(MAG OR RARE) BAR !ID GROUND FILTLVL>2]: Barb Helm%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('DRU')) lines.push('ItemDisplay[(MAG OR RARE) DRU !ID GROUND FILTLVL>2]: Druid Pelt%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('DIN')) lines.push('ItemDisplay[(MAG OR RARE) DIN !ID GROUND FILTLVL>2]: Pala Shield%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('SIN')) lines.push('ItemDisplay[(MAG OR RARE) SIN !ID GROUND FILTLVL>2]: Sin Claw%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('ZON')) lines.push('ItemDisplay[(MAG OR RARE) ZON !ID GROUND FILTLVL>2]: Zon Weapon%CONTINUE%');
       }
       // General magic/rare unid display by slot (from HiimFilter FILTLVL-gated)
       lines.push('// --- Unid magic/rare by slot ---');
@@ -3997,7 +4008,7 @@
         lines.push('// RUNEWORD BASES');
         lines.push('// ============================================================');
         var showEthBases = (rwBases === 'eth' || rwBases === 'all');
-        var showNonEthBases = (rwBases === 'noneth' || rwBases === 'all');
+        var showNonEthBases = (rwBases === 'all');
 
         // Helper to push a base rule for eth and/or non-eth
         function pushBase(cond, sockets, baseLabel) {
@@ -4245,7 +4256,7 @@
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FCR>0]: %TAN%%STAT105%FCR %NAME%%CONTINUE%{%NAME%}');
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID IAS>0 !WAND !SOR]: %ORANGE%%STAT93%IAS %NAME%%CONTINUE%{%NAME%}');
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FHR>0]: %GOLD%%STAT99%FHR %NAME%%CONTINUE%{%NAME%}');
-      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FRW>0]: %GOLD%%FRW%FRW %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FRW>0]: %GOLD%%STAT96%FRW %NAME%%CONTINUE%{%NAME%}');
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FBR>0]: %ORANGE%%STAT102%FBR %NAME%%CONTINUE%{%NAME%}');
       // Resistances
       lines.push('// --- Resistances ---');
@@ -4705,6 +4716,11 @@
             copyEl.textContent = 'copied!';
             copyEl.style.opacity = '1';
             setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
+          }).catch(function () {
+            var copyEl = row.querySelector('.itemcode-copy');
+            copyEl.textContent = 'copy failed';
+            copyEl.style.opacity = '1';
+            setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
           });
         });
         listEl.appendChild(row);
@@ -4749,6 +4765,11 @@
             navigator.clipboard.writeText(item[0]).then(function () {
               var copyEl = row.querySelector('.itemcode-copy');
               copyEl.textContent = 'copied!';
+              copyEl.style.opacity = '1';
+              setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
+            }).catch(function () {
+              var copyEl = row.querySelector('.itemcode-copy');
+              copyEl.textContent = 'copy failed';
               copyEl.style.opacity = '1';
               setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
             });
@@ -5046,6 +5067,7 @@
   // Initialize everything
   // ==========================================
   function init() {
+    if (!codeEditor) return; // Not on editor page
     loadFromStorage();
     updateLineNumbers();
 

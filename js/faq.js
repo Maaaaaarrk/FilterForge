@@ -117,6 +117,12 @@
             btn.textContent = 'Copy';
             btn.classList.remove('copied');
           }, 1500);
+        }).catch(function () {
+          btn.textContent = 'Copy failed';
+          setTimeout(function () {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 1500);
         });
       });
       pre.appendChild(btn);
@@ -142,7 +148,7 @@
       resultCount.textContent = '';
       noResults.classList.add('hidden');
       if (faqData) highlightMatches([]);
-      history.replaceState(null, '', window.location.pathname);
+      history.replaceState(null, '', window.location.pathname + window.location.hash);
       return;
     }
 

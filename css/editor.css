@@ -114,7 +114,10 @@
   gap: 1rem;
 }
 
-/* Sidebar - Rule Builder */
+/* Sidebar - Rule Builder
+   overflow-y: auto is intentional without a height constraint — the sidebar
+   grows with its content and the page scrolls as a whole. Do not add
+   sticky positioning or max-height here. */
 .editor-sidebar {
   width: 340px;
   flex-shrink: 0;

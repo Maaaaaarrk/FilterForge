@@ -58,6 +58,12 @@
           btn.textContent = 'Copy';
           btn.classList.remove('copied');
         }, 1500);
+      }).catch(function () {
+        btn.textContent = 'Copy failed';
+        setTimeout(function () {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1500);
       });
     });
     pre.appendChild(btn);

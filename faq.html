@@ -14,6 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FAQ — Filter Forge</title>
   <meta name="description" content="Frequently asked questions about Project Diablo 2 item filters.">
+  <meta property="og:title" content="FAQ — Filter Forge">
+  <meta property="og:description" content="Frequently asked questions about Filter Forge and PD2 loot filters.">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/faq.css">
 </head>
@@ -22,13 +24,13 @@
     <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
     <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="faq.html" class="active">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
       <li><a href="guide.html">Guide</a></li>
       <li><a href="editor.html">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
   </nav>
 
   <main class="main-content">
@@ -38,11 +40,12 @@
       </div>
 
       <div class="search-wrap">
-        <input type="text" class="search-input" id="faq-search" placeholder="Search questions, answers, and tags..." autocomplete="off" aria-label="Search FAQ">
+        <input type="text" class="search-input" id="faq-search" placeholder="Search questions, answers, and tags..." autocomplete="off" aria-label="Search FAQ" aria-controls="faq-result-count faq-container">
       </div>
       <div class="faq-result-count" id="faq-result-count" aria-live="polite"></div>
 
       <div id="faq-container"></div>
+      <noscript><p class="text-muted text-center">JavaScript is required to view the FAQ.</p></noscript>
       <div class="faq-no-results hidden" id="faq-no-results" aria-live="polite">No questions match your search.</div>
     </div>
   </main>

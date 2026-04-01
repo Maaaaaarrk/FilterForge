@@ -14,6 +14,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Filter Editor — Filter Forge</title>
   <meta name="description" content="Create and edit Project Diablo 2 item filters with a visual rule builder, live preview, and code editor.">
+  <meta property="og:title" content="Filter Editor — Filter Forge">
+  <meta property="og:description" content="Build and customize PD2 loot filters with a visual editor.">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/editor.css">
 </head>
@@ -25,10 +27,10 @@
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
       <li><a href="guide.html">Guide</a></li>
-      <li><a href="editor.html">Editor</a></li>
+      <li><a href="editor.html" class="active">Editor</a></li>
     </ul>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links">&#9776;</button>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
   </nav>
 
   <main class="main-content">
@@ -41,7 +43,7 @@
         </div>
         <div class="toolbar-right">
           <button class="btn btn-secondary" id="btn-new" title="New filter">New</button>
-          <button class="btn btn-secondary" id="btn-import" title="Import .filter file from disk">Import File</button>
+          <button class="btn btn-secondary" id="btn-import" title="Import .filter or .txt file from disk">Import File</button>
           <button class="btn btn-secondary" id="btn-import-author" title="Import from a community filter author">Import from Community Author</button>
           <button class="btn btn-accent" id="btn-wizard" title="Answer questions to build a custom filter">Build My Filter</button>
           <button class="btn btn-primary" id="btn-export" title="Download as .filter file">Export .filter</button>
@@ -79,6 +81,7 @@
             <div id="author-step-3" style="display:none">
               <div class="text-center" style="padding:2rem 0">
                 <p id="author-loading-msg">Downloading filter...</p>
+                <p id="author-error-msg" style="display:none;color:#ff4040">Failed to download filter. Please try again.</p>
               </div>
             </div>
           </div>
@@ -95,14 +98,14 @@
           <div class="modal-body">
             <!-- Progress bar -->
             <div class="wizard-progress">
-              <div class="wizard-progress-bar" id="wizard-progress-bar" style="width:10%"></div>
+              <div class="wizard-progress-bar" id="wizard-progress-bar" style="width:0%"></div>
             </div>
             <div class="wizard-step-label" id="wizard-step-label">Step 1 of 10</div>
 
             <!-- Step 1: Class -->
             <div class="wizard-step" id="wiz-step-1">
               <h3>What class are you playing?</h3>
-              <p class="text-muted">This adds class-specific items, weapons, and set pieces to your filter at higher strictness levels. <strong>You don't have to pick one</strong> — skip this step if you don't need class-specific enrichment. <strong>Select all that apply.</strong></p>
+              <p class="text-muted">This adds class-specific items, weapons, and set pieces to your filter at higher strictness levels. <strong>You don't have to pick one</strong> — press Next to continue if you don't need class-specific enrichment. <strong>Select all that apply.</strong></p>
               <div class="wizard-options" data-wiz="class" data-multi="true">
                 <button class="wizard-opt" data-value="amazon">Amazon</button>
                 <button class="wizard-opt" data-value="sorceress">Sorceress</button>
@@ -138,19 +141,19 @@
                 </button>
                 <button class="wizard-opt" data-value="minimal">
                   <strong>Minimal</strong>
-                  <span>Small minimap dots (%DOT%) on valuable items — no sounds</span>
+                  <span>Small minimap dots (minimap dots) on valuable items — no sounds</span>
                 </button>
                 <button class="wizard-opt" data-value="standard">
                   <strong>Standard</strong>
-                  <span>Map icons (%MAP%) on good drops + dots on lesser items — no sounds</span>
+                  <span>Map icons (minimap icons) on good drops + dots on lesser items — no sounds</span>
                 </button>
                 <button class="wizard-opt" data-value="full">
                   <strong>Full</strong>
-                  <span>Map icons + drop sounds on high runes, uniques, and key items</span>
+                  <span>All notifications — map icons + drop sounds on important items. Includes minimap dots on lesser items.</span>
                 </button>
                 <button class="wizard-opt" data-value="max">
                   <strong>Maximum</strong>
-                  <span>Large bordered minimap icons (%BORDER%) + sounds on top drops, map icons on mid drops, dots on everything else</span>
+                  <span>Large bordered minimap icons (large minimap borders) + sounds on top drops, map icons on mid drops, dots on everything else</span>
                 </button>
               </div>
             </div>
@@ -187,7 +190,7 @@
                 </button>
                 <button class="wizard-opt" data-value="clean">
                   <strong>Clean (No Extra Colors)</strong>
-                  <span>Items use only their default rarity colors</span>
+                  <span>Minimal color overrides — similar to default with uniform rune colors</span>
                   <span class="wiz-color-example"><span style="color:#ff8000">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:#ff8000">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:#ff8000">Lem</span></span>
                 </button>
               </div>
@@ -260,7 +263,7 @@
                 </button>
                 <button class="wizard-opt" data-value="crafting">
                   <strong>Crafting Info</strong>
-                  <span>Show ALVL and crafted ALVL on magic items</span>
+                  <span>Show crafted ALVL on magic items</span>
                 </button>
                 <button class="wizard-opt" data-value="eth">
                   <strong>Ethereal Tag</strong>
@@ -284,7 +287,7 @@
                 </button>
                 <button class="wizard-opt" data-value="wpnspeed">
                   <strong>Weapon Base Speed</strong>
-                  <span>Show base speed and range in weapon descriptions (e.g. "Base Speed: -10 || Range: +3")</span>
+                  <span>Show base speed and range in weapon descriptions (e.g. "Base Speed: -10 || Range: +3") (excludes wands and orbs)</span>
                 </button>
               </div>
             </div>
@@ -400,7 +403,7 @@
               <div class="builder-panel" id="conditions-panel">
 
                 <label class="builder-label">Quality</label>
-                <div class="chip-group" data-field="quality">
+                <div class="chip-group" data-field="quality" data-multi="false">
                   <button class="chip" data-value="NMAG">Normal</button>
                   <button class="chip" data-value="MAG">Magic</button>
                   <button class="chip" data-value="RARE">Rare</button>
@@ -434,8 +437,8 @@
                   <button class="chip" data-value="WEAPON">Weapon</button>
                 </div>
 
-                <label class="builder-label">Armor Slot</label>
-                <div class="chip-group" data-field="equipment">
+                <label class="builder-label">Armor Slot<span class="text-muted"> (clears weapon type)</span></label>
+                <div class="chip-group" data-field="equipment" data-multi="false">
                   <button class="chip" data-value="HELM">Helm</button>
                   <button class="chip" data-value="CHEST">Chest</button>
                   <button class="chip" data-value="SHIELD">Shield</button>
@@ -445,8 +448,8 @@
                   <button class="chip" data-value="CIRC">Circlet</button>
                 </div>
 
-                <label class="builder-label">Weapon Type</label>
-                <div class="chip-group" data-field="weapons">
+                <label class="builder-label">Weapon Type<span class="text-muted"> (clears armor slot)</span></label>
+                <div class="chip-group" data-field="weapons" data-multi="false">
                   <button class="chip" data-value="AXE">Axe</button>
                   <button class="chip" data-value="MACE">Mace</button>
                   <button class="chip" data-value="SWORD">Sword</button>
@@ -465,7 +468,7 @@
                 </div>
 
                 <label class="builder-label">Misc</label>
-                <div class="chip-group" data-field="misc">
+                <div class="chip-group" data-field="misc" data-multi="false">
                   <button class="chip" data-value="JEWELRY">Jewelry</button>
                   <button class="chip" data-value="CHARM">Charm</button>
                   <button class="chip" data-value="QUIVER">Quiver</button>
@@ -473,7 +476,7 @@
                 </div>
 
                 <label class="builder-label">Class Items</label>
-                <div class="chip-group" data-field="classitems">
+                <div class="chip-group" data-field="classitems" data-multi="false">
                   <button class="chip" data-value="ZON">Amazon</button>
                   <button class="chip" data-value="SOR">Sorceress</button>
                   <button class="chip" data-value="NEC">Necro</button>
@@ -539,7 +542,7 @@
                       <option value="=">=</option>
                       <option value="~">~ (between)</option>
                     </select>
-                    <input type="text" class="value-val" placeholder="value" size="6" aria-label="Condition value">
+                    <input type="text" class="value-val" placeholder="value (min-max for ~)" size="6" aria-label="Condition value">
                     <button class="btn-icon btn-remove-value" title="Remove" aria-label="Remove condition">&times;</button>
                   </div>
                 </div>
@@ -587,7 +590,7 @@
                   <button class="chip" data-value="!RW">!RW</button>
                 </div>
 
-                <label class="builder-label" for="item-code-input">Item Code (3-char)</label>
+                <label class="builder-label" for="item-code-input">Item Code</label>
                 <div class="itemcode-input-wrap">
                   <input type="text" class="builder-input" id="item-code-input" placeholder="Type name or code..." maxlength="20" autocomplete="off">
                   <div class="itemcode-dropdown" id="itemcode-dropdown"></div>
@@ -630,14 +633,14 @@
               <div class="builder-panel" id="output-panel">
 
                 <label class="builder-label">Action</label>
-                <div class="chip-group" data-field="action">
+                <div class="chip-group" data-field="action" data-multi="false">
                   <button class="chip active" data-value="show">Show</button>
                   <button class="chip" data-value="hide">Hide</button>
                 </div>
 
                 <div id="output-options">
                   <label class="builder-label">Name Display</label>
-                  <div class="chip-group" data-field="nameDisplay">
+                  <div class="chip-group" data-field="nameDisplay" data-multi="false">
                     <button class="chip active" data-value="%NAME%">Default Name</button>
                     <button class="chip" data-value="custom">Custom Text</button>
                   </div>
@@ -672,7 +675,7 @@
                   <a href="https://www.asciiart.eu/ascii-dividers/gallery" target="_blank" rel="noopener" class="builder-hint-link" style="margin-top:0.2rem;">ASCII art ideas for decorations &rarr;</a>
 
                   <label class="builder-label">Map Icon</label>
-                  <div class="chip-group" data-field="mapIcon">
+                  <div class="chip-group" data-field="mapIcon" data-multi="false">
                     <button class="chip" data-value="">None</button>
                     <button class="chip" data-value="%BORDER%">Border (lg)</button>
                     <button class="chip" data-value="%MAP%">Map (md)</button>
@@ -686,6 +689,7 @@
 
                   <label class="builder-label" for="sound-select">Sound</label>
                   <p class="text-muted builder-hint">To hear sounds in-game: type <code>/sound XXXX</code> in chat (e.g. <code>/sound 4716</code>)</p>
+                  <!-- Sound labels use PoE currency names intentionally — PD2 borrowed these sounds from PoE and the community recognizes them by these names -->
                   <select class="builder-select" id="sound-select">
                     <option value="">None</option>
                     <option value="4714">4714 — Exalted Orb</option>
@@ -707,13 +711,13 @@
                   </select>
 
                   <label class="builder-label">Notification</label>
-                  <div class="chip-group" data-field="notify">
-                    <button class="chip active" data-value="">Default</button>
-                    <button class="chip" data-value="%NOTIFY-DEAD%">Disable</button>
+                  <div class="chip-group" data-field="notify" data-multi="false">
+                    <button class="chip active" data-value="" title="Use PD2's built-in notification behavior">Default</button>
+                    <button class="chip" data-value="%NOTIFY-DEAD%" title="Suppress built-in notifications for this rule">Disable</button>
                   </div>
 
                   <label class="builder-label">Continue</label>
-                  <div class="chip-group" data-field="continue">
+                  <div class="chip-group" data-field="continueKw" data-multi="false">
                     <button class="chip active" data-value="">No</button>
                     <button class="chip" data-value="%CONTINUE%">%CONTINUE%</button>
                   </div>
@@ -894,7 +898,7 @@
                 </optgroup>
               </select>
               <label class="preview-filtlvl-label">FILTLVL:
-                <select id="preview-filtlvl">
+                <select id="preview-filtlvl" title="Wizard-generated filters use levels 1-4. Higher levels are for custom filters.">
                   <option value="0">0 (Show All)</option>
                   <option value="1" selected>1</option>
                   <option value="2">2</option>
@@ -913,7 +917,7 @@
               <button class="btn btn-secondary" id="btn-test-rule">Test</button>
             </div>
             <div class="preview-results" id="preview-results">
-              <p class="text-muted text-center">Select an item and click Test to see how your filter handles it.</p>
+              <p class="text-muted text-center">Select an item to see how your filter handles it.</p>
             </div>
           </div>
 
@@ -921,7 +925,7 @@
           <div class="editor-pane" id="pane-grail" style="display:none">
             <div class="grail-header">
               <h3>Holy Grail Tracker</h3>
-              <p class="text-muted">Check off unique items as you find them. Unfound items will be highlighted in your filter.</p>
+              <p class="text-muted">Check off items as you find them, then use Insert Grail Rules to highlight unfound items in your filter.</p>
               <div class="grail-actions">
                 <button class="btn btn-primary" id="btn-grail-generate">Insert Grail Rules</button>
                 <button class="btn btn-secondary" id="btn-grail-update">Update Grail Rules</button>
@@ -958,9 +962,9 @@
                   <div class="grail-style-row">
                     <label for="grail-notify">Notification</label>
                     <select id="grail-notify" aria-label="Grail notification type">
-                      <option value="%BORDER-05%" selected>Border (large)</option>
-                      <option value="%MAP-05%">Map icon (medium)</option>
-                      <option value="%DOT-05%">Dot (small)</option>
+                      <option value="%BORDER-05%" selected title="Dark blue minimap border">Border (large)</option>
+                      <option value="%MAP-05%" title="Dark blue minimap icon">Map icon (medium)</option>
+                      <option value="%DOT-05%" title="Dark blue minimap dot">Dot (small)</option>
                       <option value="">None</option>
                     </select>
                   </div>
