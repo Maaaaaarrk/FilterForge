@@ -120,6 +120,9 @@
   flex-shrink: 0;
   overflow-y: auto;
   padding-right: 0.5rem;
+  max-height: calc(100vh - 80px);
+  position: sticky;
+  top: 80px;
 }
 
 .sidebar-section h3 {
