@@ -403,7 +403,7 @@
               <div class="builder-panel" id="conditions-panel">
 
                 <label class="builder-label">Quality</label>
-                <div class="chip-group" data-field="quality">
+                <div class="chip-group" data-field="quality" data-multi="false">
                   <button class="chip" data-value="NMAG">Normal</button>
                   <button class="chip" data-value="MAG">Magic</button>
                   <button class="chip" data-value="RARE">Rare</button>
@@ -438,7 +438,7 @@
                 </div>
 
                 <label class="builder-label">Armor Slot<span class="text-muted"> (clears weapon type)</span></label>
-                <div class="chip-group" data-field="equipment">
+                <div class="chip-group" data-field="equipment" data-multi="false">
                   <button class="chip" data-value="HELM">Helm</button>
                   <button class="chip" data-value="CHEST">Chest</button>
                   <button class="chip" data-value="SHIELD">Shield</button>
@@ -449,7 +449,7 @@
                 </div>
 
                 <label class="builder-label">Weapon Type<span class="text-muted"> (clears armor slot)</span></label>
-                <div class="chip-group" data-field="weapons">
+                <div class="chip-group" data-field="weapons" data-multi="false">
                   <button class="chip" data-value="AXE">Axe</button>
                   <button class="chip" data-value="MACE">Mace</button>
                   <button class="chip" data-value="SWORD">Sword</button>
@@ -468,7 +468,7 @@
                 </div>
 
                 <label class="builder-label">Misc</label>
-                <div class="chip-group" data-field="misc">
+                <div class="chip-group" data-field="misc" data-multi="false">
                   <button class="chip" data-value="JEWELRY">Jewelry</button>
                   <button class="chip" data-value="CHARM">Charm</button>
                   <button class="chip" data-value="QUIVER">Quiver</button>
@@ -476,7 +476,7 @@
                 </div>
 
                 <label class="builder-label">Class Items</label>
-                <div class="chip-group" data-field="classitems">
+                <div class="chip-group" data-field="classitems" data-multi="false">
                   <button class="chip" data-value="ZON">Amazon</button>
                   <button class="chip" data-value="SOR">Sorceress</button>
                   <button class="chip" data-value="NEC">Necro</button>
@@ -633,14 +633,14 @@
               <div class="builder-panel" id="output-panel">
 
                 <label class="builder-label">Action</label>
-                <div class="chip-group" data-field="action">
+                <div class="chip-group" data-field="action" data-multi="false">
                   <button class="chip active" data-value="show">Show</button>
                   <button class="chip" data-value="hide">Hide</button>
                 </div>
 
                 <div id="output-options">
                   <label class="builder-label">Name Display</label>
-                  <div class="chip-group" data-field="nameDisplay">
+                  <div class="chip-group" data-field="nameDisplay" data-multi="false">
                     <button class="chip active" data-value="%NAME%">Default Name</button>
                     <button class="chip" data-value="custom">Custom Text</button>
                   </div>
@@ -675,7 +675,7 @@
                   <a href="https://www.asciiart.eu/ascii-dividers/gallery" target="_blank" rel="noopener" class="builder-hint-link" style="margin-top:0.2rem;">ASCII art ideas for decorations &rarr;</a>
 
                   <label class="builder-label">Map Icon</label>
-                  <div class="chip-group" data-field="mapIcon">
+                  <div class="chip-group" data-field="mapIcon" data-multi="false">
                     <button class="chip" data-value="">None</button>
                     <button class="chip" data-value="%BORDER%">Border (lg)</button>
                     <button class="chip" data-value="%MAP%">Map (md)</button>
@@ -711,13 +711,13 @@
                   </select>
 
                   <label class="builder-label">Notification</label>
-                  <div class="chip-group" data-field="notify">
+                  <div class="chip-group" data-field="notify" data-multi="false">
                     <button class="chip active" data-value="" title="Use PD2's built-in notification behavior">Default</button>
                     <button class="chip" data-value="%NOTIFY-DEAD%" title="Suppress built-in notifications for this rule">Disable</button>
                   </div>
 
                   <label class="builder-label">Continue</label>
-                  <div class="chip-group" data-field="continueKw">
+                  <div class="chip-group" data-field="continueKw" data-multi="false">
                     <button class="chip active" data-value="">No</button>
                     <button class="chip" data-value="%CONTINUE%">%CONTINUE%</button>
                   </div>
