@@ -3973,13 +3973,13 @@
       if (wantShortNames) {
         // Class item rename on ground at strict levels
         lines.push('// Class item shortnames on ground at strict levels');
-        if (selectedClasses.length === 0 || hasClass('NEC')) lines.push('ItemDisplay[(MAG OR RARE) NEC !ID GROUND FILTLVL>2]: %CONTINUE%Nec Head');
-        if (selectedClasses.length === 0 || hasClass('SOR')) lines.push('ItemDisplay[(MAG OR RARE) SOR !ID GROUND FILTLVL>2]: %CONTINUE%Sorc Orb');
-        if (selectedClasses.length === 0 || hasClass('BAR')) lines.push('ItemDisplay[(MAG OR RARE) BAR !ID GROUND FILTLVL>2]: %CONTINUE%Barb Helm');
-        if (selectedClasses.length === 0 || hasClass('DRU')) lines.push('ItemDisplay[(MAG OR RARE) DRU !ID GROUND FILTLVL>2]: %CONTINUE%Druid Pelt');
-        if (selectedClasses.length === 0 || hasClass('DIN')) lines.push('ItemDisplay[(MAG OR RARE) DIN !ID GROUND FILTLVL>2]: %CONTINUE%Pala Shield');
-        if (selectedClasses.length === 0 || hasClass('SIN')) lines.push('ItemDisplay[(MAG OR RARE) SIN !ID GROUND FILTLVL>2]: %CONTINUE%Asn Claw');
-        if (selectedClasses.length === 0 || hasClass('ZON')) lines.push('ItemDisplay[(MAG OR RARE) ZON !ID GROUND FILTLVL>2]: %CONTINUE%Zon Weapon');
+        if (selectedClasses.length === 0 || hasClass('NEC')) lines.push('ItemDisplay[(MAG OR RARE) NEC !ID GROUND FILTLVL>2]: Nec Head%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('SOR')) lines.push('ItemDisplay[(MAG OR RARE) SOR !ID GROUND FILTLVL>2]: Sorc Orb%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('BAR')) lines.push('ItemDisplay[(MAG OR RARE) BAR !ID GROUND FILTLVL>2]: Barb Helm%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('DRU')) lines.push('ItemDisplay[(MAG OR RARE) DRU !ID GROUND FILTLVL>2]: Druid Pelt%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('DIN')) lines.push('ItemDisplay[(MAG OR RARE) DIN !ID GROUND FILTLVL>2]: Pala Shield%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('SIN')) lines.push('ItemDisplay[(MAG OR RARE) SIN !ID GROUND FILTLVL>2]: Sin Claw%CONTINUE%');
+        if (selectedClasses.length === 0 || hasClass('ZON')) lines.push('ItemDisplay[(MAG OR RARE) ZON !ID GROUND FILTLVL>2]: Zon Weapon%CONTINUE%');
       }
       // General magic/rare unid display by slot (from HiimFilter FILTLVL-gated)
       lines.push('// --- Unid magic/rare by slot ---');
