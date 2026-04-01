@@ -3990,7 +3990,7 @@
         lines.push('// RUNEWORD BASES');
         lines.push('// ============================================================');
         var showEthBases = (rwBases === 'eth' || rwBases === 'all');
-        var showNonEthBases = (rwBases === 'noneth' || rwBases === 'all');
+        var showNonEthBases = (rwBases === 'all');
 
         // Helper to push a base rule for eth and/or non-eth
         function pushBase(cond, sockets, baseLabel) {
@@ -4008,7 +4008,9 @@
           lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=15 ELT CHEST (SOCK=0 OR SOCK>2)]: %GOLD%15ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
           lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=15 ELT POLEARM (SOCK=0 OR SOCK>3)]: %GOLD%15ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
         }
-        lines.push('ItemDisplay[NMAG !INF !RW SUP ED=15 ELT (CHEST OR SHIELD) (SOCK=0 OR SOCK>2)]: %GOLD%15ED %WHITE%%NAME%' + (wantMapIcons ? '%DOT-D6%' : ''));
+        if (showNonEthBases) {
+          lines.push('ItemDisplay[NMAG !INF !RW !ETH SUP ED=15 ELT (CHEST OR SHIELD) (SOCK=0 OR SOCK>2)]: %GOLD%15ED %WHITE%%NAME%' + (wantMapIcons ? '%DOT-D6%' : ''));
+        }
         lines.push('');
 
         // GG specific bases (from HiimFilter — high-value eth bases with DEF/skill checks)
