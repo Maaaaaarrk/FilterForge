@@ -3535,7 +3535,7 @@
         ];
         uniNames.forEach(function (entry) {
           var color = entry[0].indexOf('SET') === 0 ? '%GREEN%' : '%GOLD%';
-          lines.push('ItemDisplay[' + entry[0] + ']: %CONTINUE%' + color + entry[1]);
+          lines.push('ItemDisplay[' + entry[0] + ']: ' + color + entry[1] + '%CONTINUE%');
         });
         lines.push('');
       }
