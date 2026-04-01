@@ -3615,7 +3615,7 @@
       lines.push('ItemDisplay[(FILTLVL<3 OR (FILTLVL<4 ETH)) !ID RARE (gix OR 9gi OR 7gi OR whm OR 9wh OR 7wh OR gma OR 9gm OR 7gm OR gis OR 9gs OR 7gs OR pil OR 9pi OR 7pi OR ssp OR 9s9 OR 7s7 OR tsp OR 9ts OR 7ts OR ktr OR 9ar OR 7ar OR skr OR 9qr OR 7qr OR am2 OR am7 OR amc) ILVL>84 ALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
       // Catch all & hide
       lines.push('//Catch All Rare');
-      lines.push('ItemDisplay[FILTLVL<3 !ID RARE]:%SHOW%');
+      lines.push('ItemDisplay[FILTLVL<3 !ID RARE]:%NAME%');
       // Crafted always shown
       lines.push('ItemDisplay[CRAFT !ID]: %ORANGE%%NAME%' + descStr);
       lines.push('');
