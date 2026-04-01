@@ -2314,7 +2314,7 @@
       var showChip = document.querySelector('[data-field="action"] [data-value="show"]');
       var nameChip = document.querySelector('[data-field="nameDisplay"] [data-value="%NAME%"]');
       var noneNotify = document.querySelector('[data-field="notify"] [data-value=""]');
-      var noContinue = document.querySelector('[data-field="continue"] [data-value=""]');
+      var noContinue = document.querySelector('[data-field="continueKw"] [data-value=""]');
       var noMap = document.querySelector('[data-field="mapIcon"] [data-value=""]');
       if (showChip) showChip.classList.add('active');
       if (nameChip) nameChip.classList.add('active');
