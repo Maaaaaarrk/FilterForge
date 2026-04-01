@@ -2716,13 +2716,13 @@
       if (wantEthTag || wantSockets) {
         if (wantEthTag && wantSockets) {
           lines.push('// Magic+ items: Eth tag and socket count');
+          lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) !RW ETH SOCK>0]: %NAME% %GRAY%[Eth] [%SOCKETS%]%CONTINUE%');
           lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) ETH]: %NAME% %GRAY%[Eth]%CONTINUE%');
           lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) !RW !ETH SOCK>0]: %NAME% [%SOCKETS%]%CONTINUE%');
-          lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) !RW ETH SOCK>0]: %NAME%[%SOCKETS%]%CONTINUE%');
           lines.push('// Normal items: Eth tag and socket count');
+          lines.push('ItemDisplay[NMAG !RW ETH SOCK>0]: %GRAY%%NAME% [Eth] [%SOCKETS%]%CONTINUE%');
           lines.push('ItemDisplay[NMAG ETH]: %GRAY%%NAME% [Eth]%CONTINUE%');
           lines.push('ItemDisplay[NMAG !RW !ETH SOCK>0]: %GRAY%%NAME% [%SOCKETS%]%CONTINUE%');
-          lines.push('ItemDisplay[NMAG !RW ETH SOCK>0]: %GRAY%%NAME%[%SOCKETS%]%CONTINUE%');
         } else if (wantEthTag) {
           lines.push('ItemDisplay[(MAG OR UNI OR SET OR RARE OR CRAFT) ETH]: %NAME% %GRAY%[Eth]%CONTINUE%');
           lines.push('ItemDisplay[NMAG ETH]: %GRAY%%NAME% [Eth]%CONTINUE%');
