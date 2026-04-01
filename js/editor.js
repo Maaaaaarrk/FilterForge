@@ -4708,6 +4708,11 @@
             copyEl.textContent = 'copied!';
             copyEl.style.opacity = '1';
             setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
+          }).catch(function () {
+            var copyEl = row.querySelector('.itemcode-copy');
+            copyEl.textContent = 'copy failed';
+            copyEl.style.opacity = '1';
+            setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
           });
         });
         listEl.appendChild(row);
@@ -4752,6 +4757,11 @@
             navigator.clipboard.writeText(item[0]).then(function () {
               var copyEl = row.querySelector('.itemcode-copy');
               copyEl.textContent = 'copied!';
+              copyEl.style.opacity = '1';
+              setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
+            }).catch(function () {
+              var copyEl = row.querySelector('.itemcode-copy');
+              copyEl.textContent = 'copy failed';
               copyEl.style.opacity = '1';
               setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
             });
