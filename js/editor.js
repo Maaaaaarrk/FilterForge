@@ -21,7 +21,7 @@
   // ==========================================
   var builderState = {
     quality: '',
-    tier: '',
+    tier: [],
     properties: [],
     itemcat: [],
     equipment: '',
