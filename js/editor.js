@@ -3021,8 +3021,8 @@
           ['UNI !ID uld', 'Leviathan'],
           ['UNI !ID uth', 'Dark Abyss'],
           ['UNI !ID uul', 'Steel Carapace'],
-          ['UNI !ID uar !ETH', 'Templars Might or Tyraels Might'],
-          ['UNI !ID uar ETH', 'Templars Might'],
+          ['UNI !ID uar !ETH', 'Templars Might'],
+          ['UNI !ID uar ETH', 'Tyraels Might'],
           // Normal Belts
           ['UNI !ID lbl', 'Lenymo'],
           ['UNI !ID vbl', 'Snakecord'],
