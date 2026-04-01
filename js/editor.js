@@ -1992,6 +1992,7 @@
       var code = valueMatch[1];
       var op = valueMatch[2];
       var valStr = valueMatch[3];
+      if (code === 'SOCK') code = 'SOCKETS';
       var itemVal = (item.values && item.values[code] !== undefined) ? item.values[code] : 0;
 
       // GOLD conditions only match gold piles (items with code 'gold')
