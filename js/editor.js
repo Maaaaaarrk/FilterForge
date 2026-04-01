@@ -1404,7 +1404,7 @@
             el.className = 'grail-item' + (found[key] ? ' found' : '');
             el.querySelector('.grail-check').innerHTML = found[key] ? '&#9745;' : '&#9744;';
             updateProgress();
-            header.textContent = category + ' (' + items.filter(function (it) { return found[category + ':' + it.name]; }).length + '/' + items.length + ')';
+            header.textContent = category + ' (' + filtered.filter(function (it) { return found[category + ':' + it.name]; }).length + '/' + filtered.length + ')';
           });
           itemsDiv.appendChild(el);
         });
