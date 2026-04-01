@@ -22,7 +22,7 @@
 
   function renderFilters(data) {
     filters = data;
-    loading.style.display = 'none';
+    loading.classList.add('hidden');
     grid.innerHTML = '';
 
     data.forEach(function (f, i) {
@@ -88,8 +88,8 @@
         })
         .then(renderFilters)
         .catch(function () {
-          loading.style.display = 'none';
-          errorEl.style.display = 'block';
+          loading.classList.add('hidden');
+          errorEl.classList.remove('hidden');
         });
     });
 })();
