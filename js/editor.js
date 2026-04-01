@@ -4254,7 +4254,7 @@
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FCR>0]: %TAN%%STAT105%FCR %NAME%%CONTINUE%{%NAME%}');
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID IAS>0 !WAND !SOR]: %ORANGE%%STAT93%IAS %NAME%%CONTINUE%{%NAME%}');
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FHR>0]: %GOLD%%STAT99%FHR %NAME%%CONTINUE%{%NAME%}');
-      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FRW>0]: %GOLD%%FRW%FRW %NAME%%CONTINUE%{%NAME%}');
+      lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FRW>0]: %GOLD%%STAT96%FRW %NAME%%CONTINUE%{%NAME%}');
       lines.push('ItemDisplay[(ARMOR OR WEAPON OR rin OR amu) (MAG OR RARE OR CRAFT) ID FBR>0]: %ORANGE%%STAT102%FBR %NAME%%CONTINUE%{%NAME%}');
       // Resistances
       lines.push('// --- Resistances ---');
