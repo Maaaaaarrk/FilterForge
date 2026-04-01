@@ -303,7 +303,7 @@
     'mag-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 45, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 85, CRAFTALVL: 90, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'mag-gc-91': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 91, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'mag-gc-99': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-gc': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-sc': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-lc': { code: 'cm2', name: 'Large Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
@@ -2210,12 +2210,8 @@
       return lookup[code] || '';
     });
 
-    // Extract descriptions {} for display as dimmed suffix
-    var descriptions = [];
-    text = text.replace(/\{([^}]*)\}/g, function(m, desc) {
-      if (desc.trim()) descriptions.push(desc);
-      return '';
-    });
+    // Remove descriptions {} for inline display
+    text = text.replace(/\{[^}]*\}/g, '');
 
     // Convert colors to spans — start with item's rarity color
     var rarityColor = '#ffffff'; // default white
@@ -2262,10 +2258,6 @@
       if (chunk) {
         result += '<span style="color:' + currentColor + '">' + escapeHtml(chunk) + '</span>';
       }
-    }
-
-    if (descriptions.length) {
-      result += ' <span style="color:#888;font-size:0.85em">{' + escapeHtml(descriptions.join(' | ')) + '}</span>';
     }
 
     return result || escapeHtml(item.name);
