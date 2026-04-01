@@ -1814,7 +1814,7 @@
         return {
           matched: true,
           rule: rule,
-          hidden: finalOutput === '',
+          hidden: finalOutput === '' || !namePart.replace(/%[A-Z_0-9-]+%/g, '').trim(),
           output: finalOutput,
           continued: anyMatched,
           allRules: allMatchedRules
@@ -1826,7 +1826,8 @@
     if (anyMatched) {
       var finalOut = storedName;
       if (storedDesc) finalOut = storedName + '{' + storedDesc + '}';
-      return { matched: true, rule: lastRule, hidden: false, output: finalOut, continued: true, allRules: allMatchedRules };
+      var nameVisible = storedName.replace(/%[A-Z_0-9-]+%/g, '').trim();
+      return { matched: true, rule: lastRule, hidden: !nameVisible, output: finalOut, continued: true, allRules: allMatchedRules };
     }
     return { matched: false, hidden: false, output: '', rule: null, allRules: [] };
   }
