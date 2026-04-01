@@ -3679,19 +3679,19 @@
         lines.push('// CRAFTING BASES -- shows CRAFTALVL on good bases');
         lines.push('// ============================================================');
         lines.push('// 2H Axes, Mauls, 2H Swords, Glaives, Pikes, Cestus (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (gax OR 9ga OR 7ga OR mau OR 9m9 OR 7m7 OR flb OR 9fb OR 7fb OR gsd OR 9gd OR 7gd OR glv OR 9gl OR 7gl OR pik OR 9p9 OR 7p7 OR axf OR 9xf OR 7xf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (gax OR 9ga OR 7ga OR mau OR 9m9 OR 7m7 OR flb OR 9fb OR 7fb OR gsd OR 9gd OR 7gd OR glv OR 9gl OR 7gl OR pik OR 9p9 OR 7p7 OR axf OR 9xf OR 7xf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Amazon Bows');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) (am2 OR am7 OR amc) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) (am2 OR am7 OR amc) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Assassin Katars (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (ktr OR 9ar OR 7ar OR skr OR 9qr OR 7qr) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (ktr OR 9ar OR 7ar OR skr OR 9qr OR 7qr) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Giant Axes, War Hammers, Great Mauls, Giant Swords, Pilums, Spears, Throwing Spears (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (gix OR 9gi OR 7gi OR whm OR 9wh OR 7wh OR gma OR 9gm OR 7gm OR gis OR 9gs OR 7gs OR pil OR 9pi OR 7pi OR ssp OR 9s9 OR 7s7 OR tsp OR 9ts OR 7ts) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (gix OR 9gi OR 7gi OR whm OR 9wh OR 7wh OR gma OR 9gm OR 7gm OR gis OR 9gs OR 7gs OR pil OR 9pi OR 7pi OR ssp OR 9s9 OR 7s7 OR tsp OR 9ts OR 7ts) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Battle Axes, Giant Axes (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (btx OR 9bt OR 7bt OR gix OR 9gi OR 7gi) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (btx OR 9bt OR 7bt OR gix OR 9gi OR 7gi) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// 1H Maces, Morning Stars, Flails (ETH)');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) ETH (mac OR 9ma OR 7ma OR mst OR 9mt OR 7mt OR fla OR 9fl OR 7fl) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) ETH (mac OR 9ma OR 7ma OR mst OR 9mt OR 7mt OR fla OR 9fl OR 7fl) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('// Sorceress Orbs');
-        lines.push('ItemDisplay[CRAFTING !ID (MAG OR RARE) (ob5 OR oba OR obf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
+        lines.push('ItemDisplay[!ID (MAG OR RARE) (ob5 OR oba OR obf) CRAFTALVL>76]: %NAME%{cALVL:%CRAFTALVL%}');
         lines.push('');
       }
 
