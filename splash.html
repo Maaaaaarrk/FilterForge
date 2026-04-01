@@ -255,6 +255,36 @@
     border-radius: 50%;
     flex-shrink: 0;
   }
+
+  @media (max-width: 860px) {
+    body {
+      padding: 12px;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .splash {
+      width: 100%;
+      height: auto;
+      flex-direction: column;
+    }
+
+    .left {
+      width: 100%;
+      padding: 28px 24px 12px;
+    }
+
+    .right {
+      width: 100%;
+      height: auto;
+      padding: 0 16px 16px;
+    }
+
+    .editor-preview {
+      height: auto;
+      min-height: 320px;
+    }
+  }
 </style>
 </head>
 <body>
