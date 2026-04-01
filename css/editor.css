@@ -114,7 +114,9 @@
   gap: 1rem;
 }
 
-/* Sidebar - Rule Builder */
+/* Sidebar - Rule Builder
+   overflow-y requires a height constraint to activate scrolling;
+   sticky positioning + max-height are added in PR #125 (fix/sidebar-scroll) */
 .editor-sidebar {
   width: 340px;
   flex-shrink: 0;
