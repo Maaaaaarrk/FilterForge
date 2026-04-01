@@ -826,10 +826,8 @@
 
       if (mapIcon) {
         if (mapIconColor) {
-          output += mapIcon.replace('%', '%').replace(/%$/, '-' + mapIconColor + '%');
-          // Fix: replace e.g. %MAP% with %MAP-0A%
           var iconBase = mapIcon.replace(/%/g, '');
-          output = output.replace(mapIcon, '%' + iconBase + '-' + mapIconColor + '%');
+          output += '%' + iconBase + '-' + mapIconColor + '%';
         } else {
           output += mapIcon;
         }
