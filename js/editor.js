@@ -1814,7 +1814,7 @@
         return {
           matched: true,
           rule: rule,
-          hidden: finalOutput === '' && !anyMatched,
+          hidden: finalOutput === '',
           output: finalOutput,
           continued: anyMatched,
           allRules: allMatchedRules
