@@ -333,10 +333,55 @@
     assassin: [['SK251','Fire Blast'],['SK252','Claw Mastery'],['SK253','Psychic Hammer'],['SK254','Tiger Strike'],['SK255','Dragon Talon'],['SK256','Shock Web'],['SK257','Blade Sentinel'],['SK258','Burst of Speed'],['SK259','Fists of Fire'],['SK260','Dragon Claw'],['SK261','Charged Bolt Sentry'],['SK262','Wake of Fire'],['SK263','Weapon Block'],['SK264','Cloak of Shadows'],['SK265','Cobra Strike'],['SK266','Blade Fury'],['SK267','Fade'],['SK268','Shadow Warrior'],['SK269','Claws of Thunder'],['SK270','Dragon Tail'],['SK271','Chain Lightning Sentry'],['SK272','Wake of Inferno'],['SK273','Mind Blast'],['SK274','Blades of Ice'],['SK275','Dragon Flight'],['SK276','Death Sentry'],['SK277','Blade Shield'],['SK278','Venom'],['SK279','Shadow Master'],['SK280','Phoenix Strike'],['SK366','Lightning Sentry']]
   };
 
+  // Maps each skill ID (number) to its TABSK index for MULTI code generation
+  // Tab indices: Ama 0/1/2, Sor 8/9/10, Nec 16/17/18, Pal 24/25/26,
+  //              Bar 32/33/34, Dru 40/41/42, Sin 48/49/50
+  var SKILL_TAB_MAP = {
+    // Amazon — Tab 0: Bow, Tab 1: Passive, Tab 2: Javelin
+    6:0, 7:0, 11:0, 12:0, 16:0, 21:0, 22:0, 26:0, 27:0, 31:0,
+    8:1, 9:1, 13:1, 17:1, 18:1, 23:1, 28:1, 29:1, 32:1, 33:1,
+    10:2, 14:2, 15:2, 19:2, 20:2, 24:2, 25:2, 30:2, 34:2, 35:2,
+    // Sorceress — Tab 8: Fire, Tab 9: Lightning, Tab 10: Cold
+    36:8, 37:8, 41:8, 46:8, 47:8, 51:8, 52:8, 56:8, 61:8, 62:8, 376:8, 383:8,
+    38:9, 42:9, 43:9, 48:9, 49:9, 53:9, 54:9, 57:9, 58:9, 63:9,
+    39:10, 40:10, 44:10, 45:10, 50:10, 55:10, 59:10, 60:10, 64:10, 65:10, 369:10,
+    // Necromancer — Tab 16: Curses, Tab 17: Poison & Bone, Tab 18: Summoning
+    66:16, 71:16, 72:16, 76:16, 77:16, 81:16, 82:16, 86:16, 87:16, 91:16, 374:16,
+    67:17, 68:17, 73:17, 74:17, 78:17, 83:17, 84:17, 88:17, 92:17, 93:17, 367:17, 381:17,
+    69:18, 70:18, 75:18, 79:18, 80:18, 85:18, 89:18, 90:18, 94:18, 95:18,
+    // Paladin — Tab 24: Combat, Tab 25: Offensive Auras, Tab 26: Defensive Auras
+    96:24, 97:24, 101:24, 106:24, 107:24, 111:24, 112:24, 116:24, 117:24, 121:24, 364:24, 371:24, 378:24,
+    98:25, 102:25, 108:25, 113:25, 114:25, 118:25, 122:25, 123:25,
+    99:26, 100:26, 103:26, 104:26, 105:26, 109:26, 110:26, 115:26, 119:26, 120:26, 124:26, 125:26,
+    // Barbarian — Tab 32: Combat, Tab 33: Masteries, Tab 34: Warcries
+    126:32, 132:32, 133:32, 139:32, 140:32, 143:32, 144:32, 147:32, 151:32, 152:32,
+    127:33, 128:33, 129:33, 134:33, 135:33, 136:33, 141:33, 145:33, 148:33, 153:33, 368:33,
+    130:34, 131:34, 137:34, 138:34, 142:34, 146:34, 149:34, 150:34, 154:34, 155:34,
+    // Druid — Tab 40: Summoning, Tab 41: Shape Shifting, Tab 42: Elemental
+    221:40, 222:40, 226:40, 227:40, 231:40, 236:40, 237:40, 241:40, 246:40, 247:40,
+    223:41, 224:41, 228:41, 232:41, 233:41, 238:41, 239:41, 242:41, 243:41, 248:41,
+    225:42, 229:42, 230:42, 234:42, 235:42, 240:42, 244:42, 245:42, 249:42, 250:42, 370:42,
+    // Assassin — Tab 48: Traps, Tab 49: Shadow, Tab 50: Martial Arts
+    251:48, 256:48, 257:48, 261:48, 262:48, 266:48, 271:48, 272:48, 276:48, 277:48, 366:48,
+    252:49, 253:49, 258:49, 263:49, 264:49, 267:49, 268:49, 273:49, 278:49, 279:49,
+    254:50, 255:50, 259:50, 260:50, 265:50, 269:50, 270:50, 274:50, 275:50, 280:50
+  };
+
+  // Maps class name to CLSK class index for MULTI code generation
+  var CLASS_INDEX_MAP = {
+    amazon: 0, sorceress: 1, necromancer: 2, paladin: 3,
+    barbarian: 4, druid: 5, assassin: 6
+  };
+
   function initSkillConditions() {
     var container = document.getElementById('skill-conditions');
     var addBtn = document.getElementById('btn-add-skill');
+    var multiCheckbox = document.getElementById('skill-multi-mode');
     var MAX_SKILLS = 3;
+
+    if (multiCheckbox) {
+      multiCheckbox.addEventListener('change', function () { updateGeneratedRule(); });
+    }
 
     function populateSkills(row) {
       var classSelect = row.querySelector('.skill-class');
@@ -569,13 +614,26 @@
 
     // Skill conditions
     var skContainer = document.getElementById('skill-conditions');
+    var useMulti = document.getElementById('skill-multi-mode') && document.getElementById('skill-multi-mode').checked;
     if (skContainer) {
       skContainer.querySelectorAll('.skill-row').forEach(function (row) {
         var code = row.querySelector('.skill-name').value;
+        var cls = row.querySelector('.skill-class').value;
         var op = row.querySelector('.skill-op').value;
         var level = row.querySelector('.skill-level').value;
         if (code && level) {
-          conditions.push(code + op + level);
+          if (useMulti && cls) {
+            var skillNum = parseInt(code.replace('SK', ''), 10);
+            var tabIdx = SKILL_TAB_MAP[skillNum];
+            var classIdx = CLASS_INDEX_MAP[cls];
+            if (tabIdx !== undefined && classIdx !== undefined) {
+              conditions.push('MULTI107,' + skillNum + '+MULTI188,' + tabIdx + '+MULTI83,' + classIdx + '+ALLSK' + op + level);
+            } else {
+              conditions.push(code + op + level);
+            }
+          } else {
+            conditions.push(code + op + level);
+          }
         }
       });
     }
@@ -781,8 +839,8 @@
         if (KNOWN_FLAGS.indexOf(baseTok) !== -1) return tok;
         // Known value codes (SOCKETS, ILVL, RUNE, etc.)
         if (KNOWN_VALUE_CODES.indexOf(baseTok) !== -1) return tok;
-        // Dynamic stat/skill tokens: STAT###, SK###, CLSK###, TABSK###
-        if (/^!?(STAT|SK|CLSK|TABSK|CHARSTAT)\d*$/.test(tok)) return tok;
+        // Dynamic stat/skill tokens: STAT###, SK###, CLSK###, TABSK###, MULTI###
+        if (/^!?(STAT|SK|CLSK|TABSK|CHARSTAT|MULTI)\d*$/.test(tok)) return tok;
         // Item codes (2-4 alphanumeric chars) — allow lowercase
         if (baseTok.length <= 4 && baseTok.length >= 2) return tok;
         // Unknown token — warn
