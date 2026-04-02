@@ -28,6 +28,7 @@
     weapons: '',
     misc: '',
     classitems: '',
+    location: [],
     negate: [],
     valueConditions: [],
     itemCode: '',
@@ -527,6 +528,15 @@
     // Class items
     if (builderState.classitems) conditions.push(builderState.classitems);
 
+    // Location (multi-select: wraps in OR group)
+    if (builderState.location && builderState.location.length) {
+      if (builderState.location.length === 1) {
+        conditions.push(builderState.location[0]);
+      } else {
+        conditions.push('(' + builderState.location.join(' OR ') + ')');
+      }
+    }
+
     // Negate (multi)
     if (builderState.negate && builderState.negate.length) {
       builderState.negate.forEach(function (n) { conditions.push(n); });
@@ -727,7 +737,7 @@
   var highlightEl = document.getElementById('code-highlight');
 
   // Known valid condition tokens for validation
-  var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7'];
+  var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','EQUIPPED','INVENTORY','STASH','CUBE','SHOP','MERC','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7'];
   var KNOWN_NEGATES = KNOWN_FLAGS.map(function (f) { return '!' + f; });
   var KNOWN_VALUE_CODES = ['SOCKETS','SOCK','DEF','ED','EDEF','EDAM','ILVL','CLVL','ALVL','QLVL','RUNE','GOLD','PRICE','SELLPRICE','FRES','CRES','LRES','PRES','RES','STR','DEX','LIFE','MANA','FCR','IAS','FHR','FRW','MFIND','LVLREQ','MAXSOCKETS','GEMLEVEL','GEM','GEMTYPE','FILTLVL','DIFF','MAPID','MAPTIER','ALLSK','QTY','TABSK0','TABSK1','TABSK2','TABSK3','TABSK4','TABSK5','TABSK6','CHARSTAT'];
   var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY','LVLREQ'];
