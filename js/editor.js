@@ -44,222 +44,6 @@
     description: ''
   };
 
-  // ==========================================
-  // Templates
-  // ==========================================
-  var TEMPLATES = {
-    starter: [
-      '// ==========================================',
-      '// Filter Forge — Starter Filter',
-      '// A beginner-friendly filter that shows most items',
-      '// ==========================================',
-      '',
-      '// --- Filter Level Names ---',
-      'ItemDisplayFilterName[]: Level 1 - Show Everything',
-      'ItemDisplayFilterName[]: Level 2 - Hide Junk',
-      'ItemDisplayFilterName[]: Level 3 - Normal',
-      '',
-      '// --- High Value: Unique, Set, Rare ---',
-      'ItemDisplay[UNI]: %GOLD%%NAME%%MAP%',
-      'ItemDisplay[SET]: %GREEN%%NAME%%MAP%',
-      'ItemDisplay[RARE]: %YELLOW%%NAME%',
-      '',
-      '// --- Runes ---',
-      'ItemDisplay[RUNE>19]: %ORANGE%%RUNENAME% Rune%BORDER%%SOUNDID-4718%',
-      'ItemDisplay[RUNE>10]: %ORANGE%%RUNENAME% Rune%MAP%',
-      'ItemDisplay[RUNE>0]: %ORANGE%%RUNENAME% Rune',
-      '',
-      '// --- Gems ---',
-      'ItemDisplay[GEM=5]: %PURPLE%%NAME%%DOT%',
-      'ItemDisplay[GEM>0]: %PURPLE%%NAME%',
-      '',
-      '// --- Charms ---',
-      'ItemDisplay[CHARM]: %BLUE%%NAME%',
-      '',
-      '// --- Jewelry ---',
-      'ItemDisplay[JEWELRY]: %NAME%',
-      '',
-      '// --- Keys, Scrolls ---',
-      'ItemDisplay[key FILTLVL>1]:',
-      'ItemDisplay[tsc FILTLVL>1]:',
-      'ItemDisplay[isc FILTLVL>1]:',
-      '',
-      '// --- Gold ---',
-      'ItemDisplay[GOLD<100 FILTLVL>1]:',
-      'ItemDisplay[GOLD<500 FILTLVL>2]:',
-      '',
-      '// --- Hide low normal/magic at higher filter levels ---',
-      'ItemDisplay[NMAG NORM !ETH FILTLVL>2]:',
-      'ItemDisplay[MAG NORM FILTLVL>2]:',
-      '',
-      '// --- Socket Info ---',
-      'ItemDisplay[NMAG SOCKETS>0]: %NAME% %GRAY%[%SOCKETS%]',
-      '',
-      '// --- Show Everything Else ---',
-      'ItemDisplay[]: %NAME%'
-    ].join('\n'),
-
-    endgame: [
-      '// ==========================================',
-      '// Filter Forge — Endgame Strict Filter',
-      '// Hides most items, highlights only valuable drops',
-      '// ==========================================',
-      '',
-      'ItemDisplayFilterName[]: Strict',
-      'ItemDisplayFilterName[]: Very Strict',
-      'ItemDisplayFilterName[]: Ultra Strict',
-      '',
-      '// --- Always Show ---',
-      'ItemDisplay[UNI]: %GOLD%%NAME%%BORDER%%SOUNDID-4715%',
-      'ItemDisplay[SET]: %GREEN%%NAME%%MAP%%SOUNDID-4718%',
-      '',
-      '// --- High Runes (Vex+) ---',
-      'ItemDisplay[RUNE>25]: %ORANGE%%RUNENAME% Rune (#%RUNENUM%)%BORDER%%SOUNDID-4716%',
-      'ItemDisplay[RUNE>19]: %ORANGE%%RUNENAME% Rune (#%RUNENUM%)%MAP%%SOUNDID-4718%',
-      '',
-      '// --- Mid Runes ---',
-      'ItemDisplay[RUNE>10]: %ORANGE%%RUNENAME% Rune',
-      'ItemDisplay[RUNE>0 FILTLVL<2]: %ORANGE%%RUNENAME% Rune',
-      'ItemDisplay[RUNE>0]:',
-      '',
-      '// --- Perfect Gems ---',
-      'ItemDisplay[GEM=5]: %PURPLE%%NAME%%DOT%',
-      'ItemDisplay[GEM>0 FILTLVL<2]: %PURPLE%%NAME%',
-      'ItemDisplay[GEM>0]:',
-      '',
-      '// --- Charms ---',
-      'ItemDisplay[cm3 MAG]: %BLUE%GC %NAME%{iLvl: %ILVL%}',
-      'ItemDisplay[cm1 MAG]: %BLUE%SC %NAME%',
-      'ItemDisplay[CHARM]: %BLUE%%NAME%',
-      '',
-      '// --- Rare Jewelry ---',
-      'ItemDisplay[RARE JEWELRY]: %YELLOW%%NAME%',
-      '',
-      '// --- Crafted ---',
-      'ItemDisplay[CRAFT]: %ORANGE%%NAME%',
-      '',
-      '// --- Runeword Bases ---',
-      'ItemDisplay[NMAG !INF SOCKETS=4 CHEST ELT ETH]: %GRAY%4os %NAME% %WHITE%[Base]%MAP%',
-      'ItemDisplay[NMAG !INF SOCKETS=3 HELM ELT]: %GRAY%3os %NAME% %WHITE%[Base]',
-      'ItemDisplay[NMAG !INF SOCKETS=4 POLEARM ELT ETH]: %GRAY%4os %NAME% %WHITE%[Base]%MAP%',
-      'ItemDisplay[NMAG !INF SOCKETS=5 WEAPON ELT]: %GRAY%5os %NAME% %WHITE%[Base]',
-      '',
-      '// --- Hide Everything Else ---',
-      'ItemDisplay[GOLD<5000]:',
-      'ItemDisplay[NMAG]:',
-      'ItemDisplay[MAG]:',
-      '',
-      '// --- Catch-all ---',
-      'ItemDisplay[]: %NAME%'
-    ].join('\n'),
-
-    runes: [
-      '// ==========================================',
-      '// Rune Display Rules',
-      '// Paste these near the top of your filter',
-      '// ==========================================',
-      '',
-      '// --- Zod ---',
-      'ItemDisplay[RUNE=33]: %ORANGE%>> Zod Rune <<  %RED%#%RUNENUM%%BORDER-FF%%SOUNDID-4716%',
-      '',
-      '// --- Cham ---',
-      'ItemDisplay[RUNE=32]: %ORANGE%>> Cham Rune <<  %RED%#%RUNENUM%%BORDER-0A%%SOUNDID-4716%',
-      '',
-      '// --- Jah ---',
-      'ItemDisplay[RUNE=31]: %ORANGE%>> Jah Rune <<  %RED%#%RUNENUM%%BORDER-0A%%SOUNDID-4716%',
-      '',
-      '// --- Ber ---',
-      'ItemDisplay[RUNE=30]: %ORANGE%>> Ber Rune <<  %RED%#%RUNENUM%%BORDER-0A%%SOUNDID-4716%',
-      '',
-      '// --- Sur ---',
-      'ItemDisplay[RUNE=29]: %ORANGE%> Sur Rune <  #%RUNENUM%%BORDER-0A%%SOUNDID-4715%',
-      '',
-      '// --- Lo ---',
-      'ItemDisplay[RUNE=28]: %ORANGE%> Lo Rune <  #%RUNENUM%%BORDER-0A%%SOUNDID-4715%',
-      '',
-      '// --- Ohm ---',
-      'ItemDisplay[RUNE=27]: %ORANGE%> Ohm Rune <  #%RUNENUM%%MAP-0A%%SOUNDID-4715%',
-      '',
-      '// --- Vex ---',
-      'ItemDisplay[RUNE=26]: %ORANGE%> Vex Rune <  #%RUNENUM%%MAP-0A%%SOUNDID-4718%',
-      '',
-      '// --- Gul to Ist ---',
-      'ItemDisplay[RUNE>23]: %ORANGE%%RUNENAME% Rune  #%RUNENUM%%MAP%%SOUNDID-4718%',
-      '',
-      '// --- Um to Mal ---',
-      'ItemDisplay[RUNE>21]: %ORANGE%%RUNENAME% Rune  #%RUNENUM%%DOT%',
-      '',
-      '// --- Mid Runes (Lem to Pul) ---',
-      'ItemDisplay[RUNE>19]: %ORANGE%%RUNENAME% Rune  #%RUNENUM%',
-      '',
-      '// --- Low-Mid Runes (Io to Ko) ---',
-      'ItemDisplay[RUNE>15]: %ORANGE%%RUNENAME%',
-      '',
-      '// --- Low Runes ---',
-      'ItemDisplay[RUNE>0]: %ORANGE%%RUNENAME%'
-    ].join('\n'),
-
-    crafting: [
-      '// ==========================================',
-      '// Crafting Base Highlights',
-      '// Highlights items useful for crafting recipes',
-      '// ==========================================',
-      '',
-      '// --- Blood Crafting (Ral + Jewel + base) ---',
-      '// Blood Helm: Magic Helm with ALVL',
-      'ItemDisplay[MAG HELM !ID]: %RED%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Caster Crafting (Amn + Jewel + base) ---',
-      '// Caster Amulet: Magic Amulet',
-      'ItemDisplay[MAG amu !ID]: %BLUE%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '// Caster Belt: Magic Belt',
-      'ItemDisplay[MAG BELT !ID]: %BLUE%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Safety Crafting (Ort + Jewel + base) ---',
-      '// Safety Shield: Magic Shield',
-      'ItemDisplay[MAG SHIELD !ID]: %GREEN%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Hitpower Crafting (Tir + Jewel + base) ---',
-      '// Hitpower Gloves: Magic Gloves',
-      'ItemDisplay[MAG GLOVES !ID]: %YELLOW%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Show ALVL/CRAFTALVL on all Magic items ---',
-      '// Uncomment the line below to see crafting info on everything:',
-      '// ItemDisplay[MAG !ID]: %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}'
-    ].join('\n'),
-
-    mapping: [
-      '// ==========================================',
-      '// Mapping-Specific Rules',
-      '// Use MAPTIER and MAPID for map-aware filtering',
-      '// ==========================================',
-      '',
-      '// --- Map Tier Display ---',
-      '// Show map tier in item descriptions while mapping',
-      '',
-      '// --- Strict filtering in high-tier maps ---',
-      'ItemDisplay[NMAG NORM MAPTIER>2]:',
-      'ItemDisplay[MAG NORM MAPTIER>2]:',
-      'ItemDisplay[NMAG EXC MAPTIER>3]:',
-      '',
-      '// --- Always show in maps ---',
-      'ItemDisplay[UNI MAPTIER>0]: %GOLD%%NAME% %RED%[T%MAPTIER%]%BORDER%%SOUNDID-4715%',
-      'ItemDisplay[SET MAPTIER>0]: %GREEN%%NAME% %RED%[T%MAPTIER%]%MAP%',
-      '',
-      '// --- Gold threshold scales with map tier ---',
-      'ItemDisplay[GOLD<1000 MAPTIER>0]:',
-      'ItemDisplay[GOLD<3000 MAPTIER>3]:',
-      '',
-      '// --- Show good bases only in maps ---',
-      'ItemDisplay[NMAG ELT ETH SOCKETS>3 MAPTIER>0]: %WHITE%%NAME% [%SOCKETS%os]%MAP%',
-      'ItemDisplay[NMAG ELT SOCKETS>3 MAPTIER>0]: %GRAY%%NAME% [%SOCKETS%os]',
-      '',
-      '// --- Filter level integration ---',
-      '// Use FILTLVL to let players choose strictness',
-      'ItemDisplay[RARE MAPTIER>0 FILTLVL>2]:',
-      'ItemDisplay[MAG MAPTIER>0 FILTLVL>1]:'
-    ].join('\n')
-  };
 
   // ==========================================
   // Item definitions for preview
@@ -1203,24 +987,6 @@
     });
   }
 
-  // ==========================================
-  // Templates
-  // ==========================================
-  function initTemplates() {
-    document.querySelectorAll('.template-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var key = btn.getAttribute('data-template');
-        var template = TEMPLATES[key];
-        if (!template) return;
-
-        if (codeEditor.value.trim() && !confirm('Load template? This will replace your current filter.')) return;
-
-        codeEditor.value = template;
-        updateLineNumbers();
-        saveToStorage();
-      });
-    });
-  }
 
   // ==========================================
   // Tabs
@@ -1675,7 +1441,7 @@
     });
 
     if (!rules.length) {
-      html = '<p class="text-muted text-center">No rules found in the editor. Write some rules or load a template to test.</p>';
+      html = '<p class="text-muted text-center">No rules found in the editor. Write some rules or use the wizard to get started.</p>';
     }
 
     previewResults.innerHTML = html;
@@ -5077,7 +4843,6 @@
     initSkillConditions();
     initTextInputs();
     initImportExport();
-    initTemplates();
     initTabs();
     initGrail();
     initPreview();
