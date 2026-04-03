@@ -28,6 +28,7 @@
     weapons: '',
     misc: '',
     classitems: '',
+    location: [],
     negate: [],
     valueConditions: [],
     itemCode: '',
@@ -44,222 +45,6 @@
     description: ''
   };
 
-  // ==========================================
-  // Templates
-  // ==========================================
-  var TEMPLATES = {
-    starter: [
-      '// ==========================================',
-      '// Filter Forge — Starter Filter',
-      '// A beginner-friendly filter that shows most items',
-      '// ==========================================',
-      '',
-      '// --- Filter Level Names ---',
-      'ItemDisplayFilterName[]: Level 1 - Show Everything',
-      'ItemDisplayFilterName[]: Level 2 - Hide Junk',
-      'ItemDisplayFilterName[]: Level 3 - Normal',
-      '',
-      '// --- High Value: Unique, Set, Rare ---',
-      'ItemDisplay[UNI]: %GOLD%%NAME%%MAP%',
-      'ItemDisplay[SET]: %GREEN%%NAME%%MAP%',
-      'ItemDisplay[RARE]: %YELLOW%%NAME%',
-      '',
-      '// --- Runes ---',
-      'ItemDisplay[RUNE>19]: %ORANGE%%RUNENAME% Rune%BORDER%%SOUNDID-4718%',
-      'ItemDisplay[RUNE>10]: %ORANGE%%RUNENAME% Rune%MAP%',
-      'ItemDisplay[RUNE>0]: %ORANGE%%RUNENAME% Rune',
-      '',
-      '// --- Gems ---',
-      'ItemDisplay[GEM=5]: %PURPLE%%NAME%%DOT%',
-      'ItemDisplay[GEM>0]: %PURPLE%%NAME%',
-      '',
-      '// --- Charms ---',
-      'ItemDisplay[CHARM]: %BLUE%%NAME%',
-      '',
-      '// --- Jewelry ---',
-      'ItemDisplay[JEWELRY]: %NAME%',
-      '',
-      '// --- Keys, Scrolls ---',
-      'ItemDisplay[key FILTLVL>1]:',
-      'ItemDisplay[tsc FILTLVL>1]:',
-      'ItemDisplay[isc FILTLVL>1]:',
-      '',
-      '// --- Gold ---',
-      'ItemDisplay[GOLD<100 FILTLVL>1]:',
-      'ItemDisplay[GOLD<500 FILTLVL>2]:',
-      '',
-      '// --- Hide low normal/magic at higher filter levels ---',
-      'ItemDisplay[NMAG NORM !ETH FILTLVL>2]:',
-      'ItemDisplay[MAG NORM FILTLVL>2]:',
-      '',
-      '// --- Socket Info ---',
-      'ItemDisplay[NMAG SOCKETS>0]: %NAME% %GRAY%[%SOCKETS%]',
-      '',
-      '// --- Show Everything Else ---',
-      'ItemDisplay[]: %NAME%'
-    ].join('\n'),
-
-    endgame: [
-      '// ==========================================',
-      '// Filter Forge — Endgame Strict Filter',
-      '// Hides most items, highlights only valuable drops',
-      '// ==========================================',
-      '',
-      'ItemDisplayFilterName[]: Strict',
-      'ItemDisplayFilterName[]: Very Strict',
-      'ItemDisplayFilterName[]: Ultra Strict',
-      '',
-      '// --- Always Show ---',
-      'ItemDisplay[UNI]: %GOLD%%NAME%%BORDER%%SOUNDID-4715%',
-      'ItemDisplay[SET]: %GREEN%%NAME%%MAP%%SOUNDID-4718%',
-      '',
-      '// --- High Runes (Vex+) ---',
-      'ItemDisplay[RUNE>25]: %ORANGE%%RUNENAME% Rune (#%RUNENUM%)%BORDER%%SOUNDID-4716%',
-      'ItemDisplay[RUNE>19]: %ORANGE%%RUNENAME% Rune (#%RUNENUM%)%MAP%%SOUNDID-4718%',
-      '',
-      '// --- Mid Runes ---',
-      'ItemDisplay[RUNE>10]: %ORANGE%%RUNENAME% Rune',
-      'ItemDisplay[RUNE>0 FILTLVL<2]: %ORANGE%%RUNENAME% Rune',
-      'ItemDisplay[RUNE>0]:',
-      '',
-      '// --- Perfect Gems ---',
-      'ItemDisplay[GEM=5]: %PURPLE%%NAME%%DOT%',
-      'ItemDisplay[GEM>0 FILTLVL<2]: %PURPLE%%NAME%',
-      'ItemDisplay[GEM>0]:',
-      '',
-      '// --- Charms ---',
-      'ItemDisplay[cm3 MAG]: %BLUE%GC %NAME%{iLvl: %ILVL%}',
-      'ItemDisplay[cm1 MAG]: %BLUE%SC %NAME%',
-      'ItemDisplay[CHARM]: %BLUE%%NAME%',
-      '',
-      '// --- Rare Jewelry ---',
-      'ItemDisplay[RARE JEWELRY]: %YELLOW%%NAME%',
-      '',
-      '// --- Crafted ---',
-      'ItemDisplay[CRAFT]: %ORANGE%%NAME%',
-      '',
-      '// --- Runeword Bases ---',
-      'ItemDisplay[NMAG !INF SOCKETS=4 CHEST ELT ETH]: %GRAY%4os %NAME% %WHITE%[Base]%MAP%',
-      'ItemDisplay[NMAG !INF SOCKETS=3 HELM ELT]: %GRAY%3os %NAME% %WHITE%[Base]',
-      'ItemDisplay[NMAG !INF SOCKETS=4 POLEARM ELT ETH]: %GRAY%4os %NAME% %WHITE%[Base]%MAP%',
-      'ItemDisplay[NMAG !INF SOCKETS=5 WEAPON ELT]: %GRAY%5os %NAME% %WHITE%[Base]',
-      '',
-      '// --- Hide Everything Else ---',
-      'ItemDisplay[GOLD<5000]:',
-      'ItemDisplay[NMAG]:',
-      'ItemDisplay[MAG]:',
-      '',
-      '// --- Catch-all ---',
-      'ItemDisplay[]: %NAME%'
-    ].join('\n'),
-
-    runes: [
-      '// ==========================================',
-      '// Rune Display Rules',
-      '// Paste these near the top of your filter',
-      '// ==========================================',
-      '',
-      '// --- Zod ---',
-      'ItemDisplay[RUNE=33]: %ORANGE%>> Zod Rune <<  %RED%#%RUNENUM%%BORDER-FF%%SOUNDID-4716%',
-      '',
-      '// --- Cham ---',
-      'ItemDisplay[RUNE=32]: %ORANGE%>> Cham Rune <<  %RED%#%RUNENUM%%BORDER-0A%%SOUNDID-4716%',
-      '',
-      '// --- Jah ---',
-      'ItemDisplay[RUNE=31]: %ORANGE%>> Jah Rune <<  %RED%#%RUNENUM%%BORDER-0A%%SOUNDID-4716%',
-      '',
-      '// --- Ber ---',
-      'ItemDisplay[RUNE=30]: %ORANGE%>> Ber Rune <<  %RED%#%RUNENUM%%BORDER-0A%%SOUNDID-4716%',
-      '',
-      '// --- Sur ---',
-      'ItemDisplay[RUNE=29]: %ORANGE%> Sur Rune <  #%RUNENUM%%BORDER-0A%%SOUNDID-4715%',
-      '',
-      '// --- Lo ---',
-      'ItemDisplay[RUNE=28]: %ORANGE%> Lo Rune <  #%RUNENUM%%BORDER-0A%%SOUNDID-4715%',
-      '',
-      '// --- Ohm ---',
-      'ItemDisplay[RUNE=27]: %ORANGE%> Ohm Rune <  #%RUNENUM%%MAP-0A%%SOUNDID-4715%',
-      '',
-      '// --- Vex ---',
-      'ItemDisplay[RUNE=26]: %ORANGE%> Vex Rune <  #%RUNENUM%%MAP-0A%%SOUNDID-4718%',
-      '',
-      '// --- Gul to Ist ---',
-      'ItemDisplay[RUNE>23]: %ORANGE%%RUNENAME% Rune  #%RUNENUM%%MAP%%SOUNDID-4718%',
-      '',
-      '// --- Um to Mal ---',
-      'ItemDisplay[RUNE>21]: %ORANGE%%RUNENAME% Rune  #%RUNENUM%%DOT%',
-      '',
-      '// --- Mid Runes (Lem to Pul) ---',
-      'ItemDisplay[RUNE>19]: %ORANGE%%RUNENAME% Rune  #%RUNENUM%',
-      '',
-      '// --- Low-Mid Runes (Io to Ko) ---',
-      'ItemDisplay[RUNE>15]: %ORANGE%%RUNENAME%',
-      '',
-      '// --- Low Runes ---',
-      'ItemDisplay[RUNE>0]: %ORANGE%%RUNENAME%'
-    ].join('\n'),
-
-    crafting: [
-      '// ==========================================',
-      '// Crafting Base Highlights',
-      '// Highlights items useful for crafting recipes',
-      '// ==========================================',
-      '',
-      '// --- Blood Crafting (Ral + Jewel + base) ---',
-      '// Blood Helm: Magic Helm with ALVL',
-      'ItemDisplay[MAG HELM !ID]: %RED%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Caster Crafting (Amn + Jewel + base) ---',
-      '// Caster Amulet: Magic Amulet',
-      'ItemDisplay[MAG amu !ID]: %BLUE%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '// Caster Belt: Magic Belt',
-      'ItemDisplay[MAG BELT !ID]: %BLUE%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Safety Crafting (Ort + Jewel + base) ---',
-      '// Safety Shield: Magic Shield',
-      'ItemDisplay[MAG SHIELD !ID]: %GREEN%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Hitpower Crafting (Tir + Jewel + base) ---',
-      '// Hitpower Gloves: Magic Gloves',
-      'ItemDisplay[MAG GLOVES !ID]: %YELLOW%Craft? %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}',
-      '',
-      '// --- Show ALVL/CRAFTALVL on all Magic items ---',
-      '// Uncomment the line below to see crafting info on everything:',
-      '// ItemDisplay[MAG !ID]: %NAME%{ALVL: %ALVL% | cALVL: %CRAFTALVL%}'
-    ].join('\n'),
-
-    mapping: [
-      '// ==========================================',
-      '// Mapping-Specific Rules',
-      '// Use MAPTIER and MAPID for map-aware filtering',
-      '// ==========================================',
-      '',
-      '// --- Map Tier Display ---',
-      '// Show map tier in item descriptions while mapping',
-      '',
-      '// --- Strict filtering in high-tier maps ---',
-      'ItemDisplay[NMAG NORM MAPTIER>2]:',
-      'ItemDisplay[MAG NORM MAPTIER>2]:',
-      'ItemDisplay[NMAG EXC MAPTIER>3]:',
-      '',
-      '// --- Always show in maps ---',
-      'ItemDisplay[UNI MAPTIER>0]: %GOLD%%NAME% %RED%[T%MAPTIER%]%BORDER%%SOUNDID-4715%',
-      'ItemDisplay[SET MAPTIER>0]: %GREEN%%NAME% %RED%[T%MAPTIER%]%MAP%',
-      '',
-      '// --- Gold threshold scales with map tier ---',
-      'ItemDisplay[GOLD<1000 MAPTIER>0]:',
-      'ItemDisplay[GOLD<3000 MAPTIER>3]:',
-      '',
-      '// --- Show good bases only in maps ---',
-      'ItemDisplay[NMAG ELT ETH SOCKETS>3 MAPTIER>0]: %WHITE%%NAME% [%SOCKETS%os]%MAP%',
-      'ItemDisplay[NMAG ELT SOCKETS>3 MAPTIER>0]: %GRAY%%NAME% [%SOCKETS%os]',
-      '',
-      '// --- Filter level integration ---',
-      '// Use FILTLVL to let players choose strictness',
-      'ItemDisplay[RARE MAPTIER>0 FILTLVL>2]:',
-      'ItemDisplay[MAG MAPTIER>0 FILTLVL>1]:'
-    ].join('\n')
-  };
 
   // ==========================================
   // Item definitions for preview
@@ -548,10 +333,55 @@
     assassin: [['SK251','Fire Blast'],['SK252','Claw Mastery'],['SK253','Psychic Hammer'],['SK254','Tiger Strike'],['SK255','Dragon Talon'],['SK256','Shock Web'],['SK257','Blade Sentinel'],['SK258','Burst of Speed'],['SK259','Fists of Fire'],['SK260','Dragon Claw'],['SK261','Charged Bolt Sentry'],['SK262','Wake of Fire'],['SK263','Weapon Block'],['SK264','Cloak of Shadows'],['SK265','Cobra Strike'],['SK266','Blade Fury'],['SK267','Fade'],['SK268','Shadow Warrior'],['SK269','Claws of Thunder'],['SK270','Dragon Tail'],['SK271','Chain Lightning Sentry'],['SK272','Wake of Inferno'],['SK273','Mind Blast'],['SK274','Blades of Ice'],['SK275','Dragon Flight'],['SK276','Death Sentry'],['SK277','Blade Shield'],['SK278','Venom'],['SK279','Shadow Master'],['SK280','Phoenix Strike'],['SK366','Lightning Sentry']]
   };
 
+  // Maps each skill ID (number) to its TABSK index for MULTI code generation
+  // Tab indices: Ama 0/1/2, Sor 8/9/10, Nec 16/17/18, Pal 24/25/26,
+  //              Bar 32/33/34, Dru 40/41/42, Sin 48/49/50
+  var SKILL_TAB_MAP = {
+    // Amazon — Tab 0: Bow, Tab 1: Passive, Tab 2: Javelin
+    6:0, 7:0, 11:0, 12:0, 16:0, 21:0, 22:0, 26:0, 27:0, 31:0,
+    8:1, 9:1, 13:1, 17:1, 18:1, 23:1, 28:1, 29:1, 32:1, 33:1,
+    10:2, 14:2, 15:2, 19:2, 20:2, 24:2, 25:2, 30:2, 34:2, 35:2,
+    // Sorceress — Tab 8: Fire, Tab 9: Lightning, Tab 10: Cold
+    36:8, 37:8, 41:8, 46:8, 47:8, 51:8, 52:8, 56:8, 61:8, 62:8, 376:8, 383:8,
+    38:9, 42:9, 43:9, 48:9, 49:9, 53:9, 54:9, 57:9, 58:9, 63:9,
+    39:10, 40:10, 44:10, 45:10, 50:10, 55:10, 59:10, 60:10, 64:10, 65:10, 369:10,
+    // Necromancer — Tab 16: Curses, Tab 17: Poison & Bone, Tab 18: Summoning
+    66:16, 71:16, 72:16, 76:16, 77:16, 81:16, 82:16, 86:16, 87:16, 91:16, 374:16,
+    67:17, 68:17, 73:17, 74:17, 78:17, 83:17, 84:17, 88:17, 92:17, 93:17, 367:17, 381:17,
+    69:18, 70:18, 75:18, 79:18, 80:18, 85:18, 89:18, 90:18, 94:18, 95:18,
+    // Paladin — Tab 24: Combat, Tab 25: Offensive Auras, Tab 26: Defensive Auras
+    96:24, 97:24, 101:24, 106:24, 107:24, 111:24, 112:24, 116:24, 117:24, 121:24, 364:24, 371:24, 378:24,
+    98:25, 102:25, 108:25, 113:25, 114:25, 118:25, 122:25, 123:25,
+    99:26, 100:26, 103:26, 104:26, 105:26, 109:26, 110:26, 115:26, 119:26, 120:26, 124:26, 125:26,
+    // Barbarian — Tab 32: Combat, Tab 33: Masteries, Tab 34: Warcries
+    126:32, 132:32, 133:32, 139:32, 140:32, 143:32, 144:32, 147:32, 151:32, 152:32,
+    127:33, 128:33, 129:33, 134:33, 135:33, 136:33, 141:33, 145:33, 148:33, 153:33, 368:33,
+    130:34, 131:34, 137:34, 138:34, 142:34, 146:34, 149:34, 150:34, 154:34, 155:34,
+    // Druid — Tab 40: Summoning, Tab 41: Shape Shifting, Tab 42: Elemental
+    221:40, 222:40, 226:40, 227:40, 231:40, 236:40, 237:40, 241:40, 246:40, 247:40,
+    223:41, 224:41, 228:41, 232:41, 233:41, 238:41, 239:41, 242:41, 243:41, 248:41,
+    225:42, 229:42, 230:42, 234:42, 235:42, 240:42, 244:42, 245:42, 249:42, 250:42, 370:42,
+    // Assassin — Tab 48: Traps, Tab 49: Shadow, Tab 50: Martial Arts
+    251:48, 256:48, 257:48, 261:48, 262:48, 266:48, 271:48, 272:48, 276:48, 277:48, 366:48,
+    252:49, 253:49, 258:49, 263:49, 264:49, 267:49, 268:49, 273:49, 278:49, 279:49,
+    254:50, 255:50, 259:50, 260:50, 265:50, 269:50, 270:50, 274:50, 275:50, 280:50
+  };
+
+  // Maps class name to CLSK class index for MULTI code generation
+  var CLASS_INDEX_MAP = {
+    amazon: 0, sorceress: 1, necromancer: 2, paladin: 3,
+    barbarian: 4, druid: 5, assassin: 6
+  };
+
   function initSkillConditions() {
     var container = document.getElementById('skill-conditions');
     var addBtn = document.getElementById('btn-add-skill');
+    var multiCheckbox = document.getElementById('skill-multi-mode');
     var MAX_SKILLS = 3;
+
+    if (multiCheckbox) {
+      multiCheckbox.addEventListener('change', function () { updateGeneratedRule(); });
+    }
 
     function populateSkills(row) {
       var classSelect = row.querySelector('.skill-class');
@@ -743,6 +573,15 @@
     // Class items
     if (builderState.classitems) conditions.push(builderState.classitems);
 
+    // Location (multi-select: wraps in OR group)
+    if (builderState.location && builderState.location.length) {
+      if (builderState.location.length === 1) {
+        conditions.push(builderState.location[0]);
+      } else {
+        conditions.push('(' + builderState.location.join(' OR ') + ')');
+      }
+    }
+
     // Negate (multi)
     if (builderState.negate && builderState.negate.length) {
       builderState.negate.forEach(function (n) { conditions.push(n); });
@@ -775,13 +614,26 @@
 
     // Skill conditions
     var skContainer = document.getElementById('skill-conditions');
+    var useMulti = document.getElementById('skill-multi-mode') && document.getElementById('skill-multi-mode').checked;
     if (skContainer) {
       skContainer.querySelectorAll('.skill-row').forEach(function (row) {
         var code = row.querySelector('.skill-name').value;
+        var cls = row.querySelector('.skill-class').value;
         var op = row.querySelector('.skill-op').value;
         var level = row.querySelector('.skill-level').value;
         if (code && level) {
-          conditions.push(code + op + level);
+          if (useMulti && cls) {
+            var skillNum = parseInt(code.replace('SK', ''), 10);
+            var tabIdx = SKILL_TAB_MAP[skillNum];
+            var classIdx = CLASS_INDEX_MAP[cls];
+            if (tabIdx !== undefined && classIdx !== undefined) {
+              conditions.push('MULTI107,' + skillNum + '+MULTI188,' + tabIdx + '+MULTI83,' + classIdx + '+ALLSK' + op + level);
+            } else {
+              conditions.push(code + op + level);
+            }
+          } else {
+            conditions.push(code + op + level);
+          }
         }
       });
     }
@@ -943,7 +795,7 @@
   var highlightEl = document.getElementById('code-highlight');
 
   // Known valid condition tokens for validation
-  var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7'];
+  var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','EQUIPPED','INVENTORY','STASH','CUBE','SHOP','MERC','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7'];
   var KNOWN_NEGATES = KNOWN_FLAGS.map(function (f) { return '!' + f; });
   var KNOWN_VALUE_CODES = ['SOCKETS','SOCK','DEF','ED','EDEF','EDAM','ILVL','CLVL','ALVL','QLVL','RUNE','GOLD','PRICE','SELLPRICE','FRES','CRES','LRES','PRES','RES','STR','DEX','LIFE','MANA','FCR','IAS','FHR','FRW','MFIND','LVLREQ','MAXSOCKETS','GEMLEVEL','GEM','GEMTYPE','FILTLVL','DIFF','MAPID','MAPTIER','ALLSK','QTY','TABSK0','TABSK1','TABSK2','TABSK3','TABSK4','TABSK5','TABSK6','CHARSTAT'];
   var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY','LVLREQ'];
@@ -987,8 +839,8 @@
         if (KNOWN_FLAGS.indexOf(baseTok) !== -1) return tok;
         // Known value codes (SOCKETS, ILVL, RUNE, etc.)
         if (KNOWN_VALUE_CODES.indexOf(baseTok) !== -1) return tok;
-        // Dynamic stat/skill tokens: STAT###, SK###, CLSK###, TABSK###
-        if (/^!?(STAT|SK|CLSK|TABSK|CHARSTAT)\d*$/.test(tok)) return tok;
+        // Dynamic stat/skill tokens: STAT###, SK###, CLSK###, TABSK###, MULTI###
+        if (/^!?(STAT|SK|CLSK|TABSK|CHARSTAT|MULTI)\d*$/.test(tok)) return tok;
         // Item codes (2-4 alphanumeric chars) — allow lowercase
         if (baseTok.length <= 4 && baseTok.length >= 2) return tok;
         // Unknown token — warn
@@ -1203,24 +1055,6 @@
     });
   }
 
-  // ==========================================
-  // Templates
-  // ==========================================
-  function initTemplates() {
-    document.querySelectorAll('.template-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var key = btn.getAttribute('data-template');
-        var template = TEMPLATES[key];
-        if (!template) return;
-
-        if (codeEditor.value.trim() && !confirm('Load template? This will replace your current filter.')) return;
-
-        codeEditor.value = template;
-        updateLineNumbers();
-        saveToStorage();
-      });
-    });
-  }
 
   // ==========================================
   // Tabs
@@ -1675,7 +1509,7 @@
     });
 
     if (!rules.length) {
-      html = '<p class="text-muted text-center">No rules found in the editor. Write some rules or load a template to test.</p>';
+      html = '<p class="text-muted text-center">No rules found in the editor. Write some rules or use the wizard to get started.</p>';
     }
 
     previewResults.innerHTML = html;
@@ -5178,7 +5012,6 @@
     initSkillConditions();
     initTextInputs();
     initImportExport();
-    initTemplates();
     initTabs();
     initGrail();
     initPreview();

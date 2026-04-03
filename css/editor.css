@@ -438,27 +438,6 @@
   padding: 0.35rem 0.6rem;
 }
 
-/* Templates */
-.template-btn {
-  display: block;
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  margin-bottom: 0.35rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text-primary);
-  font-size: 0.85rem;
-  font-family: var(--font-body);
-  text-align: left;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-}
-
-.template-btn:hover {
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
-}
 
 /* Editor main area */
 .editor-main {
