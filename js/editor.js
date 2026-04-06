@@ -1339,6 +1339,7 @@
       document.getElementById('pane-code').style.display = 'block';
       document.getElementById('pane-preview').style.display = 'none';
       document.getElementById('pane-grail').style.display = 'none';
+      document.getElementById('pane-allitems').style.display = 'none';
     }
 
     btnGenerate.addEventListener('click', function () {
@@ -1390,10 +1391,15 @@
         document.getElementById('pane-code').style.display = target === 'code' ? 'block' : 'none';
         document.getElementById('pane-preview').style.display = target === 'preview' ? 'flex' : 'none';
         document.getElementById('pane-grail').style.display = target === 'grail' ? 'block' : 'none';
+        document.getElementById('pane-allitems').style.display = target === 'allitems' ? 'block' : 'none';
 
         // Auto-run preview test when switching to Live Preview
         if (target === 'preview') {
           testAllItems();
+        }
+        if (target === 'allitems' && initAllItems.render) {
+          ALL_ITEMS_CACHE = null; // Force rebuild to pick up any item data changes
+          initAllItems.render();
         }
       });
     });
@@ -1410,6 +1416,7 @@
     document.getElementById('pane-code').style.display = 'block';
     document.getElementById('pane-preview').style.display = 'none';
     document.getElementById('pane-grail').style.display = 'none';
+    document.getElementById('pane-allitems').style.display = 'none';
 
     var text = codeEditor.value;
     var lines = text.split('\n');
@@ -4723,6 +4730,216 @@
     renderItems(currentCat, '');
   }
 
+
+  // ==========================================
+  // All Items - Bird's Eye View
+  // ==========================================
+  function buildAllItemsList() {
+    // Build comprehensive item list from PREVIEW_ITEMS and ITEM_CODES
+    var items = [];
+    var seen = {};
+
+    // First add all PREVIEW_ITEMS (they have full flag/value data for accurate matching)
+    Object.keys(PREVIEW_ITEMS).forEach(function (key) {
+      var pi = PREVIEW_ITEMS[key];
+      seen[key] = true;
+      var cat = 'nmag';
+      if (pi.flags.indexOf('UNI') !== -1) cat = 'uni';
+      else if (pi.flags.indexOf('SET') !== -1) cat = 'set';
+      else if (pi.flags.indexOf('RARE') !== -1 || pi.flags.indexOf('CRAFT') !== -1) cat = 'rare';
+      else if (pi.flags.indexOf('MAG') !== -1) cat = 'mag';
+      else if (pi.values && pi.values.RUNE > 0) cat = 'runesgems';
+      else if (pi.values && pi.values.GEM > 0) cat = 'runesgems';
+      else if (pi.flags.indexOf('MISC') !== -1) cat = 'misc';
+      items.push({
+        key: key,
+        code: pi.code,
+        name: pi.name,
+        flags: pi.flags,
+        values: pi.values,
+        cat: cat,
+        hasFullData: true
+      });
+    });
+
+    // Add items from ITEM_CODES that aren't already in PREVIEW_ITEMS
+    var catMap = {
+      runes: 'runesgems',
+      pd2: 'misc',
+      norm: 'nmag',
+      exc: 'nmag',
+      elt: 'nmag',
+      uni: 'uni',
+      set: 'set',
+      classitems: 'nmag',
+      misc: 'misc'
+    };
+
+    Object.keys(ITEM_CODES).forEach(function (codeCat) {
+      ITEM_CODES[codeCat].forEach(function (entry) {
+        var code = entry[0];
+        var name = entry[1];
+        var itemKey = codeCat + '-' + code;
+
+        // Check if this code is already covered by a PREVIEW_ITEMS entry
+        var alreadyHas = items.some(function (it) { return it.code === code && it.cat === catMap[codeCat]; });
+        if (alreadyHas) return;
+
+        var flags = ['GROUND'];
+        var values = { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 };
+        var cat = catMap[codeCat] || 'misc';
+
+        // Set appropriate flags based on category
+        if (codeCat === 'runes') {
+          var runeNum = parseInt(code.replace(/[^0-9]/g, ''), 10) || 1;
+          flags.push('MISC');
+          values.RUNE = runeNum;
+          values.QTY = 1;
+        } else if (codeCat === 'uni') {
+          flags.push('UNI');
+          if (['rin', 'amu', 'jew'].indexOf(code) !== -1) flags.push('JEWELRY');
+          else if (['cm1', 'cm2', 'cm3'].indexOf(code) !== -1) flags.push('CHARM');
+          else flags.push('ARMOR');
+        } else if (codeCat === 'set') {
+          flags.push('SET');
+          if (['rin', 'amu'].indexOf(code) !== -1) flags.push('JEWELRY');
+          else flags.push('ARMOR');
+        } else if (codeCat === 'norm') {
+          flags.push('NMAG', 'NORM');
+          if (['rin', 'amu', 'jew'].indexOf(code) !== -1) flags.push('JEWELRY');
+          else if (['cm1', 'cm2', 'cm3'].indexOf(code) !== -1) flags.push('CHARM');
+          else if (code.match(/^(hp|mp|rv|yp|wm|vp|tp|ts|is|aq|cq)/)) flags.push('MISC');
+          else flags.push('ARMOR');
+        } else if (codeCat === 'exc') {
+          flags.push('NMAG', 'EXC');
+          flags.push('ARMOR');
+        } else if (codeCat === 'elt') {
+          flags.push('NMAG', 'ELT');
+          flags.push('ARMOR');
+        } else if (codeCat === 'classitems') {
+          flags.push('NMAG');
+          flags.push('WEAPON');
+        } else if (codeCat === 'misc') {
+          flags.push('NMAG', 'MISC');
+          if (code.match(/^g[cfglps][a-z]s$/)) {
+            var gemLevelMap = { c: 1, f: 2, s: 3, l: 4, p: 5 };
+            values.GEM = gemLevelMap[code[1]] || 1;
+            cat = 'runesgems';
+          }
+        } else if (codeCat === 'pd2') {
+          flags.push('MISC');
+        }
+
+        items.push({
+          key: itemKey,
+          code: code,
+          name: name,
+          flags: flags,
+          values: values,
+          cat: cat,
+          hasFullData: false
+        });
+      });
+    });
+
+    return items;
+  }
+
+  var ALL_ITEMS_CACHE = null;
+
+  function initAllItems() {
+    var resultsEl = document.getElementById('allitems-results');
+    var statsEl = document.getElementById('allitems-stats');
+    var slider = document.getElementById('allitems-filtlvl-slider');
+    var sliderVal = document.getElementById('allitems-filtlvl-val');
+    var catButtons = document.querySelectorAll('.allitems-cat');
+
+    if (!resultsEl) return;
+
+    var currentCat = 'all';
+
+    catButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        catButtons.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentCat = btn.getAttribute('data-cat');
+        renderAllItems();
+      });
+    });
+
+    slider.addEventListener('input', function () {
+      sliderVal.textContent = this.value;
+      renderAllItems();
+    });
+
+    function renderAllItems() {
+      if (!ALL_ITEMS_CACHE) {
+        ALL_ITEMS_CACHE = buildAllItemsList();
+      }
+      var items = ALL_ITEMS_CACHE;
+      var filtlvl = parseInt(slider.value, 10);
+
+      // Filter by category
+      var filtered = items;
+      if (currentCat !== 'all') {
+        filtered = items.filter(function (it) { return it.cat === currentCat; });
+      }
+
+      // Parse current filter rules
+      var text = typeof getFullFilterText === 'function' ? getFullFilterText() : codeEditor.value;
+      var lines = text.split('\n');
+      var rules = parseRules(lines);
+
+      var html = '';
+      var shownCount = 0;
+      var hiddenCount = 0;
+      var defaultCount = 0;
+
+      filtered.forEach(function (item) {
+        // Build a PREVIEW_ITEMS-compatible object for matchItem
+        var previewItem = {
+          code: item.code,
+          name: item.name,
+          flags: item.flags,
+          values: item.values
+        };
+
+        var result = matchItem(previewItem, rules);
+        var status = 'default';
+        if (!result.matched) status = 'default';
+        else if (result.hidden) status = 'hide';
+        else status = 'show';
+
+        if (status === 'show') shownCount++;
+        else if (status === 'hide') hiddenCount++;
+        else defaultCount++;
+
+        var cssClass = 'allitems-item';
+        if (status === 'hide') cssClass += ' allitems-item-hidden';
+        else if (status === 'show') cssClass += ' allitems-item-shown';
+        else cssClass += ' allitems-item-default';
+
+        var displayColor = '';
+
+        html += '<div class="' + cssClass + '" title="' + escapeHtml(item.code) + ' | ' + escapeHtml(item.flags.join(' ')) + '">';
+        html += '<span class="allitems-item-name"' + displayColor + '>' + escapeHtml(item.name) + '</span>';
+        html += '<span class="allitems-item-code">' + escapeHtml(item.code) + '</span>';
+        html += '<span class="allitems-item-status allitems-status-' + status + '">' + status + '</span>';
+        html += '</div>';
+      });
+
+      if (!filtered.length) {
+        html = '<p class="text-muted text-center">No items in this category.</p>';
+      }
+
+      resultsEl.innerHTML = html;
+      statsEl.innerHTML = '<span class="allitems-stat-shown">' + shownCount + ' shown</span> · <span class="allitems-stat-hidden">' + hiddenCount + ' hidden</span> · <span class="allitems-stat-default">' + defaultCount + ' default</span> · <span>' + filtered.length + ' total</span>';
+    }
+
+    // Expose for tab switching
+    initAllItems.render = renderAllItems;
+  }
+
   // ==========================================
   // Import from Community Author
   // ==========================================
@@ -5020,6 +5237,7 @@
     initItemCodeFinder();
     initItemCodeAutocomplete();
     initAuthorImport();
+    initAllItems();
 
     // Auto-open author import if ?author= in URL
     var urlParams2 = new URLSearchParams(window.location.search);
