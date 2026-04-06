@@ -1339,6 +1339,7 @@
       document.getElementById('pane-code').style.display = 'block';
       document.getElementById('pane-preview').style.display = 'none';
       document.getElementById('pane-grail').style.display = 'none';
+      document.getElementById('pane-allitems').style.display = 'none';
     }
 
     btnGenerate.addEventListener('click', function () {
@@ -1390,10 +1391,15 @@
         document.getElementById('pane-code').style.display = target === 'code' ? 'block' : 'none';
         document.getElementById('pane-preview').style.display = target === 'preview' ? 'flex' : 'none';
         document.getElementById('pane-grail').style.display = target === 'grail' ? 'block' : 'none';
+        document.getElementById('pane-allitems').style.display = target === 'allitems' ? 'block' : 'none';
 
         // Auto-run preview test when switching to Live Preview
         if (target === 'preview') {
           testAllItems();
+        }
+        if (target === 'allitems' && initAllItems.render) {
+          ALL_ITEMS_CACHE = null; // Force rebuild to pick up any item data changes
+          initAllItems.render();
         }
       });
     });
@@ -1410,6 +1416,7 @@
     document.getElementById('pane-code').style.display = 'block';
     document.getElementById('pane-preview').style.display = 'none';
     document.getElementById('pane-grail').style.display = 'none';
+    document.getElementById('pane-allitems').style.display = 'none';
 
     var text = codeEditor.value;
     var lines = text.split('\n');
@@ -1489,7 +1496,12 @@
   }
 
   function testAllItems() {
-    var text = codeEditor.value;
+    var text = typeof getFullFilterText === 'function' ? getFullFilterText() : codeEditor.value;
+    var previewFLSelect = document.getElementById('preview-filtlvl');
+    var previewFLName = document.getElementById('preview-filtlvl-name');
+    if (previewFLSelect && previewFLName) {
+      populateFilterLevelDropdown(previewFLSelect, previewFLName, text);
+    }
     var lines = text.split('\n');
     var rules = parseRules(lines);
     var selectedKey = document.getElementById('preview-item-type').value;
@@ -4413,123 +4425,229 @@
       ['rera','Reroll Area Orb'],['imra','Imbue Rare Orb'],['upma','Upgrade Map Orb'],['imma','Imbue Magic Orb']
     ],
     norm: [
-      ['cap','Cap'],['skp','Skull Cap'],['hlm','Helm'],['fhl','Full Helm'],['ghm','Great Helm'],['crn','Crown'],['msk','Mask'],['buc','Buckler'],['sml','Small Shield'],['lrg','Large Shield'],['kit','Kite Shield'],['tow','Tower Shield'],['gts','Gothic Shield'],
-      ['qui','Quilted Armor'],['lea','Leather Armor'],['hla','Hard Leather'],['stu','Studded Leather'],['rng','Ring Mail'],['scl','Scale Mail'],['chn','Chain Mail'],['brs','Breast Plate'],['spl','Splint Mail'],['plt','Plate Mail'],['fld','Field Plate'],['gth','Gothic Plate'],['ful','Full Plate Mail'],['aar','Ancient Armor'],['ltp','Light Plate'],
+      ['cap','Cap'],['skp','Skull Cap'],['hlm','Helm'],['fhl','Full Helm'],['msk','Mask'],['bhm','Bone Helm'],['ghm','Great Helm'],['crn','Crown'],['ci0','Circlet'],['ci1','Coronet'],
+      ['qui','Quilted Armor'],['lea','Leather Armor'],['hla','Hard Leather Armor'],['stu','Studded Leather'],['rng','Ring Mail'],['scl','Scale Mail'],['chn','Chain Mail'],['brs','Breast Plate'],['spl','Splint Mail'],['plt','Plate Mail'],['fld','Field Plate'],['gth','Gothic Plate'],['ltp','Light Plate'],['ful','Full Plate Mail'],['aar','Ancient Armor'],
+      ['buc','Buckler'],['sml','Small Shield'],['lrg','Large Shield'],['spk','Spiked Shield'],['kit','Kite Shield'],['bsh','Bone Shield'],['tow','Tower Shield'],['gts','Gothic Shield'],
       ['lgl','Leather Gloves'],['vgl','Heavy Gloves'],['mgl','Chain Gloves'],['tgl','Light Gauntlets'],['hgl','Gauntlets'],
       ['lbt','Boots'],['vbt','Heavy Boots'],['mbt','Chain Boots'],['tbt','Light Plated Boots'],['hbt','Greaves'],
       ['lbl','Sash'],['vbl','Light Belt'],['mbl','Belt'],['tbl','Heavy Belt'],['hbl','Plated Belt'],
+      ['ne1','Preserved Head'],['ne2','Zombie Head'],['ne3','Unraveller Head'],['ne4','Gargoyle Head'],['ne5','Demon Head'],
       ['hax','Hand Axe'],['axe','Axe'],['2ax','Double Axe'],['mpi','Military Pick'],['wax','War Axe'],['lax','Large Axe'],['bax','Broad Axe'],['btx','Battle Axe'],['gax','Great Axe'],['gix','Giant Axe'],
       ['clb','Club'],['spc','Spiked Club'],['mac','Mace'],['mst','Morning Star'],['fla','Flail'],['whm','War Hammer'],['mau','Maul'],['gma','Great Maul'],
-      ['ssd','Short Sword'],['scm','Scimitar'],['sbr','Sabre'],['flc','Falchion'],['crs','Crystal Sword'],['bsd','Broad Sword'],['lsd','Long Sword'],['wsd','War Sword'],['2hs','Two-Handed Sword'],['clm','Claymore'],['gis','Giant Sword'],['bsw','Bastard Sword'],['flb','Flamberge'],['gsd','Great Sword'],
+      ['ssd','Short Sword'],['scm','Scimitar'],['sbr','Sabre'],['flc','Falchion'],['crs','Crystal Sword'],['bsd','Broad Sword'],['lsd','Long Sword'],['wsd','War Sword'],['2hs','Two-handed Sword'],['clm','Claymore'],['gis','Giant Sword'],['bsw','Bastard Sword'],['flb','Flamberge'],['gsd','Great Sword'],
       ['dgr','Dagger'],['dir','Dirk'],['kri','Kris'],['bld','Blade'],
+      ['tkf','Throwing Knife'],['tax','Throwing Axe'],['bkf','Balanced Knife'],['bal','Balanced Axe'],
       ['jav','Javelin'],['pil','Pilum'],['ssp','Short Spear'],['glv','Glaive'],['tsp','Throwing Spear'],
       ['spr','Spear'],['tri','Trident'],['brn','Brandistock'],['spt','Spetum'],['pik','Pike'],
       ['bar','Bardiche'],['vou','Voulge'],['scy','Scythe'],['pax','Poleaxe'],['hal','Halberd'],['wsc','War Scythe'],
-      ['tkf','Throwing Knife'],['tax','Throwing Axe'],['bkf','Balanced Knife'],['bal','Balanced Axe'],
+      ['sbw','Short Bow'],['hbw','Hunter\'s Bow'],['lbw','Long Bow'],['cbw','Composite Bow'],['sbb','Short Battle Bow'],['lbb','Long Battle Bow'],['swb','Short War Bow'],['lwb','Long War Bow'],
+      ['lxb','Light Crossbow'],['mxb','Crossbow'],['hxb','Heavy Crossbow'],['rxb','Repeating Crossbow'],
       ['sst','Short Staff'],['lst','Long Staff'],['cst','Gnarled Staff'],['bst','Battle Staff'],['wst','War Staff'],
       ['wnd','Wand'],['ywn','Yew Wand'],['bwn','Bone Wand'],['gwn','Grim Wand'],
       ['scp','Scepter'],['gsc','Grand Scepter'],['wsp','War Scepter'],
-      ['sbw','Short Bow'],['hbw','Hunters Bow'],['lbw','Long Bow'],['cbw','Composite Bow'],['sbb','Short Battle Bow'],['lbb','Long Battle Bow'],['swb','Short War Bow'],['lwb','Long War Bow'],
-      ['lxb','Light Crossbow'],['mxb','Crossbow'],['hxb','Heavy Crossbow'],['rxb','Repeating Crossbow'],
-      ['key','Key'],['tsc','TP Scroll'],['isc','ID Scroll'],['tbk','TP Tome'],['ibk','ID Tome'],
+      ['ob1','Eagle Orb'],['ob2','Sacred Globe'],['ob3','Smoked Sphere'],['ob4','Clasped Orb'],['ob5','Jared\'s Stone'],
       ['rin','Ring'],['amu','Amulet'],['jew','Jewel'],
-      ['cm1','Small Charm'],['cm2','Large Charm'],['cm3','Grand Charm'],
       ['aqv','Arrow Quiver'],['cqv','Bolt Quiver']
     ],
     exc: [
-      ['xap','War Hat'],['xkp','Sallet'],['xlm','Casque'],['xhl','Winged Helm'],['xhm','Grand Crown'],['xrn','Death Mask'],['xsk','Grim Helm'],
-      ['xui','Ghost Armor'],['xea','Serpentskin'],['xla','Demonhide'],['xtu','Trellised Armor'],['xng','Linked Mail'],['xmg','Tigulated Mail'],['xcl','Mesh Armor'],['xhn','Cuirass'],['xrs','Russet Armor'],['xpl','Templar Coat'],['xlt','Sharktooth'],['xld','Embossed Plate'],['xth','Chaos Armor'],['xul','Ornate Plate'],['xar','Mage Plate'],['xtp','Archon Plate'],
-      ['xuc','Defender'],['xml','Round Shield'],['xrg','Scutum'],['xts','Dragon Shield'],['xsh','Pavise'],['xow','Ancient Shield'],
-      ['xlg','Demonhide Gloves'],['xvg','Sharkskin Gloves'],['xmb','Heavy Bracers'],['xtg','Battle Gauntlets'],['xhg','War Gauntlets'],
+      ['xap','War Hat'],['xkp','Sallet'],['xlm','Casque'],['xhl','Basinet'],['xsk','Death Mask'],['xh9','Grim Helm'],['xhm','Winged Helm'],['xrn','Grand Crown'],['ci2','Tiara'],
+      ['xui','Ghost Armor'],['xea','Serpentskin Armor'],['xla','Demonhide Armor'],['xtu','Trellised Armor'],['xng','Linked Mail'],['xcl','Tigulated Mail'],['xhn','Mesh Armor'],['xrs','Cuirass'],['xpl','Russet Armor'],['xlt','Templar Coat'],['xld','Sharktooth Armor'],['xth','Embossed Plate'],['xtp','Mage Plate'],['xul','Chaos Armor'],['xar','Ornate Plate'],
+      ['xuc','Defender'],['xml','Round Shield'],['xrg','Scutum'],['xpk','Barbed Shield'],['xit','Dragon Shield'],['xsh','Grim Shield'],['xow','Pavise'],['xts','Ancient Shield'],
+      ['xlg','Demonhide Gloves'],['xvg','Sharkskin Gloves'],['xmg','Heavy Bracers'],['xtg','Battle Gauntlets'],['xhg','War Gauntlets'],
       ['xlb','Demonhide Boots'],['xvb','Sharkskin Boots'],['xmb','Mesh Boots'],['xtb','Battle Boots'],['xhb','War Boots'],
       ['zlb','Demonhide Sash'],['zvb','Sharkskin Belt'],['zmb','Mesh Belt'],['ztb','Battle Belt'],['zhb','War Belt'],
-      ['ci0','Circlet'],['ci1','Coronet'],['ci2','Tiara'],['ci3','Diadem'],
+      ['ne6','Mummified Trophy'],['ne7','Fetish Trophy'],['ne8','Sexton Trophy'],['ne9','Cantor Trophy'],['nea','Hierophant Trophy'],
       ['9ha','Hatchet'],['9ax','Cleaver'],['92a','Twin Axe'],['9mp','Crowbill'],['9wa','Naga'],['9la','Military Axe'],['9ba','Bearded Axe'],['9bt','Tabar'],['9ga','Gothic Axe'],['9gi','Ancient Axe'],
       ['9cl','Cudgel'],['9sp','Barbed Club'],['9ma','Flanged Mace'],['9mt','Jagged Star'],['9fl','Knout'],['9wh','Battle Hammer'],['9m9','War Club'],['9gm','Martel de Fer'],
-      ['9ss','Gladius'],['9sm','Cutlass'],['9sb','Shamshir'],['9fc','Tulwar'],['9cr','Dimensional Blade'],['9bs','Battle Sword'],['9ls','Rune Sword'],['9wd','Ancient Sword'],['92h','Espandon'],['9cm','Dacian Falx'],['9gs','Tusk Sword'],['9b9','Highland Blade'],['9fb','Conquest Sword'],['9gd','Cryptic Sword'],
+      ['9ss','Gladius'],['9sm','Cutlass'],['9sb','Shamshir'],['9fc','Tulwar'],['9cr','Dimensional Blade'],['9bs','Battle Sword'],['9ls','Rune Sword'],['9wd','Ancient Sword'],['92h','Espandon'],['9cm','Dacian Falx'],['9gs','Tusk Sword'],['9b9','Gothic Sword'],['9fb','Zweihander'],['9gd','Executioner Sword'],
       ['9dg','Poignard'],['9di','Rondel'],['9kr','Cinquedeas'],['9bl','Stiletto'],
+      ['9tk','Battle Dart'],['9ta','Francisca'],['9bk','War Dart'],['9b8','Hurlbat'],
+      ['9ja','War Javelin'],['9pi','Great Pilum'],['9s9','Simbilan'],['9gl','Spiculum'],['9ts','Harpoon'],
       ['9sr','War Spear'],['9tr','Fuscina'],['9br','War Fork'],['9st','Yari'],['9p9','Lance'],
       ['9b7','Lochaber Axe'],['9vo','Bill'],['9s8','Battle Scythe'],['9pa','Partizan'],['9h9','Bec-de-Corbin'],['9wc','Grim Scythe'],
-      ['9ja','War Javelin'],['9pi','Great Pilum'],['9s9','Simbilan'],['9gl','Spiculum'],['9ts','Harpoon'],
-      ['9tk','Battle Dart'],['9ta','Francisca'],['9bk','War Knife'],['9b8','Hurlbat'],
-      ['9lw','Razor Bow'],['9sw','Cedar Bow'],['9cb','Double Bow'],['9sb','Short Siege Bow'],['9lb','Large Siege Bow'],['9cw','Rune Bow'],['9lx','Gorgon Crossbow'],['9mx','Eagle Horn'],['9hx','Colossus Crossbow'],['9rx','Demon Crossbow'],
-      ['9ss','Ward Bow'],['9ws','Ashwood Bow'],
-      ['9qs','Holy Water Sprinkler'],['9sc','Divine Scepter'],['9ws','Caduceus'],
-      ['9sb','Jo Staff'],['9ls','Quarterstaff'],['9cs','Cedar Staff'],['9bs','Gothic Staff'],['9ws','Rune Staff']
+      ['8sb','Edge Bow'],['8hb','Razor Bow'],['8lb','Cedar Bow'],['8cb','Double Bow'],['8s8','Short Siege Bow'],['8l8','Large Siege Bow'],['8sw','Rune Bow'],['8lw','Gothic Bow'],
+      ['8lx','Arbalest'],['8mx','Siege Crossbow'],['8hx','Ballista'],['8rx','Chu-Ko-Nu'],
+      ['8ss','Jo Staff'],['8ls','Quarterstaff'],['8cs','Cedar Staff'],['8bs','Gothic Staff'],['8ws','Rune Staff'],
+      ['9wn','Burnt Wand'],['9yw','Petrified Wand'],['9bw','Tomb Wand'],['9gw','Grave Wand'],
+      ['9sc','Rune Scepter'],['9qs','Holy Water Sprinkler'],['9ws','Divine Scepter'],
+      ['ob6','Glowing Orb'],['ob7','Crystalline Globe'],['ob8','Cloudy Sphere'],['ob9','Sparkling Ball'],['oba','Swirling Crystal']
     ],
     elt: [
-      ['uap','Shako/War Hat'],['ukp','Hydraskull'],['ulm','Armet'],['uhl','Giant Conch'],['uhm','Spired Helm'],['urn','Corona'],['usk','Demonhead'],['uh9','Bone Visage'],
-      ['uui','Dusk Shroud'],['uea','Wyrmhide'],['ula','Scarab Husk'],['utu','Wire Fleece'],['ung','Diamond Mail'],['umg','Boneweave Hauberk'],['ucl','Loricated Mail'],['uhn','Boneweave'],['urs','Great Hauberk'],['upl','Balrog Skin'],['ult','Hellforge Plate'],['uld','Kraken Shell'],['uth','Lacquered Plate'],['uul','Shadow Plate'],['uar','Sacred Armor'],['utp','Archon Plate'],
-      ['uit','Monarch'],['uow','Aegis'],['uts','Ward'],['ush','Troll Nest'],
+      ['uap','Shako'],['ukp','Hydraskull'],['ulm','Armet'],['uhl','Giant Conch'],['usk','Demonhead'],['uh9','Bone Visage'],['uhm','Spired Helm'],['urn','Corona'],['ci3','Diadem'],
+      ['uui','Dusk Shroud'],['uea','Wyrmhide'],['ula','Scarab Husk'],['utu','Wire Fleece'],['ung','Diamond Mail'],['ucl','Loricated Mail'],['uhn','Boneweave'],['urs','Great Hauberk'],['upl','Balrog Skin'],['ult','Hellforge Plate'],['uld','Kraken Shell'],['uth','Lacquered Plate'],['utp','Archon Plate'],['uul','Shadow Plate'],['uar','Sacred Armor'],
+      ['uuc','Heater'],['uml','Luna'],['urg','Hyperion'],['upk','Blade Barrier'],['uit','Monarch'],['ush','Troll Nest'],['uow','Aegis'],['uts','Ward'],
       ['ulg','Bramble Mitts'],['uvg','Vampirebone Gloves'],['umg','Vambraces'],['utg','Crusader Gauntlets'],['uhg','Ogre Gauntlets'],
       ['ulb','Wyrmhide Boots'],['uvb','Scarabshell Boots'],['umb','Boneweave Boots'],['utb','Mirrored Boots'],['uhb','Myrmidon Greaves'],
       ['ulc','Spiderweb Sash'],['uvc','Vampirefang Belt'],['umc','Mithril Coil'],['utc','Troll Belt'],['uhc','Colossus Girdle'],
-      ['7wa','Berserker Axe'],['72a','Ettin Axe'],['7bt','Decapitator'],['7ga','Champion Axe'],['7gi','Glorious Axe'],['7la','Feral Axe'],
-      ['7wh','Legendary Mallet'],['7m7','Ogre Maul'],['7gm','Thunder Maul'],
-      ['7cr','Phase Blade'],['7fb','Colossus Sword'],['7gd','Colossus Blade'],['7ls','Cryptic Sword'],
-      ['7s7','Balrog Spear'],['7pa','Cryptic Axe'],['7s8','Thresher'],['7p7','War Pike'],
-      ['6ws','Archon Staff'],['6ls','Stalagmite'],['6cs','Elder Staff'],['6bs','Shillelagh'],
-      ['7ws','Caduceus'],['7qs','Seraph Rod'],
-      ['6lw','Hydra Bow'],['6sw','Ward Bow'],['6mx','Gorgon Crossbow'],['6rx','Demon Crossbow'],
-      ['7xf','War Fist'],['7ar','Suwayyah'],['7qr','Scissors Suwayyah'],
-      ['7ja','Hyperion Javelin'],['7pi','Stygian Pilum'],['7s9','Balrog Spear'],['7gl','Ghost Glaive'],['7ts','Winged Harpoon'],
+      ['neb','Minion Skull'],['neg','Hellspawn Skull'],['ned','Overseer Skull'],['nee','Succubus Skull'],['nef','Bloodlord Skull'],
+      ['7ha','Tomahawk'],['7ax','Small Crescent'],['72a','Ettin Axe'],['7mp','War Spike'],['7wa','Berserker Axe'],['7la','Feral Axe'],['7ba','Silver-edged Axe'],['7bt','Decapitator'],['7ga','Champion Axe'],['7gi','Glorious Axe'],
+      ['7cl','Truncheon'],['7sp','Tyrant Club'],['7ma','Reinforced Mace'],['7mt','Devil Star'],['7fl','Scourge'],['7wh','Legendary Mallet'],['7m7','Ogre Maul'],['7gm','Thunder Maul'],
+      ['7ss','Falcata'],['7sm','Ataghan'],['7sb','Elegant Blade'],['7fc','Hydra Edge'],['7cr','Phase Blade'],['7bs','Conquest Sword'],['7ls','Cryptic Sword'],['7wd','Mythical Sword'],['72h','Legend Sword'],['7cm','Highland Blade'],['7gs','Balrog Blade'],['7b7','Champion Sword'],['7fb','Colossus Sword'],['7gd','Colossus Blade'],
+      ['7dg','Bone Knife'],['7di','Mithril Point'],['7kr','Fanged Knife'],['7bl','Legend Spike'],
       ['7tk','Flying Knife'],['7ta','Flying Axe'],['7bk','Winged Knife'],['7b8','Winged Axe'],
-      ['7dg','Fanged Knife'],['7di','Legend Spike'],['7kr','Mythical Spike'],
-      ['7wn','Petrified Wand'],['7yw','Tomb Wand'],['7bw','Lich Wand'],['7gw','Unearthed Wand'],
-      ['7ss','Ataghan'],['7sm','Elegant Blade'],['7sb','Tusk Sword'],['7fc','Hydra Edge'],
+      ['7ja','Hyperion Javelin'],['7pi','Stygian Pilum'],['7s7','Balrog Spear'],['7gl','Ghost Glaive'],['7ts','Winged Harpoon'],
+      ['7sr','Hyperion Spear'],['7tr','Stygian Pike'],['7br','Mancatcher'],['7st','Ghost Spear'],['7p7','War Pike'],
+      ['7o7','Ogre Axe'],['7vo','Colossus Voulge'],['7s8','Thresher'],['7pa','Cryptic Axe'],['7h7','Great Poleaxe'],['7wc','Giant Thresher'],
+      ['6sb','Spider Bow'],['6hb','Blade Bow'],['6lb','Shadow Bow'],['6cb','Great Bow'],['6s7','Diamond Bow'],['6l7','Crusader Bow'],['6sw','Ward Bow'],['6lw','Hydra Bow'],
+      ['6lx','Pellet Bow'],['6mx','Gorgon Crossbow'],['6hx','Colossus Crossbow'],['6rx','Demon Crossbow'],
+      ['6ss','Walking Stick'],['6ls','Stalagmite'],['6cs','Elder Staff'],['6bs','Shillelagh'],['6ws','Archon Staff'],
+      ['7wn','Polished Wand'],['7yw','Ghost Wand'],['7bw','Lich Wand'],['7gw','Unearthed Wand'],
+      ['7sc','Mighty Scepter'],['7qs','Seraph Rod'],['7ws','Caduceus'],
+      ['obb','Heavenly Stone'],['obc','Eldritch Orb'],['obd','Demon Heart'],['obe','Vortex Orb'],['obf','Dimensional Shard'],
       ['aqv3','Elite Arrow Quiver'],['cqv3','Elite Bolt Quiver']
     ],
     uni: [
-      ['uap','Harlequin Crest (Shako)'],['ci3','Griffons Eye'],['ci2','Kiras Guardian'],['uhm','Andariel\'s Visage'],['urn','Crown of Ages'],['usk','Giant Skull'],['uh9','Nightwings Veil'],
-      ['uar','Enigma base / Tyrael\'s Might'],['uui','Skin of the Vipermagi'],['uth','Lacquered Plate (Templar/Tyrael)'],['xlt','Skullder\'s Ire'],
-      ['uit','Stormshield'],['uow','Aegis (Herald of Zakarum)'],
-      ['utg','Dracul\'s Grasp'],['uhg','Steelrend'],['uvg','Magefist base'],
-      ['xtb','War Traveler'],['xhb','Gore Rider'],['uhb','Shadow Dancer'],['uvb','Sandstorm Trek'],
-      ['ulc','Arachnid Mesh'],['umc','Verdungo\'s'],['zhb','Thundergod\'s Vigor'],
-      ['rin','Unique Rings (SoJ, BK, Raven, etc.)'],['amu','Unique Amulets (Mara\'s, Highlord\'s, etc.)'],['jew','Rainbow Facet'],
-      ['cm1','Annihilus'],['cm2','Hellfire Torch'],['cm3','Gheeds Fortune'],
-      ['7gw','Death\'s Web'],['obf','Death\'s Fathom'],['oba','The Oculus'],['7wa','Beast base / Grief base'],
-      ['6lw','Windforce'],['7cr','Lightsabre'],['7ws','Astreons Iron Ward'],
-      ['ama','Titan\'s Revenge'],['amf','Thunderstroke'],
-      ['rar','Cage of the Unsullied'],['rbe','Band of Skulls'],['ram','The Third Eye']
+      ['2ax','Bladebone - Double Axe'],['2hs','Shadowfang - Two-handed Sword'],['6bs','Brimstone Rain - Shillelagh'],['6cb','Great Bow (No Unique for this base)'],['6cs','Ondals Wisdom - Elder Staff'],
+      ['6hb','Crackleshot - Blade Bow'],['6hx','Hellrack - Colossus Crossbow'],['6l7','Eaglehorn - Crusader Bow'],['6lb','Shadow Bow (No Unique for this base)'],['6ls','Stalagmite (No Unique for this base)'],
+      ['6lw','Windforce - Hydra Bow'],['6lx','Pellet Bow (No Unique for this base)'],['6mx','Gorgon Crossbow (No Unique for this base)'],['6rx','Gut Siphon - Demon Crossbow'],['6s7','Diamond Bow (No Unique for this base)'],
+      ['6sb','Spider Bow (No Unique for this base)'],['6ss','Walking Stick (No Unique for this base)'],['6sw','Widowmaker - Ward Bow'],['6ws','Mang Songs Lesson - Archon Staff'],['72a','Rune Master - Ettin Axe'],
+      ['72h','Legend Sword (No Unique for this base)'],['7ar','Suwayyah (No Unique for this base)'],['7ax','Small Crescent (No Unique for this base)'],['7b7','Doombringer - Champion Sword'],['7b8','Lacerator - Winged Axe'],
+      ['7ba','Ethereal Edge - Silver-Edged Axe'],['7bk','Warshrike - Winged Knife'],['7bl','Ghostflame - Legend Spike'],['7br','Viperfork - Mancatcher'],['7bs','Hadriels Hand'],
+      ['7bt','Hellslayer - Decapitator'],['7bw','Boneshade - Lich Wand'],['7cl','Nords Tenderizer - Truncheon'],['7cm','Leroics Mithril Bane - Highland Blade'],['7cr','Lightsabre or Azurewrath'],
+      ['7cs','Shadowkiller - Battle Cestus'],['7dg','Wizardspike - Bone Knife'],['7di','Shatterblade - Mithril Point'],['7fb','Odium - Colossus Sword'],['7fc','Hydra Edge (No Unique for this base)'],
+      ['7fl','Horizons Tornado or Stormlash - Scourge'],['7ga','Messerschmidts Reaver - Champion Axe'],['7gd','The Grandfather - Colossus Blade'],['7gi','Executioners Justice - Glorious Axe'],['7gl','Wraith Flight - Ghost Glaive'],
+      ['7gm','Earth Shifter or The Cranium Basher'],['7gs','Flamebellow - Balrog Blade'],['7gw','Deaths Web - Unearthed Wand'],['7h7','Great Poleaxe (No Unique for this base)'],['7ha','Razors Edge - Tomahawk'],
+      ['7ja','Hyperion Javelin (No Unique for this base)'],['7kr','Fleshripper - Fanged Knife'],['7la','Feral Axe (No Unique for this base)'],['7ls','Frostwind - Cryptic Sword'],['7lw','Firelizards Talons - Feral Claws'],
+      ['7m7','Windhammer - Ogre Maul'],['7ma','Reinforced Mace (No Unique for this base)'],['7mp','Cranebeak - War Spike'],['7mt','Baranars Star - Devil Star'],['7o7','Bonehew - Ogre Axe'],
+      ['7p7','Steel Pillar - War Pike'],['7pa','Tomb Reaver - Cryptic Axe'],['7pi','Stygian Pilum (No Unique for this base)'],['7qr','Aidans Scar'],['7qs','Akarat\'s Devotion - Seraph Rod'],
+      ['7s7','Demons Arch - Balrog Spear'],['7s8','The Reapers Toll - Thresher'],['7sb','Bloodmoon - Elegant Blade'],['7sc','Heavens Light or The Redeemer - Mighty Scepter'],['7sm','Djinn Slayer - Ataghan'],
+      ['7sp','Demon Limb - Tyrant Club'],['7sr','Ariocs Needle - Hyperion Spear'],['7ss','Falcata (No Unique for this base)'],['7st','Uldyssians Awakening - Ghost Spear'],['7ta','Gimmershred - Flying Axe'],
+      ['7tk','Flying Knife (No Unique for this base)'],['7tr','Stygian Pike (No Unique for this base)'],['7ts','Gargoyles Bite - Winged Harpoon'],['7tw','Stalker\'s Cull - Runic Talons'],['7vo','Colossus Voulge (No Unique for this base)'],
+      ['7wa','Death Cleaver - Berserker Axe'],['7wb','Jade Talon - Wrist Sword'],['7wc','Stormspire - Giant Thresher'],['7wd','Mythical Sword (No Unique for this base)'],['7wh','Stone Crusher or Schaefers Hammer'],
+      ['7wn','Polished Wand (No Unique for this base)'],['7ws','Astreons Iron Ward - Caduceus'],['7xf','War Fist - Whispering Mirage'],['7yw','Ghost Wand (No Unique for this base)'],['8bs','Warpspear - Gothic Staff'],
+      ['8cb','Endlesshail - Double Bow'],['8cs','Chromatic Ire - Cedar Staff'],['8hb','Riphook - Razor Bow'],['8hx','Buriza-Do Kyanon - Ballista'],['8l8','Cliffkiller - Large Siege Bow'],
+      ['8lb','Kuko Shakaku - Cedar Bow'],['8ls','Ribcracker - Quarterstaff'],['8lw','Goldstrike - Arch Gothic Bow'],['8lx','Langer Briser - Arbalest'],['8mx','Pus Spitter - Siege Crossbow'],
+      ['8rx','Demon Machine - Chu-Ko-Nu'],['8s8','Witchwild String - Short Siege Bow'],['8sb','Skystrike - Edge Bow'],['8ss','Razorswitch - Jo Staff'],['8sw','Magewrath - Rune Bow'],
+      ['8ws','Skull Collector - Rune Staff'],['92a','Islestrike - Twin Axe'],['92h','Crainte Vomir - Espandon'],['9ar','Mage Slayer - Quhab'],['9ax','Butchers Pupil - Cleaver'],
+      ['9b7','The Meat Scraper - Lochaber Axe'],['9b8','Achilles Strike - Hurlbat'],['9b9','Cloudcrack - Gothic Sword'],['9ba','Spellsteel - Bearded Axe'],['9bk','War Dart (No Unique for this base)'],
+      ['9bl','Stormspike - Stiletto'],['9br','Soulfeast Tine - War Fork'],['9bs','Headstriker - Battle Sword'],['9bt','Stormrider - Tabar'],['9bw','Arm of King Leoric - Tomb Wand'],
+      ['9cl','Dark Clan Crusher - Cudgel'],['9cm','Bing Sz Wang - Dacian Falx'],['9cr','Ginthers Rift - Dimensional Blade'],['9cs','Hand Scythe (No Unique for this base)'],['9dg','Spineripper - Poignard'],
+      ['9di','Heart Carver - Rondel'],['9fb','Todesfaelle - Flamme Zweihander'],['9fc','Blade of Ali Baba - Tulwar'],['9fl','Baezils Vortex - Knout'],['9ga','Boneslayer Blade - Gothic Axe'],
+      ['9gd','Swordguard - Executioner Sword'],['9gi','The Minotaur - Ancient Axe'],['9gl','Spiculum (No Unique for this base)'],['9gm','The Gavel Of Pain - Martel de Fer'],['9gs','The Vile Husk - Tusk Sword'],
+      ['9gw','Blackhand Key - Grave Wand'],['9h9','Husoldal Evo - Bec-de-Corbin'],['9ha','Coldkill - Hatchet'],['9ja','War Javelin (No Unique for this base)'],['9kr','Blackbogs Sharp - Cinquedeas'],
+      ['9la','Warlords Trust - Military Axe'],['9ls','Plague Bearer - Rune Sword'],['9lw','Greater Claws (No Unique for this base)'],['9m9','Bloodtree Stump - War Club'],['9ma','Sureshrill Frost - Flanged Mace'],
+      ['9mp','Pompeiis Wrath - Crowbill'],['9mt','Moonfall - Jagged Star'],['9p9','Spire of Honor - Lance'],['9pa','Pierre Tombale Couant - Partizan'],['9pi','Great Pilum (No Unique for this base)'],
+      ['9qr','Scissors Quhab (No Unique for this base)'],['9qs','The Fetid Sprinkler - Holy Water Sprinkler'],['9s8','Athenas Wrath - Battle Scythe'],['9s9','Simbilan (No Unique for this base)'],['9sb','Hexfire - Shamshir'],
+      ['9sc','Zakarums Hand - Rune Scepter'],['9sm','Coldsteel Eye - Cutlass'],['9sp','Fleshrender - Barbed Club'],['9sr','The Impaler - War Spear'],['9ss','Bloodletter - Gladius'],
+      ['9st','Hone Sundan - Yari'],['9ta','The Scalper - Francisca'],['9tk','Deathbit - Battle Dart'],['9tr','Kelpie Snare - Fuscina'],['9ts','Harpoon (No Unique for this base)'],
+      ['9tw','Bartucs Cut-Throat - Greater Talons'],['9vo','Blackleach Blade - Bill'],['9wa','Guardian Naga - Naga'],['9wb','Wrist Spike (No Unique for this base)'],['9wc','Grims Burning Dead Grim - Scythe'],
+      ['9wd','The Atlantean - Ancient Sword'],['9wh','Earthshaker - Battle Hammer'],['9wn','Suicide Branch - Burnt Wand'],['9ws','Hand of Blessed Light - Divine Scepter'],['9xf','Fascia (No Unique for this base)'],
+      ['9yw','Carin Shard - Petrified Wand'],['aar','Silks of the Victor - Ancient Armor'],['am1','Stag Bow (No Unique for this base)'],['am2','Reflex Bow (No Unique for this base)'],['am3','Maiden Spear (No Unique for this base)'],
+      ['am4','Maiden Pike (No Unique for this base)'],['am5','True Silver - Maiden Javelin'],['am6','Ashwood Bow (No Unique for this base)'],['am7','Lycanders Aim - Ceremonial Bow'],['am8','Ceremonial Spear (No Unique for this base)'],
+      ['am9','Lycanders Flank - Ceremonial Pike'],['ama','Titans Revenge - Ceremonial Javelin'],['amb','Bloodravens Charge - Matriarchal Bow'],['amc','Ebonbane - Grand Matron Bow'],['amd','Stoneraven - Matriarchal Spear'],
+      ['ame','Zerae\'s Resolve - Matriarchal Pike'],['amf','Thunderstroke - Matriarchal Javelin'],['amu','Unique Amulet'],['axe','Deathspade - Axe'],['axf','Hatchet Hands (No Unique for this base)'],
+      ['ba1','Jawbone Cap (No Unique for this base)'],['ba2','Fanged Helm (No Unique for this base)'],['ba3','Horned Helm (No Unique for this base)'],['ba4','Assault Helmet (No Unique for this base)'],['ba5','Avenger Guard (No Unique for this base)'],
+      ['ba6','Cyclopean Roar - Jawbone Visor'],['ba7','Wildspeaker - Lion Helm'],['ba8','Rage Mask (No Unique for this base)'],['ba9','Savage Helmet (No Unique for this base)'],['baa','Arreats Face - Slayer Guard'],
+      ['bab','Carnage Helm (No Unique for this base)'],['bac','Wolfhowl - Fury Visor'],['bad','Demonhorns Edge - Destroyer Helm'],['bae','Halaberds Reign - Conqueror Crown'],['baf','Raekor\'s Virtue - Guardian Crown'],
+      ['bal','Balanced Axe (No Unique for this base)'],['bar','Dimoaks Hew - Bardiche'],['bax','Goreshovel - Broad Axe'],['bhm','Wormskull - Bone Helm'],['bkf','Balanced Knife (No Unique for this base)'],
+      ['bld','Spectral Shard - Blade'],['brn','Bloodthief - Brandistock'],['brs','Venom Ward - Breast Plate'],['bsd','Griswolds Edge - Broad Sword'],['bsh','Wall of the Eyeless - Bone Shield'],
+      ['bst','The Salamander - Battle Staff'],['bsw','Blacktongue - Bastard Sword'],['btl','Blade Talons (No Unique for this base)'],['btx','The Chieftain - Battle Axe'],['buc','Pelta Lunata - Buckler'],
+      ['bwn','Gravenspine - Bone Wand'],['cap','Biggins Bonnet - Cap'],['cbw','Rogues Bow - Composite Bow'],['ces','Cestus (No Unique for this base)'],['chn','Sparking Mail - Chain Mail'],
+      ['ci0','Circlet (No Unique for this base)'],['ci1','Coronet (No Unique for this base)'],['ci2','Kiras Guardian - Tiara'],['ci3','Griffons Eye - Diadem'],['clb','Felloak - Club'],
+      ['clm','Soulflay - Claymore'],['clw','Claws (No Unique for this base)'],['crn','Undead Crown'],['crs','Crystal Sword (No Unique for this base)'],['cst','Spire of Lazarus - Gnarled Staff'],
+      ['dgr','Gull Dagger'],['dir','The Diggler - Dirk'],['dr1','Wolf Head (No Unique for this base)'],['dr2','Quetzalcoatl - Hawk Helm'],['dr3','Antlers (No Unique for this base)'],
+      ['dr4','Falcon Mask (No Unique for this base)'],['dr5','Spirit Mask (No Unique for this base)'],['dr6','Fenris - Alpha Helm'],['dr7','Griffon Headdress (No Unique for this base)'],['dr8','Hunters Guise (No Unique for this base)'],
+      ['dr9','Sacred Feathers (No Unique for this base)'],['dra','Jalals Mane - Totemic Mask'],['drb','Cerebus Bite - Blood Spirit'],['drc','Denmother - Sun Spirit'],['drd','Spirit Keeper - Earth Spirit'],
+      ['dre','Ravenlore - Sky Spirit'],['drf','Ursa\'s Nightmare - Dream Spirit'],['fhl','Duskdeep - Full Helm'],['fla','The Generals Tan Do Li Ga - Flail'],['flb','Ripsaw - Flamberge'],
+      ['flc','Gleamscythe - Falchion'],['fld','Rockfleece - Field Plate'],['ful','Goldskin - Full Plate Mail'],['gax','Brainhew - Great Axe'],['ghm','Howltusk - Great Helm'],
+      ['gis','Kinemils Awl - Giant Sword'],['gix','Humongous - Giant Axe'],['glv','Glaive (No Unique for this base)'],['gma','Steeldriver - Great Maul'],['gsc','Rusthandle - Grand Scepter'],
+      ['gsd','The Patriarch - Great Sword'],['gth','Rattlecage - Gothic Plate'],['gts','The Ward - Gothic Shield'],['gwn','Umes Lament - Grim Wand'],['hal','Woestave - Halberd'],
+      ['hax','The Gnasher - Hand Axe'],['hbl','Bladebuckle - Plated Belt'],['hbt','Tearhaunch - Greaves'],['hbw','Witherstring - Hunters Bow'],['hgl','Frostburn - Gauntlets'],
+      ['hla','The Centurion - Hard Leather Armor'],['hlm','Coif of Glory - Helm'],['hxb','Hellcast - Heavy Crossbow'],['jav','Javelin (No Unique for this base)'],['jew','Rainbow Facet'],
+      ['kit','Steelclash - Kite Shield'],['kri','The Jade Tan Do - Kris'],['ktr','Katar (No Unique for this base)'],['lax','Axe of Fechmar - Large Axe'],['lbb','Wizendraw - Long Battle Bow'],
+      ['lbl','Lenymo - Sash'],['lbt','Hotspur - Boots'],['lbw','Raven Claw - Long Bow'],['lea','Blinkbats Form - Leather Armor'],['lgl','The Hand of Broc - Leather Gloves'],
+      ['lrg','Stormguild - Large Shield'],['lsd','Hellplague - Long Sword'],['lst','Serpent - Lord Long Staff'],['ltp','Heavenly Garb - Light Plate'],['lwb','Blastbark - Long War Bow'],
+      ['lxb','Leadcrow - Light Crossbow'],['mac','Crushflange - Mace'],['mau','Bonesnap - Maul'],['mbl','Nightsmoke - Belt'],['mbt','Treads of Cthon - Chain Boots'],
+      ['mgl','Chance Guards - Chain Gloves'],['mpi','Skull Splitter - Military Pick'],['msk','The Face of Horror - Mask'],['mst','Bloodrise - Morning Star'],['mxb','Ichorsting - Crossbow'],
+      ['ne1','Preserved Head (No Unique for this base)'],['ne2','Zombie Head (No Unique for this base)'],['ne3','Unraveller Head (No Unique for this base)'],['ne4','Gargoyle Head (No Unique for this base)'],['ne5','Demon Head (No Unique for this base)'],
+      ['ne6','Kalans Legacy - Mummified Trophy'],['ne7','Fetish Trophy (No Unique for this base)'],['ne8','Sexton Trophy (No Unique for this base)'],['ne9','Cantor Trophy (No Unique for this base)'],['nea','Homunculus - Hierophant Trophy'],
+      ['neb','Minion Skull (No Unique for this base)'],['ned','Martyrdom - Overseer Skull'],['nee','Boneflame - Succubus Skull'],['nef','Darkforce - Spawn Bloodlord Skull'],['neg','Sacred Totem - Hellspawn Skull'],
+      ['ob1','Eagle Orb (No Unique for this base)'],['ob2','Sacred Globe (No Unique for this base)'],['ob3','Smoked Sphere (No Unique for this base)'],['ob4','Clasped Orb (No Unique for this base)'],['ob5','Jareds Stone (No Unique for this base)'],
+      ['ob6','Tempest - Glowing Orb'],['ob7','Skorn - Crystalline Globe'],['ob8','Cloudy Sphere (No Unique for this base)'],['ob9','Sparkling Ball (No Unique for this base)'],['oba','The Oculus - Swirling Crystal'],
+      ['obb','Heavenly Stone (No Unique for this base)'],['obc','Eschutas Temper - Eldritch Orb'],['obd','Demon Heart (No Unique for this base)'],['obe','Vortex Orb (No Unique for this base)'],['obf','Deaths Fathom - Dimensional Shard'],
+      ['pa1','Targe (No Unique for this base)'],['pa2','Rondache (No Unique for this base)'],['pa3','Sankekurs Fall - Heraldic Shield'],['pa4','Aerin Shield (No Unique for this base)'],['pa5','Crown Shield (No Unique for this base)'],
+      ['pa6','Akaran Targe (No Unique for this base)'],['pa7','Akaran Rondache (No Unique for this base)'],['pa8','Protector Shield (No Unique for this base)'],['pa9','Herald of Zakarum - Gilded Shield'],['paa','Royal Shield (No Unique for this base)'],
+      ['pab','Sacred Targe (No Unique for this base)'],['pac','Alma Negra - Sacred Rondache'],['pad','Kurast Shield (No Unique for this base)'],['pae','Dragonscale - Zakarum Shield'],['paf','Vortex Shield - Skywarden'],
+      ['pax','The Battlebranch - Poleaxe'],['pik','The Tannr Gorerod - Pike'],['pil','Pilum (No Unique for this base)'],['plt','Boneflesh - Plate Mail'],['qui','Greyform - Quilted Armor'],
+      ['ram','The Third Eye'],['rar','Cage of the Unsullied'],['rbe','Band of Skulls'],['rin','Unique Ring'],['rng','Darkglow - Ring Mail'],
+      ['rxb','Doomslinger - Repeating Crossbow'],['sbb','Stormstrike - Short Battle Bow'],['sbr','Skewer of Krintiz - Sabre'],['sbw','Pluckeye - Short Bow'],['scl','Hawkmail - Scale Mail'],
+      ['scm','Blood Crescent - Scimitar'],['scp','Knell Striker - Scepter'],['scy','Soul Harvest - Scythe'],['skp','Tarnhelm - Skull Cap'],['skr','Scissors Katar (No Unique for this base)'],
+      ['sml','Umbral Disk - Small Shield'],['spc','Stoutnail - Spiked Club'],['spk','Swordback Hold - Spiked Shield'],['spl','Iceblink - Splint Mail'],['spr','The Dragon Chang - Spear'],
+      ['spt','Lance of Yaggai - Spetum'],['ssd','Rixots Keen - Short Sword'],['ssp','Short Spear (No Unique for this base)'],['sst','Bane Ash - Short Staff'],['stu','Twitchthroe - Studded Leather'],
+      ['swb','Hellclap - Short War Bow'],['tax','Throwing Axe (No Unique for this base)'],['tbl','Goldwrap - Heavy Belt'],['tbt','Goblin Toe - Light Plated Boots'],['tgl','Magefist - Light Gauntlets'],
+      ['tkf','Throwing Knife (No Unique for this base)'],['tow','Bverrit Keep - Tower Shield'],['tri','Razortine - Trident'],['tsp','Throwing Spear (No Unique for this base)'],['uap','SHAKO'],
+      ['ucl','Loricated Mail (No Unique for this base)'],['uea','Wyrmhide (No Unique for this base)'],['uh9','Giant Skull - Bone Visage'],['uhb','Shadow Dancer - Myrmidon Greaves'],['uhc','Siggard\'s Staunch - Colossus Girdle'],
+      ['uhg','Steelrend - Ogre Gauntlets'],['uhl','Overlords Helm'],['uhm','Veil of Steel or Nightwings Veil'],['uhn','Cage of the Unsullied'],['uit','Stormshield'],
+      ['ukp','Hydraskull (No Unique for this base)'],['ula','Scarab Husk (No Unique for this base)'],['ulb','Merman\'s Sprocket - Wyrmhide Boots'],['ulc','Arachnid Mesh - Spiderweb Sash'],['uld','Leviathan - Kraken Shell'],
+      ['ulg','Titans Grip - Bramble Mitts'],['ulm','Steel Shade - Armet'],['ult','Hellforge Plate (No Unique for this base)'],['umb','Marrowwalk - Boneweave Boots'],['umc','Verdungos Hearty Cord - Mithril Coil'],
+      ['umg','Soul Drainer - Vambraces'],['uml','Blackoak Shield - Luna'],['ung','Wraithskin - Diamond Mail'],['uow','Medusas Gaze - Aegis'],['upk','Spike Thorn - Blade Barrier'],
+      ['upl','Arkaines Valor - Balrog Skin'],['urg','Twilights Reflection - Hyperion'],['urn','Crown of Ages - Corona'],['urs','Great Hauberk (No Unique for this base)'],['ush','Head Hunters Glory - Troll Nest'],
+      ['usk','Andariels Visage - Demonhead'],['utb','Itheraels Path'],['utc','Band of Skulls'],['utg','Occultist - Crusader Gauntlets'],['uth','Dark Abyss'],
+      ['utp','Purgatory - Archon Plate'],['uts','Spirit Ward'],['utu','The Gladiators Bane Wire Fleece'],['uuc','Heater (No Unique for this base)'],['uui','Ormus Robes - Dusk Shroud'],
+      ['uul','Steel Carapace - Shadow Plate'],['uvb','Sandstorm Trek - Scarabshell Boots'],['uvc','Nosferatus Coil - Vampirefang Belt'],['uvg','Draculs Grasp - Vampirebone Gloves'],['vbl','Snakecord - Light Belt'],
+      ['vbt','Gorefoot - Heavy Boots'],['vgl','Bloodfist - Heavy Gloves'],['vou','Steelgoad - Voulge'],['wax','Rakescar - War Axe'],['whm','Ironstone - War Hammer'],
+      ['wnd','Torch of Iro - Wand'],['wrb','Wrist Blade (No Unique for this base)'],['wsc','The Grim Reaper - War Scythe'],['wsd','Culwens Point - War Sword'],['wsp','Stormeye - War Scepter'],
+      ['wst','The Iron Jang Bong - War Staff'],['xap','Peasant Crown - War Hat'],['xar','Corpsemourn - Ornate Plate'],['xcl','Crow Caw - Tigulated Mail'],['xea','Skin of the Vipermagi - Serpentskin Armor'],
+      ['xh9','Vampire Gaze - Grim Helm'],['xhb','Gore Rider - War Boots'],['xhg','Hellmouth - War Gauntlets'],['xhl','Darksight Helm - Basinet'],['xhm','Valkyrie Wing - Winged Helm'],
+      ['xhn','Shaftstop - Mesh Armor'],['xit','Tiamats Rebuke - Dragon Shield'],['xkp','Rockstopper - Sallet'],['xla','Skin of the Flayed One - Demonhide Armor'],['xlb','Infernostride - Demonhide Boots'],
+      ['xld','Toothrow - Sharktooth Armor'],['xlg','Venom Grip - Demonhide Gloves'],['xlm','Stealskull - Casque'],['xlt','Guardian Angel - Templar Coat'],['xmb','Silkweave - Mesh Boots'],
+      ['xmg','Ghoulhide - Heavy Bracers'],['xml','Mosers Blessed Circle - Round Shield'],['xng','Spirit Forge - Linked Mail'],['xow','Gerkes Sanctuary - Pavise'],['xpk','Lance Guard - Barbed Shield'],
+      ['xpl','Skullders Ire - Russet Armor'],['xrg','Stormchaser - Scutum'],['xrn','Crown of Thieves - Grand Crown'],['xrs','Duriels Shell - Cuirass'],['xsh','Lidless Wall - Grim Shield'],
+      ['xsk','Blackhorns Face - Death Mask'],['xtb','War Traveler - Battle Boots'],['xtg','Lava Gout - Battle Gauntlets'],['xth','Atmas Wail - Embossed Plate'],['xtp','Que-Hegans Wisdom - Mage Plate'],
+      ['xts','Radaments Sphere - Ancient Shield'],['xtu','Iron Pelt - Trellised Armor'],['xuc','Viscerataunt Defender - Defender'],['xui','The Spirit Shroud - Ghost Armor'],['xul','Black Hades - Chaos Armor'],
+      ['xvb','Waterwalk - Sharkskin Boots'],['xvg','Gravepalm - Sharkskin Gloves'],['ywn','Maelstrom - Yew Wand'],['zhb','Thundergods Vigor - War Belt'],['zlb','String of Ears - Demonhide Sash'],
+      ['zmb','Glooms Trap - Mesh Belt'],['ztb','Snowclash - Battle Belt'],['zvb','Razortail - Sharkskin Belt'],
+      ['cm1','Annihilus'],['cm2','Hellfire Torch'],['cm3','Gheeds Fortune']
     ],
     set: [
-      ['rin','Set Rings (BK, Angelic, etc.)'],['amu','Set Amulets (Tal\'s, etc.)'],
-      ['xhm','Tal Rasha\'s Horadric Crest'],['xul','Tal Rasha\'s Guardianship'],['uth','Immortal King\'s Soul Cage'],['paf','Herald of Zakarum base'],
-      ['xtb','Aldur\'s Advance'],['ulg','Laying of Hands'],['7ws','Griswold\'s Honor'],
-      ['xvg','Trang-Oul\'s Claws'],['ne9','Trang-Oul\'s Wing'],['utc','Trang-Oul\'s Girth'],
-      ['urn','Crown of Ages base (IK Helm)'],['xap','Guillaume\'s Face'],['uhm','IK Helm'],
-      ['uar','Natalya\'s Shadow'],['uts','Natalya\'s Mark'],
-      ['lbt','Aldur\'s Advance / Natalya\'s Soul']
+      ['2ax','Berserker\'s Hatchet - Double Axe'],['6cs','Naj\'s Puzzler'],['7fb','Bul-Katho\'s Tribal Guardian'],['7gd','Bul-Katho\'s Sacred Charge'],['7ls','Sazabis Cobalt Redeemer - Cryptic Sword'],
+      ['7m7','Immortal Kings Stone Crusher - Ogre Maul'],['7ma','Dangoons Teaching - Reinforced Mace'],['7qr','Natalya\'s Mark - Scissors Suwayyah'],['7wd','Bul-Katho\'s Tribal Guardian'],['7ws','Griswold\'s Redemption - Caduceus'],
+      ['9mt','Aldur\'s Rhythm - Jagged Star'],['9vo','Hwanin\'s Justice - Bill'],['aar','Milabrega\'s Robe - Ancient Armor'],['amc','Mavinas Caster - Grand Matron Bow'],['amu','Set Amulet'],
+      ['ba5','Immortal Kings Will - Avenger Guard'],['bhm','Tancred\'s Skull - Bone Helm'],['brs','Isenhart\'s Case - Breast Plate'],['bsd','Isenhart\'s Lightbrand - Broad Sword'],['bst','Cathan\'s Rule - Battle Staff'],
+      ['buc','Hsarus Iron Fist - Buckler'],['bwn','Sanders Superstition - Bone Wand'],['cap','Infernal or Sanders - Cap'],['chn','Cathan\'s Mesh - Chain Mail'],['ci0','Naj\'s Circlet'],
+      ['ci3','Mavinas True Sight - Diadem'],['crn','Iratha or Milabrega - Crown'],['dgr','Infernal Spine - Dagger'],['dr8','Aldur\'s Stony Gaze - Hunters Guise'],['fhl','Isenhart\'s Horns - Full Helm'],
+      ['ful','Tancred\'s Spine - Full Plate Mail'],['ghm','Sigon\'s Visor - Great Helm'],['gsc','Civerb\'s Cudgel - Grand Scepter'],['gth','Sigon\'s Shelter - Gothic Plate'],['gts','Isenhart\'s Parry - Gothic Shield'],
+      ['hbl','Sigon\'s Wrap - Plated Belt'],['hbt','Sigon\'s Sabot - Greaves'],['hgl','Sigon\'s Gage - Gauntlets'],['hlm','Berserker\'s Headgear - Helm'],['kit','Milabrega\'s Orb - Kite Shield'],
+      ['lbb','Vidala\'s Barb Long - Battle Bow'],['lbl','Death\'s Guard - Sash'],['lbt','Tancred\'s Hobnails - Boots'],['lea','Vidala\'s Ambush - Leather Armor'],['lgl','Death\'s Hand - Leather Gloves'],
+      ['lrg','Civerb\'s Ward - Large Shield'],['lsd','Cleglaw\'s Tooth - Long Sword'],['ltp','Arcanna\'s Flesh Light Plate'],['mbl','Hsaru or Hwanin - Belt'],['mbt','Hsarus Iron Heel - Chain Boots'],
+      ['mgl','Cleglaw\'s Pincers - Chain Gloves'],['mpi','Tancred\'s Crowbill - Military Pick'],['msk','Cathan\'s Visage - Mask'],['ne9','Trang-Oul\'s Wing - Cantor Trophy'],['oba','Tal Rasha\'s Lidless Eye - Swirling Crystal'],
+      ['paf','Griswold\'s Honor - Vortex Shield'],['qui','Arctic Furs - Quilted Armor'],['rin','Set Ring'],['rng','Angelic Mantle - Ring Mail'],['sbr','Angelic Sickle - Sabre'],
+      ['skp','Arcanna\'s - Skull Cap'],['sml','Cleglaw\'s Claw - Small Shield'],['spl','Berserker\'s Hauberk - Splint Mail'],['stu','Cow King\'s Hide - Studded Leather'],['swb','Arctic Horn - Short War Bow'],
+      ['tbl','Infernal or Iratha - Heavy Belt'],['tbt','Vidala\'s Fetlock - Light Plated Boots'],['tgl','Arctic or Iratha - Light Gauntlet'],['tow','Sigon\'s Guard - Tower Shield'],['uar','Immortal Kings Soul Cage - Sacred Armor'],
+      ['ucl','Natalya\'s Shadow - Loricated Mail'],['uh9','Trang-Oul\'s Guise - Bone Visage'],['uhm','Ondals Almighty - Spired Helm'],['uld','Mavinas Embrace - Kraken Shell'],['ulg','Laying of Hands - Bramble Mitts'],
+      ['ult','Naj\'s Light Plate'],['umc','Credendum - Mithril Coil'],['upl','Sazabis Ghost Liberator - Balrog Skin'],['urn','Griswold\'s Valor - Corona'],['utc','Trang-Oul\'s Girth - Troll Belt'],
+      ['uth','Tal Rasha\'s Guardianship - Lacquered Plate'],['uts','Taebaeks Glory - Ward'],['uui','Dark Adherent - Dusk Shroud'],['uul','Aldur\'s Deception - Shadow Plate'],['vbl','Arctic Binding - Light Belt'],
+      ['vbt','Cow King or Sander - Heavy Boots'],['vgl','Sanders Taboo - Heavy Gloves'],['wsd','Death\'s Touch - War Sword'],['wsp','Milabrega\'s Rod - War Scepter'],['wst','Arcanna\'s Deathwand - War Staff'],
+      ['xap','Cow King\'s Horns - War Hat'],['xar','Griswold\'s Heart - Ornate Plate'],['xcl','Hwanin\'s Refuge - Tigulated Mail'],['xh9','Natalya\'s Totem - Grim Helm'],['xhb','Immortal Kings Pillar - War Boots'],
+      ['xhg','Immortal Kings Forge - War Gauntlets'],['xhl','Sazabis Mental Sheath - Basinet'],['xhm','Guillaumes Face'],['xlb','Rite of Passage - Demonhide Boots'],['xmb','Natalya\'s Soul - Mesh Boots'],
+      ['xmg','Trang-Oul\'s Claws - Heavy Bracers'],['xml','Whitstans Guard - Round Shield'],['xrn','Hwanin\'s Splendor - Grand Crown'],['xrs','Haemosus Adamant - Cuirass'],['xsk','Tal Rasha\'s Horadric Crest - Death Mask'],
+      ['xtb','Aldur\'s Advance - Battle Boots'],['xtg','Mavinas Icy Clutch - Battle Gauntlets'],['xul','Trang-Oul\'s Scales - Chaos Armor'],['xvg','Magnus Skin - Sharkskin Gloves'],['zhb','Immortal Kings Detail - War Belt'],
+      ['zmb','Tal Rasha\'s Fine-Spun Cloth - Mesh Belt'],['ztb','Wilhelms Pride - Battle Belt'],['zvb','Mavinas Tenet - Sharkskin Belt']
     ],
     classitems: [
-      // Amazon
-      ['ajv','Maiden Javelin'],['ajs','Ceremonial Javelin'],['aje','Matriarchal Javelin'],
-      ['asp','Maiden Spear'],['ass','Ceremonial Spear'],['ase','Matriarchal Spear'],
-      ['apk','Maiden Pike'],['aps','Ceremonial Pike'],['ape','Matriarchal Pike'],
-      ['asb','Stag Bow'],['asw','Reflex Bow'],['ase','Ashwood Bow'],
-      ['acb','Great Bow'],['acw','Grand Matron Bow'],['ace','Diamond Bow'],
-      // Sorceress
-      ['oba','Swirling Crystal'],['obl','Dimensional Shard'],['obs','Crystalline Globe'],['obd','Cloudy Sphere'],['obf','Sparkling Ball'],
-      // Necromancer
-      ['ne1','Preserved Head'],['ne2','Zombie Head'],['ne3','Unraveller Head'],['ne4','Gargoyle Head'],['ne5','Demon Head'],
-      ['ne6','Mummified Trophy'],['ne7','Fetish Trophy'],['ne8','Sexton Trophy'],['ne9','Cantor Trophy'],['ned','Hierophant Trophy'],
-      ['nea','Minion Skull'],['neb','Hellspawn Skull'],['nec','Overseer Skull'],['nee','Succubus Skull'],['nef','Bloodlord Skull'],
-      // Paladin
-      ['pa1','Targe'],['pa2','Rondache'],['pa3','Heraldic Shield'],['pa4','Aerin Shield'],['pa5','Crown Shield'],
-      ['pa6','Akaran Targe'],['pa7','Akaran Rondache'],['pa8','Protector Shield'],['pa9','Gilded Shield'],['pad','Royal Shield'],
-      ['paa','Sacred Targe'],['pab','Sacred Rondache'],['pac','Kurast Shield'],['pae','Zakarum Shield'],['paf','Vortex Shield'],
-      // Barbarian
-      ['ba1','Jawbone Cap'],['ba2','Fanged Helm'],['ba3','Horned Helm'],['ba4','Assault Helmet'],['ba5','Avenger Guard'],
-      ['ba6','Jawbone Visor'],['ba7','Lion Helm'],['ba8','Rage Mask'],['ba9','Savage Helmet'],['bad','Slayer Guard'],
-      ['baa','Carnage Helm'],['bab','Fury Visor'],['bac','Destroyer Helm'],['bae','Conqueror Crown'],['baf','Guardian Crown'],
-      // Druid
+      // Druid Pelts
       ['dr1','Wolf Head'],['dr2','Hawk Helm'],['dr3','Antlers'],['dr4','Falcon Mask'],['dr5','Spirit Mask'],
-      ['dr6','Alpha Helm'],['dr7','Griffon Headress'],['dr8','Hunter\'s Guise'],['dr9','Sacred Feathers'],['drd','Totemic Mask'],
-      ['dra','Blood Spirit'],['drb','Sun Spirit'],['drc','Earth Spirit'],['dre','Sky Spirit'],['drf','Dream Spirit'],
-      // Assassin
-      ['9ar','Katar'],['9wa','Wrist Blade'],['9wb','Hatchet Hands'],['9wc','Cestus'],['9wd','Claws'],['9we','Blade Talons'],['9wf','Scissors Katar'],
-      ['7ar','Suwayyah'],['7wb','Wrist Sword'],['7wc','War Fist'],['7wd','Battle Cestus'],['7we','Feral Claws'],['7wf','Runic Talons'],['7qr','Scissors Suwayyah']
+      ['dr6','Alpha Helm'],['dr7','Griffon Headress'],['dr8','Hunter\'s Guise'],['dr9','Sacred Feathers'],['dra','Totemic Mask'],
+      ['drb','Blood Spirit'],['drc','Sun Spirit'],['drd','Earth Spirit'],['dre','Sky Spirit'],['drf','Dream Spirit'],
+      // Barbarian Helms
+      ['ba1','Jawbone Cap'],['ba2','Fanged Helm'],['ba3','Horned Helm'],['ba4','Assault Helmet'],['ba5','Avenger Guard'],
+      ['ba6','Jawbone Visor'],['ba7','Lion Helm'],['ba8','Rage Mask'],['ba9','Savage Helmet'],['baa','Slayer Guard'],
+      ['bab','Carnage Helm'],['bac','Fury Visor'],['bad','Destroyer Helm'],['bae','Conqueror Crown'],['baf','Guardian Crown'],
+      // Paladin Shields
+      ['pa1','Targe'],['pa2','Rondache'],['pa3','Heraldic Shield'],['pa4','Aerin Shield'],['pa5','Crown Shield'],
+      ['pa6','Akaran Targe'],['pa7','Akaran Rondache'],['pa8','Protector Shield'],['pa9','Gilded Shield'],['paa','Royal Shield'],
+      ['pab','Sacred Targe'],['pac','Sacred Rondache'],['pad','Kurast Shield'],['pae','Zakarum Shield'],['paf','Vortex Shield'],
+      // Assassin Katars
+      ['ktr','Katar'],['wrb','Wrist Blade'],['axf','Hatchet Hands'],['ces','Cestus'],['clw','Claws'],['btl','Blade Talons'],['skr','Scissors Katar'],
+      ['9ar','Quhab'],['9wb','Wrist Spike'],['9xf','Fascia'],['9cs','Hand Scythe'],['9lw','Greater Claws'],['9tw','Greater Talons'],['9qr','Scissors Quhab'],
+      ['7ar','Suwayyah'],['7wb','Wrist Sword'],['7xf','War Fist'],['7cs','Battle Cestus'],['7lw','Feral Claws'],['7tw','Runic Talons'],['7qr','Scissors Suwayyah'],
+      // Amazon Bows
+      ['am1','Stag Bow'],['am2','Reflex Bow'],['am6','Ashwood Bow'],['am7','Ceremonial Bow'],['amb','Matriarchal Bow'],['amc','Grand Matron Bow'],
+      // Amazon Spears/Pikes
+      ['am3','Maiden Spear'],['am8','Ceremonial Spear'],['amd','Matriarchal Spear'],
+      ['am4','Maiden Pike'],['am9','Ceremonial Pike'],['ame','Matriarchal Pike'],
+      // Amazon Javelins
+      ['am5','Maiden Javelin'],['ama','Ceremonial Javelin'],['amf','Matriarchal Javelin']
     ],
     misc: [
       ['hp1','Minor Healing'],['hp2','Light Healing'],['hp3','Healing'],['hp4','Greater Healing'],['hp5','Super Healing'],
@@ -4542,6 +4660,7 @@
       ['gcbs','Chipped Sapphire'],['gfbs','Flawed Sapphire'],['gsbs','Sapphire'],['glbs','Flawless Sapphire'],['gpbs','Perfect Sapphire'],
       ['gcys','Chipped Topaz'],['gfys','Flawed Topaz'],['gsys','Topaz'],['glys','Flawless Topaz'],['gpys','Perfect Topaz'],
       ['skcs','Chipped Skull'],['skfs','Flawed Skull'],['skus','Skull'],['skls','Flawless Skull'],['skzs','Perfect Skull'],
+      ['key','Key'],['tsc','TP Scroll'],['isc','ID Scroll'],['tbk','TP Tome'],['ibk','ID Tome'],['gold','Gold'],
       ['ear','Ear'],['leg','Wirt\'s Leg'],['ass','Book of Skill'],['toa','Token of Absolution']
     ]
   };
@@ -4721,6 +4840,406 @@
 
     // Initial render
     renderItems(currentCat, '');
+  }
+
+
+  // ==========================================
+  // All Items - Bird's Eye View
+  // ==========================================
+  function buildAllItemsList() {
+    // Build comprehensive item list from PREVIEW_ITEMS and ITEM_CODES
+    var items = [];
+    var seen = {};
+
+    // First add all PREVIEW_ITEMS (they have full flag/value data for accurate matching)
+    Object.keys(PREVIEW_ITEMS).forEach(function (key) {
+      var pi = PREVIEW_ITEMS[key];
+      seen[key] = true;
+      var cat = 'nmag';
+      if (pi.flags.indexOf('UNI') !== -1) cat = 'uni';
+      else if (pi.flags.indexOf('SET') !== -1) cat = 'set';
+      else if (pi.flags.indexOf('RARE') !== -1 || pi.flags.indexOf('CRAFT') !== -1) cat = 'rare';
+      else if (pi.flags.indexOf('MAG') !== -1) cat = 'mag';
+      else if (pi.values && pi.values.RUNE > 0) cat = 'runesgems';
+      else if (pi.values && pi.values.GEM > 0) cat = 'runesgems';
+      else if (pi.flags.indexOf('MISC') !== -1) cat = 'misc';
+      else if (pi.values && pi.values.GOLD > 0) cat = 'misc';
+      items.push({
+        key: key,
+        code: pi.code,
+        name: pi.name,
+        flags: pi.flags,
+        values: pi.values,
+        cat: cat,
+        hasFullData: true
+      });
+    });
+
+    // Add items from ITEM_CODES that aren't already in PREVIEW_ITEMS
+    var catMap = {
+      runes: 'runesgems',
+      pd2: 'misc',
+      norm: 'nmag',
+      exc: 'nmag',
+      elt: 'nmag',
+      uni: 'uni',
+      set: 'set',
+      classitems: 'nmag',
+      misc: 'misc'
+    };
+
+    Object.keys(ITEM_CODES).forEach(function (codeCat) {
+      ITEM_CODES[codeCat].forEach(function (entry) {
+        var code = entry[0];
+        var name = entry[1];
+        var itemKey = codeCat + '-' + code;
+
+        // Check if this code is already covered by a PREVIEW_ITEMS entry
+        var alreadyHas = items.some(function (it) { return it.code === code && it.cat === catMap[codeCat]; });
+        if (alreadyHas) return;
+
+        var flags = ['GROUND'];
+        var isCharm = ['cm1', 'cm2', 'cm3'].indexOf(code) !== -1;
+        var values = { ILVL: isCharm ? 99 : 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 };
+        var cat = catMap[codeCat] || 'misc';
+
+        // Set appropriate flags based on category
+        if (codeCat === 'runes') {
+          var runeNum = parseInt(code.replace(/[^0-9]/g, ''), 10) || 1;
+          flags.push('MISC');
+          values.RUNE = runeNum;
+          values.QTY = 1;
+          values.ILVL = 1;
+        } else if (codeCat === 'uni') {
+          flags.push('UNI');
+          if (['rin', 'amu', 'jew'].indexOf(code) !== -1) flags.push('JEWELRY');
+          else if (isCharm) flags.push('CHARM');
+          else flags.push('ARMOR');
+        } else if (codeCat === 'set') {
+          flags.push('SET');
+          if (['rin', 'amu'].indexOf(code) !== -1) flags.push('JEWELRY');
+          else flags.push('ARMOR');
+        } else if (codeCat === 'norm') {
+          if (code === 'rin' || code === 'amu' || code === 'jew') {
+            // Rings, amulets, jewels are never NMAG — they appear as MAG/RARE/UNI/SET
+            return;
+          }
+          flags.push('NMAG', 'NORM');
+          if (code.match(/^(aq|cq)/)) flags.push('MISC');
+          else flags.push('ARMOR');
+        } else if (codeCat === 'exc') {
+          flags.push('NMAG', 'EXC');
+          flags.push('ARMOR');
+        } else if (codeCat === 'elt') {
+          flags.push('NMAG', 'ELT');
+          flags.push('ARMOR');
+        } else if (codeCat === 'classitems') {
+          flags.push('NMAG');
+          flags.push('WEAPON');
+        } else if (codeCat === 'misc') {
+          flags.push('MISC');
+          if (code.match(/^g[cfglps][a-z]s$/) || code.match(/^sk[cfulz]s$/)) {
+            var gemLevelMap = { c: 1, f: 2, s: 3, l: 4, p: 5 };
+            values.GEM = gemLevelMap[code[1]] || 1;
+            cat = 'runesgems';
+            values.ILVL = 1;
+          } else if (isCharm) {
+            flags.push('CHARM');
+            cat = 'mag';
+          } else if (code === 'gold') {
+            flags = ['GROUND'];
+            values = { GOLD: 5000, ILVL: 0, SOCKETS: 0, RUNE: 0, GEM: 0 };
+          } else {
+            values.ILVL = 1;
+          }
+        } else if (codeCat === 'pd2') {
+          flags.push('MISC');
+          values.ILVL = 1;
+        }
+
+        items.push({
+          key: itemKey,
+          code: code,
+          name: name,
+          flags: flags,
+          values: values,
+          cat: cat,
+          hasFullData: false
+        });
+      });
+    });
+
+    // Generate MAG and RARE entries for all equipment bases and charms
+    var equipCats = ['norm', 'exc', 'elt', 'classitems'];
+    var magRareSkip = ['aqv', 'cqv']; // quivers: no magic/rare
+    equipCats.forEach(function (codeCat) {
+      ITEM_CODES[codeCat].forEach(function (entry) {
+        var code = entry[0];
+        var name = entry[1];
+        if (magRareSkip.indexOf(code) !== -1) return;
+
+        var tierFlag = codeCat === 'exc' ? 'EXC' : codeCat === 'elt' ? 'ELT' : 'NORM';
+        var equipFlag = codeCat === 'classitems' ? 'WEAPON' : 'ARMOR';
+
+        // MAG version
+        var magKey = 'mag-gen-' + code;
+        if (!items.some(function (it) { return it.code === code && it.cat === 'mag'; })) {
+          items.push({
+            key: magKey, code: code, name: name,
+            flags: ['GROUND', 'MAG', tierFlag, equipFlag],
+            values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
+            cat: 'mag', hasFullData: false
+          });
+        }
+
+        // RARE version (not class items — those are class-specific)
+        var rareKey = 'rare-gen-' + code;
+        if (!items.some(function (it) { return it.code === code && it.cat === 'rare'; })) {
+          items.push({
+            key: rareKey, code: code, name: name,
+            flags: ['GROUND', 'RARE', tierFlag, equipFlag],
+            values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
+            cat: 'rare', hasFullData: false
+          });
+        }
+      });
+    });
+
+    // MAG charms (ilvl 99)
+    [['cm1','Small Charm'],['cm2','Large Charm'],['cm3','Grand Charm']].forEach(function (entry) {
+      var code = entry[0], name = entry[1];
+      if (!items.some(function (it) { return it.code === code && it.cat === 'mag'; })) {
+        items.push({
+          key: 'mag-charm-' + code, code: code, name: name,
+          flags: ['GROUND', 'MAG', 'CHARM'],
+          values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
+          cat: 'mag', hasFullData: false
+        });
+      }
+    });
+
+    // MAG jewelry
+    [['rin','Ring'],['amu','Amulet'],['jew','Jewel']].forEach(function (entry) {
+      var code = entry[0], name = entry[1];
+      if (!items.some(function (it) { return it.code === code && it.cat === 'mag'; })) {
+        items.push({
+          key: 'mag-jewel-' + code, code: code, name: name,
+          flags: ['GROUND', 'MAG', 'JEWELRY'],
+          values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
+          cat: 'mag', hasFullData: false
+        });
+      }
+    });
+
+    // RARE jewelry
+    [['rin','Ring'],['amu','Amulet'],['jew','Jewel']].forEach(function (entry) {
+      var code = entry[0], name = entry[1];
+      if (!items.some(function (it) { return it.code === code && it.cat === 'rare'; })) {
+        items.push({
+          key: 'rare-jewel-' + code, code: code, name: name,
+          flags: ['GROUND', 'RARE', 'JEWELRY'],
+          values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
+          cat: 'rare', hasFullData: false
+        });
+      }
+    });
+
+    // Generate NMAG variants: Superior, Ethereal, Superior+Ethereal
+    var nmagSkip = ['rin', 'amu', 'jew', 'aqv', 'cqv', 'aqv3', 'cqv3']; // jewelry/quivers: no SUP/ETH
+    var nmagBases = items.filter(function (it) {
+      return it.cat === 'nmag' && nmagSkip.indexOf(it.code) === -1 &&
+        it.flags.indexOf('SUP') === -1 && it.flags.indexOf('ETH') === -1 &&
+        it.flags.indexOf('MISC') === -1;
+    });
+    nmagBases.forEach(function (base) {
+      var isWeapon = base.flags.indexOf('WEAPON') !== -1;
+      var edKey = isWeapon ? 'EDAM' : 'EDEF';
+
+      // Superior variant
+      var supFlags = base.flags.slice();
+      supFlags.push('SUP');
+      var supValues = {};
+      for (var k in base.values) supValues[k] = base.values[k];
+      supValues[edKey] = 15;
+      items.push({
+        key: base.key + '-sup', code: base.code, name: 'Sup ' + base.name,
+        flags: supFlags, values: supValues, cat: 'nmag', hasFullData: false
+      });
+
+      // Ethereal variant
+      var ethFlags = base.flags.slice();
+      ethFlags.push('ETH');
+      items.push({
+        key: base.key + '-eth', code: base.code, name: 'Eth ' + base.name,
+        flags: ethFlags, values: Object.assign({}, base.values), cat: 'nmag', hasFullData: false
+      });
+
+      // Superior + Ethereal variant
+      var supEthFlags = base.flags.slice();
+      supEthFlags.push('SUP', 'ETH');
+      var supEthValues = {};
+      for (var k2 in base.values) supEthValues[k2] = base.values[k2];
+      supEthValues[edKey] = 15;
+      items.push({
+        key: base.key + '-sup-eth', code: base.code, name: 'Sup Eth ' + base.name,
+        flags: supEthFlags, values: supEthValues, cat: 'nmag', hasFullData: false
+      });
+    });
+
+    return items;
+  }
+
+  var ALL_ITEMS_CACHE = null;
+
+  function parseFilterLevelNames(text) {
+    var names = {};
+    var lines = text.split('\n');
+    var level = 1;
+    for (var i = 0; i < lines.length; i++) {
+      var m = lines[i].match(/^ItemDisplayFilterName\s*\[\s*\]\s*:\s*(.+)/);
+      if (m) {
+        names[level] = m[1].trim();
+        level++;
+      }
+    }
+    return names;
+  }
+
+  function populateFilterLevelDropdown(selectEl, nameEl, text) {
+    var names = parseFilterLevelNames(text);
+    var currentVal = selectEl.value || '1';
+    selectEl.innerHTML = '<option value="0">0 — Off</option>';
+    var maxLevel = Math.max(Object.keys(names).length, 1);
+    for (var lvl = 1; lvl <= maxLevel; lvl++) {
+      var label = names[lvl] ? lvl + ' — ' + names[lvl] : String(lvl);
+      selectEl.innerHTML += '<option value="' + lvl + '"' + (String(lvl) === currentVal ? ' selected' : '') + '>' + label + '</option>';
+    }
+    // Show current level name at top
+    var cur = parseInt(selectEl.value, 10);
+    nameEl.textContent = names[cur] || '';
+  }
+
+  function initAllItems() {
+    var resultsEl = document.getElementById('allitems-results');
+    var statsEl = document.getElementById('allitems-stats');
+    var filtlvlSelect = document.getElementById('allitems-filtlvl-select');
+    var filtlvlName = document.getElementById('allitems-filtlvl-name');
+    var catButtons = document.querySelectorAll('.allitems-cat');
+
+    if (!resultsEl) return;
+
+    var currentCat = 'runesgems';
+    // Set default active button
+    catButtons.forEach(function (b) {
+      b.classList.remove('active');
+      if (b.getAttribute('data-cat') === 'runesgems') b.classList.add('active');
+    });
+
+    catButtons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        catButtons.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentCat = btn.getAttribute('data-cat');
+        renderAllItems();
+      });
+    });
+
+    filtlvlSelect.addEventListener('change', function () {
+      var names = parseFilterLevelNames(typeof getFullFilterText === 'function' ? getFullFilterText() : codeEditor.value);
+      filtlvlName.textContent = names[parseInt(this.value, 10)] || '';
+      renderAllItems();
+    });
+
+    var renderPending = false;
+
+    function renderAllItems() {
+      if (renderPending) return;
+      renderPending = true;
+
+      // Show loading spinner
+      resultsEl.innerHTML = '<div class="allitems-loading"><div class="allitems-spinner"></div><p>Loading items...</p></div>';
+      statsEl.innerHTML = '';
+
+      // Use setTimeout to allow the spinner to paint before heavy work
+      setTimeout(function () {
+        if (!ALL_ITEMS_CACHE) {
+          ALL_ITEMS_CACHE = buildAllItemsList();
+        }
+        var items = ALL_ITEMS_CACHE;
+        var filtlvl = parseInt(filtlvlSelect.value, 10);
+
+        // Sync filtlvl to the preview select so matchItem picks it up
+        var previewFL = document.getElementById('preview-filtlvl');
+        if (previewFL) previewFL.value = filtlvl;
+
+        // Filter by category
+        var filtered = items;
+        if (currentCat !== 'all') {
+          filtered = items.filter(function (it) { return it.cat === currentCat; });
+        }
+
+        // Parse current filter rules
+        var text = typeof getFullFilterText === 'function' ? getFullFilterText() : codeEditor.value;
+
+        // Populate the filter level dropdown with names from the filter
+        populateFilterLevelDropdown(filtlvlSelect, filtlvlName, text);
+        var lines = text.split('\n');
+        var rules = parseRules(lines);
+
+        var html = '';
+        var shownCount = 0;
+        var hiddenCount = 0;
+        var defaultCount = 0;
+
+        filtered.forEach(function (item) {
+          var previewItem = {
+            code: item.code,
+            name: item.name,
+            flags: item.flags,
+            values: item.values
+          };
+
+          var result = matchItem(previewItem, rules);
+          var status = 'default';
+          if (!result.matched) status = 'default';
+          else if (result.hidden) status = 'hide';
+          else status = 'show';
+
+          if (status === 'show') shownCount++;
+          else if (status === 'hide') hiddenCount++;
+          else defaultCount++;
+
+          var cssClass = 'allitems-item';
+          if (status === 'hide') cssClass += ' allitems-item-hidden';
+          else if (status === 'show') cssClass += ' allitems-item-shown';
+          else cssClass += ' allitems-item-default';
+
+          var nameClass = 'allitems-item-name';
+          if (item.cat === 'mag') nameClass += ' allitems-name-mag';
+          else if (item.cat === 'rare') nameClass += ' allitems-name-rare';
+          else if (item.cat === 'set') nameClass += ' allitems-name-set';
+          else if (item.cat === 'uni') nameClass += ' allitems-name-uni';
+          else if (item.cat === 'runesgems' && item.values && item.values.RUNE > 0) nameClass += ' allitems-name-rune';
+
+          html += '<div class="' + cssClass + '" title="' + escapeHtml(item.code) + ' | ' + escapeHtml(item.flags.join(' ')) + '">';
+          html += '<span class="' + nameClass + '">' + escapeHtml(item.name) + '</span>';
+          html += '<span class="allitems-item-code">' + escapeHtml(item.code) + '</span>';
+          html += '<span class="allitems-item-status allitems-status-' + status + '">' + status + '</span>';
+          html += '</div>';
+        });
+
+        if (!filtered.length) {
+          html = '<p class="text-muted text-center">No items in this category.</p>';
+        }
+
+        resultsEl.innerHTML = html;
+        statsEl.innerHTML = '<span class="allitems-stat-shown">' + shownCount + ' shown</span> · <span class="allitems-stat-hidden">' + hiddenCount + ' hidden</span> · <span class="allitems-stat-default">' + defaultCount + ' default</span> · <span>' + filtered.length + ' total</span>';
+        renderPending = false;
+      }, 20);
+    }
+
+    // Expose for tab switching
+    initAllItems.render = renderAllItems;
   }
 
   // ==========================================
@@ -5020,6 +5539,7 @@
     initItemCodeFinder();
     initItemCodeAutocomplete();
     initAuthorImport();
+    initAllItems();
 
     // Auto-open author import if ?author= in URL
     var urlParams2 = new URLSearchParams(window.location.search);

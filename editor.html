@@ -760,6 +760,7 @@
             <button class="editor-tab active" data-tab="code">Code Editor</button>
             <button class="editor-tab" data-tab="preview">Live Preview</button>
             <button class="editor-tab" data-tab="grail">Holy Grail</button>
+            <button class="editor-tab" data-tab="allitems">All Items</button>
           </div>
 
           <!-- Generated Rule (from Rule Builder) -->
@@ -907,21 +908,11 @@
                 </optgroup>
               </select>
               <label class="preview-filtlvl-label">FILTLVL:
-                <select id="preview-filtlvl" title="Wizard-generated filters use levels 1-4. Higher levels are for custom filters.">
-                  <option value="0">0 (Show All)</option>
+                <select id="preview-filtlvl">
+                  <option value="0">0 — Off</option>
                   <option value="1" selected>1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
                 </select>
+                <span class="preview-filtlvl-name" id="preview-filtlvl-name"></span>
               </label>
               <button class="btn btn-secondary" id="btn-test-rule">Test</button>
             </div>
@@ -993,6 +984,35 @@
             </div>
             <div class="grail-list" id="grail-list"></div>
           </div>
+          <!-- All Items (Bird's Eye View) pane -->
+          <div class="editor-pane" id="pane-allitems" style="display:none">
+            <div class="allitems-header">
+              <p class="text-muted">Bird's eye view of all items. See how your filter rules affect every item. Hidden items are greyed out. NMAG bases do not include staffmod variants. MAG/RARE items use ilvl 85 (charms use ilvl 99).</p>
+            </div>
+            <div class="allitems-controls">
+              <div class="allitems-categories" id="allitems-categories">
+                <button class="btn btn-small allitems-cat" data-cat="all">All</button>
+                <button class="btn btn-small allitems-cat" data-cat="nmag" title="Non-magic bases (no staffmod variants)">NMAG</button>
+                <button class="btn btn-small allitems-cat" data-cat="mag">MAG</button>
+                <button class="btn btn-small allitems-cat" data-cat="rare">RARE</button>
+                <button class="btn btn-small allitems-cat" data-cat="set">SET</button>
+                <button class="btn btn-small allitems-cat" data-cat="uni">UNI</button>
+                <button class="btn btn-small allitems-cat active" data-cat="runesgems">Runes &amp; Gems</button>
+                <button class="btn btn-small allitems-cat" data-cat="misc">Misc</button>
+              </div>
+              <div class="allitems-filtlvl">
+                <label for="allitems-filtlvl-select">Filter Level:</label>
+                <select id="allitems-filtlvl-select">
+                  <option value="0">0 — Off</option>
+                  <option value="1" selected>1</option>
+                </select>
+                <span class="allitems-filtlvl-name" id="allitems-filtlvl-name"></span>
+              </div>
+              <div class="allitems-stats" id="allitems-stats"></div>
+            </div>
+            <div class="allitems-results" id="allitems-results"></div>
+          </div>
+
         </div>
 
       </div>
