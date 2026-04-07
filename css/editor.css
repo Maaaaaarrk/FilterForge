@@ -613,7 +613,6 @@
 
 .preview-filtlvl-label select {
   flex: none;
-  width: 5rem;
   padding: 0.4rem;
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -621,6 +620,12 @@
   color: var(--accent-primary);
   font-family: var(--font-mono);
   font-size: 0.85rem;
+}
+
+.preview-filtlvl-name {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.78rem;
 }
 
 .preview-results {
@@ -1545,4 +1550,209 @@
   cursor: default;
   background: var(--bg-secondary);
   max-height: 500px;
+}
+
+/* ============================================
+   All Items - Bird's Eye View
+   ============================================ */
+.allitems-header {
+  margin-bottom: 0.75rem;
+}
+
+.allitems-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.allitems-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.allitems-cat {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.allitems-cat:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.allitems-cat.active {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.allitems-filtlvl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.allitems-filtlvl select {
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
+.allitems-filtlvl-name {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.allitems-stats {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+.allitems-stat-shown {
+  color: #00c000;
+  font-weight: 600;
+}
+
+.allitems-stat-hidden {
+  color: #808080;
+  font-weight: 600;
+}
+
+.allitems-stat-default {
+  color: var(--text-secondary);
+}
+
+.allitems-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.35rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 0.25rem;
+}
+
+.allitems-loading {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.allitems-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: allitems-spin 0.7s linear infinite;
+}
+
+@keyframes allitems-spin {
+  to { transform: rotate(360deg); }
+}
+
+.allitems-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  transition: opacity 0.2s;
+  background: var(--bg-primary);
+}
+
+.allitems-item-hidden {
+  opacity: 0.35;
+  text-decoration: line-through;
+  background: var(--bg-secondary);
+}
+
+.allitems-item-shown {
+  border-left: 3px solid #00c000;
+}
+
+.allitems-item-default {
+  border-left: 3px solid var(--border);
+}
+
+.allitems-item-name {
+  flex: 1;
+  font-family: var(--font-mono, 'Consolas', monospace);
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.allitems-name-mag { color: #6464ff; }
+.allitems-name-rare { color: #ffff40; }
+.allitems-name-set { color: #00c000; }
+.allitems-name-uni { color: #c8a040; }
+.allitems-name-rune { color: #ff8000; }
+
+.allitems-item-code {
+  font-family: var(--font-mono, 'Consolas', monospace);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.allitems-item-status {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  min-width: 48px;
+  text-align: center;
+}
+
+.allitems-status-show {
+  color: #00c000;
+}
+
+.allitems-status-hide {
+  color: #808080;
+}
+
+.allitems-status-default {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .allitems-results {
+    grid-template-columns: 1fr;
+  }
+  .allitems-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .allitems-stats {
+    margin-left: 0;
+  }
 }
