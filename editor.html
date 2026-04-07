@@ -77,11 +77,26 @@
               </div>
             </div>
 
-            <!-- Step 3: Loading/confirm -->
+            <!-- Step 3: Loading -->
             <div id="author-step-3" style="display:none">
               <div class="text-center" style="padding:2rem 0">
                 <p id="author-loading-msg">Downloading filter...</p>
                 <p id="author-error-msg" style="display:none;color:#ff4040">Failed to download filter. Please try again.</p>
+              </div>
+            </div>
+
+            <!-- Step 4: Choose import mode -->
+            <div id="author-step-4" style="display:none">
+              <p style="margin-bottom:1rem"><strong id="author-choice-file">Filter</strong></p>
+              <div style="display:flex;flex-direction:column;gap:0.75rem">
+                <button class="btn btn-secondary" id="btn-import-community" style="text-align:left;padding:0.75rem 1rem">
+                  <strong>Community Edit Mode</strong><br>
+                  <small class="text-muted">Read-only filter with auto-updates. Add your rules above/below.</small>
+                </button>
+                <button class="btn btn-secondary" id="btn-import-full" style="text-align:left;padding:0.75rem 1rem">
+                  <strong>Load into Full Editor</strong><br>
+                  <small class="text-muted">Full control to edit everything. No auto-updates.</small>
+                </button>
               </div>
             </div>
           </div>
@@ -799,6 +814,62 @@
 // ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%BORDER%
 // ItemDisplay[NMAG NORM CLVL>30]:
 // ItemDisplay[]: %NAME%"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Community Edit Mode pane -->
+          <div class="editor-pane" id="pane-community" style="display:none">
+            <div class="community-mode-banner">
+              <div class="community-mode-info">
+                <span class="community-mode-label">Community Edit Mode</span>
+                <span class="community-mode-filter" id="community-filter-name">—</span>
+              </div>
+              <div class="community-mode-actions">
+                <button class="btn btn-secondary btn-small" id="btn-community-refresh" title="Re-download the latest version of this community filter">Refresh Filter</button>
+                <button class="btn btn-accent btn-small" id="btn-community-exit" title="Merge your top/bottom blocks into the full editor and leave Community Edit Mode">Switch to Full Editor</button>
+              </div>
+            </div>
+            <div class="community-block">
+              <label class="community-block-label" for="community-top-block">Your Top Block <span class="text-muted">(rules here override the community filter)</span></label>
+              <div class="community-wrap">
+                <div class="community-hl" id="community-top-hl" aria-hidden="true"></div>
+                <textarea class="community-ta" id="community-top-block" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  placeholder="// Add your custom rules here. These will appear ABOVE the community filter and take priority."></textarea>
+              </div>
+            </div>
+            <div class="community-block community-block-locked" id="community-grail-section" style="display:none">
+              <div class="community-block-header">
+                <label class="community-block-label">Holy Grail <span class="text-muted">(read-only, managed from Grail tab)</span></label>
+                <button class="btn btn-secondary btn-small" id="btn-community-grail-toggle" title="Show/hide grail rules">Show</button>
+              </div>
+              <div class="community-preview-collapsed" id="community-grail-collapsed">
+                <span class="text-muted" id="community-grail-count">0 lines</span>
+              </div>
+              <div class="community-wrap community-wrap-readonly" id="community-grail-wrap" style="display:none">
+                <div class="community-hl" id="community-grail-hl" aria-hidden="true"></div>
+                <textarea class="community-ta community-ta-readonly" id="community-grail-text" readonly spellcheck="false"></textarea>
+              </div>
+            </div>
+            <div class="community-block community-block-locked">
+              <div class="community-block-header">
+                <label class="community-block-label">Community Filter <span class="text-muted">(read-only)</span></label>
+                <button class="btn btn-secondary btn-small" id="btn-community-toggle" title="Show/hide community filter text">Show</button>
+              </div>
+              <div class="community-preview-collapsed" id="community-collapsed-info">
+                <span class="text-muted" id="community-line-count">0 lines</span>
+              </div>
+              <div class="community-wrap community-wrap-readonly" id="community-mid-wrap" style="display:none">
+                <div class="community-hl" id="community-mid-hl" aria-hidden="true"></div>
+                <textarea class="community-ta community-ta-readonly" id="community-filter-text" readonly spellcheck="false"></textarea>
+              </div>
+            </div>
+            <div class="community-block">
+              <label class="community-block-label" for="community-bottom-block">Your Bottom Block <span class="text-muted">(fallback rules)</span></label>
+              <div class="community-wrap">
+                <div class="community-hl" id="community-bottom-hl" aria-hidden="true"></div>
+                <textarea class="community-ta" id="community-bottom-block" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  placeholder="// Add fallback rules here. These appear BELOW the community filter."></textarea>
               </div>
             </div>
           </div>

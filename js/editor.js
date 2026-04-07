@@ -916,6 +916,30 @@
     showHighlight();
   }
 
+  // Community editor syntax highlighting
+  function highlightCommunityTA(id) {
+    var ta = document.getElementById(id);
+    var hlMap = {
+      'community-top-block': 'community-top-hl',
+      'community-filter-text': 'community-mid-hl',
+      'community-bottom-block': 'community-bottom-hl',
+      'community-grail-text': 'community-grail-hl'
+    };
+    var hl = document.getElementById(hlMap[id]);
+    if (!ta || !hl) return;
+    var lines = ta.value.split('\n');
+    hl.innerHTML = lines.map(function (l) { return highlightLine(l); }).join('\n') + '\n';
+    // Auto-size textarea to content so the container scrolls
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }
+
+  function highlightAllCommunityTAs() {
+    highlightCommunityTA('community-top-block');
+    highlightCommunityTA('community-filter-text');
+    highlightCommunityTA('community-bottom-block');
+  }
+
   function syncScroll() {
     var wrap = document.querySelector('.code-editor-wrap');
     lineNumbers.scrollTop = wrap.scrollTop;
@@ -940,11 +964,25 @@
   // ==========================================
   // Insert rule into editor
   // ==========================================
+  function getCommunityInsertTarget() {
+    // In community mode, insert into the top block by default
+    if (communityMode.active) return document.getElementById('community-top-block');
+    return null;
+  }
+
+  function afterCommunityInsert(target) {
+    highlightCommunityTA(target.id);
+    codeEditor.value = getFullFilterText();
+    updateLineNumbers();
+    saveCommunityState();
+  }
+
   function insertRule() {
     if (generatedCode.classList.contains('empty-state')) return;
     var rule = generatedCode.textContent;
-    var val = codeEditor.value;
-    var pos = codeEditor.selectionStart;
+    var target = getCommunityInsertTarget() || codeEditor;
+    var val = target.value;
+    var pos = target.selectionStart;
 
     // Find the boundaries of the current line
     var lineStart = val.lastIndexOf('\n', pos - 1) + 1;
@@ -957,46 +995,57 @@
       var before = val.substring(0, lineEnd);
       var after = val.substring(lineEnd);
       var suffix = after.length > 0 && !after.startsWith('\n') ? '\n' : '';
-      codeEditor.value = before + '\n' + rule + suffix + after;
+      target.value = before + '\n' + rule + suffix + after;
       var newPos = lineEnd + 1 + rule.length;
-      codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
+      target.selectionStart = target.selectionEnd = newPos;
     } else {
       // Empty line — insert directly here
       var before = val.substring(0, lineStart);
       var after = val.substring(lineEnd);
       var suffix = after.length > 0 && !after.startsWith('\n') ? '\n' : '';
-      codeEditor.value = before + rule + suffix + after;
+      target.value = before + rule + suffix + after;
       var newPos = lineStart + rule.length;
-      codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
+      target.selectionStart = target.selectionEnd = newPos;
     }
-    codeEditor.focus();
-    updateLineNumbers();
-    saveToStorage();
+    target.focus();
+    if (communityMode.active) { afterCommunityInsert(target); } else { updateLineNumbers(); saveToStorage(); }
   }
 
   function insertRuleAtTop() {
     if (generatedCode.classList.contains('empty-state')) return;
     var rule = generatedCode.textContent;
-    var val = codeEditor.value;
+    var target = getCommunityInsertTarget() || codeEditor;
+    var val = target.value;
     var suffix = val.length > 0 && !val.startsWith('\n') ? '\n' : '';
-    codeEditor.value = rule + suffix + val;
-    codeEditor.selectionStart = codeEditor.selectionEnd = rule.length;
-    codeEditor.focus();
-    updateLineNumbers();
-    saveToStorage();
+    target.value = rule + suffix + val;
+    target.selectionStart = target.selectionEnd = rule.length;
+    target.focus();
+    if (communityMode.active) { afterCommunityInsert(target); } else { updateLineNumbers(); saveToStorage(); }
   }
 
   function insertRuleAtEnd() {
     if (generatedCode.classList.contains('empty-state')) return;
     var rule = generatedCode.textContent;
-    var val = codeEditor.value;
-    var prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
-    codeEditor.value = val + prefix + rule;
-    var newPos = val.length + prefix.length + rule.length;
-    codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
-    codeEditor.focus();
-    updateLineNumbers();
-    saveToStorage();
+    if (communityMode.active) {
+      // In community mode, "insert at end" goes to the bottom block
+      var target = document.getElementById('community-bottom-block');
+      var val = target.value;
+      var prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
+      target.value = val + prefix + rule;
+      var newPos = val.length + prefix.length + rule.length;
+      target.selectionStart = target.selectionEnd = newPos;
+      target.focus();
+      afterCommunityInsert(target);
+    } else {
+      var val = codeEditor.value;
+      var prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
+      codeEditor.value = val + prefix + rule;
+      var newPos = val.length + prefix.length + rule.length;
+      codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
+      codeEditor.focus();
+      updateLineNumbers();
+      saveToStorage();
+    }
   }
 
   // ==========================================
@@ -1032,7 +1081,7 @@
     });
 
     btnExport.addEventListener('click', function () {
-      var text = codeEditor.value;
+      var text = getFullFilterText();
       if (!text.trim()) {
         text = '// Empty filter\nItemDisplay[]: %NAME%';
       }
@@ -1052,6 +1101,12 @@
       codeEditor.value = '';
       updateLineNumbers();
       saveToStorage();
+      if (communityMode.active) {
+        communityMode.active = false;
+        saveCommunityState();
+        document.getElementById('pane-community').style.display = 'none';
+        document.getElementById('pane-code').style.display = 'block';
+      }
     });
   }
 
@@ -1336,10 +1391,28 @@
     function switchToCodeTab() {
       document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
       document.querySelector('[data-tab="code"]').classList.add('active');
-      document.getElementById('pane-code').style.display = 'block';
+      if (communityMode.active) {
+        document.getElementById('pane-community').style.display = 'block';
+        document.getElementById('pane-code').style.display = 'none';
+      } else {
+        document.getElementById('pane-code').style.display = 'block';
+      }
       document.getElementById('pane-preview').style.display = 'none';
       document.getElementById('pane-grail').style.display = 'none';
       document.getElementById('pane-allitems').style.display = 'none';
+    }
+
+    function afterGrailInsert() {
+      if (communityMode.active) {
+        updateCommunityGrailSection();
+        highlightCommunityTA('community-grail-text');
+        codeEditor.value = getFullFilterText();
+        updateLineNumbers();
+        saveCommunityState();
+      } else {
+        updateLineNumbers();
+        saveToStorage();
+      }
     }
 
     btnGenerate.addEventListener('click', function () {
@@ -1349,26 +1422,41 @@
         return;
       }
 
-      // Switch to code tab FIRST so textarea is visible for auto-resize
       switchToCodeTab();
-      var currentCode = removeGrailSection(codeEditor.value);
-      codeEditor.value = lines.join('\n') + '\n' + currentCode;
-      updateLineNumbers();
-      saveToStorage();
+      if (communityMode.active) {
+        // In community mode, grail goes into its own read-only section
+        document.getElementById('community-grail-text').value = lines.join('\n');
+      } else {
+        var currentCode = removeGrailSection(codeEditor.value);
+        codeEditor.value = lines.join('\n') + '\n' + currentCode;
+      }
+      afterGrailInsert();
     });
 
     btnUpdate.addEventListener('click', function () {
-      var currentCode = codeEditor.value;
-      if (currentCode.indexOf('// HOLY GRAIL') === -1) {
-        alert('No grail section found in the filter. Use "Insert Grail Rules" first.');
-        return;
+      if (communityMode.active) {
+        // In community mode, just regenerate the grail section
+        var grailTA = document.getElementById('community-grail-text');
+        if (!grailTA.value.trim()) {
+          alert('No grail section found. Use "Insert Grail Rules" first.');
+          return;
+        }
+        var lines = buildGrailLines();
+        switchToCodeTab();
+        grailTA.value = lines.join('\n');
+        afterGrailInsert();
+      } else {
+        var currentCode = codeEditor.value;
+        if (currentCode.indexOf('// HOLY GRAIL') === -1) {
+          alert('No grail section found in the filter. Use "Insert Grail Rules" first.');
+          return;
+        }
+        var lines = buildGrailLines();
+        switchToCodeTab();
+        var cleaned = removeGrailSection(currentCode);
+        codeEditor.value = lines.join('\n') + '\n' + cleaned;
+        afterGrailInsert();
       }
-      var lines = buildGrailLines();
-      switchToCodeTab();
-      var cleaned = removeGrailSection(currentCode);
-      codeEditor.value = lines.join('\n') + '\n' + cleaned;
-      updateLineNumbers();
-      saveToStorage();
     });
 
     // Wire style options to live preview
@@ -1388,7 +1476,13 @@
         document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
         tab.classList.add('active');
 
-        document.getElementById('pane-code').style.display = target === 'code' ? 'block' : 'none';
+        if (communityMode.active) {
+          document.getElementById('pane-community').style.display = target === 'code' ? 'block' : 'none';
+          document.getElementById('pane-code').style.display = 'none';
+        } else {
+          document.getElementById('pane-community').style.display = 'none';
+          document.getElementById('pane-code').style.display = target === 'code' ? 'block' : 'none';
+        }
         document.getElementById('pane-preview').style.display = target === 'preview' ? 'flex' : 'none';
         document.getElementById('pane-grail').style.display = target === 'grail' ? 'block' : 'none';
         document.getElementById('pane-allitems').style.display = target === 'allitems' ? 'block' : 'none';
@@ -1413,10 +1507,64 @@
     // Switch to code tab
     document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
     document.querySelector('[data-tab="code"]').classList.add('active');
-    document.getElementById('pane-code').style.display = 'block';
     document.getElementById('pane-preview').style.display = 'none';
     document.getElementById('pane-grail').style.display = 'none';
     document.getElementById('pane-allitems').style.display = 'none';
+
+    if (communityMode.active) {
+      // Navigate within community mode
+      document.getElementById('pane-community').style.display = 'block';
+      document.getElementById('pane-code').style.display = 'none';
+
+      var topText = document.getElementById('community-top-block').value;
+      var midText = document.getElementById('community-filter-text').value;
+      var topLines = topText ? topText.split('\n').length : 0;
+      var midLines = midText ? midText.split('\n').length : 0;
+
+      var targetTextarea, localLine;
+      if (topText.trim() && lineNum <= topLines) {
+        // Line is in top block
+        targetTextarea = document.getElementById('community-top-block');
+        localLine = lineNum;
+      } else if (lineNum <= topLines + midLines) {
+        // Line is in community filter (read-only)
+        targetTextarea = document.getElementById('community-filter-text');
+        localLine = lineNum - (topText.trim() ? topLines : 0);
+        // Expand the community filter if collapsed
+        var midWrap = document.getElementById('community-mid-wrap');
+        if (midWrap.style.display === 'none') {
+          midWrap.style.display = '';
+          highlightCommunityTA('community-filter-text');
+          document.getElementById('btn-community-toggle').textContent = 'Hide';
+        }
+      } else {
+        // Line is in bottom block
+        targetTextarea = document.getElementById('community-bottom-block');
+        localLine = lineNum - (topText.trim() ? topLines : 0) - midLines;
+      }
+
+      // Select the line in the target textarea
+      var lines = targetTextarea.value.split('\n');
+      var pos = 0;
+      for (var i = 0; i < Math.min(localLine - 1, lines.length); i++) {
+        pos += lines[i].length + 1;
+      }
+      var lineEnd = pos + (lines[localLine - 1] || '').length;
+      targetTextarea.setSelectionRange(pos, lineEnd);
+      targetTextarea.focus();
+
+      // Scroll into view
+      var container = targetTextarea.parentElement;
+      var lh = parseFloat(getComputedStyle(targetTextarea).lineHeight) || 18;
+      var scrollTarget = (localLine - 1) * lh - container.clientHeight / 3;
+      container.scrollTop = Math.max(0, scrollTarget);
+
+      // Also scroll the page to the textarea
+      targetTextarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    document.getElementById('pane-code').style.display = 'block';
 
     var text = codeEditor.value;
     var lines = text.split('\n');
@@ -2141,6 +2289,223 @@
         codeEditor.value = saved;
       }
     } catch (e) { /* ignore */ }
+  }
+
+
+  // ==========================================
+  // Community Edit Mode
+  // ==========================================
+  var COMMUNITY_STORAGE_KEY = 'filterforge-community-mode';
+  var communityMode = {
+    active: false,
+    filterName: '',
+    authorName: '',
+    fileUrl: '',
+    filterText: '',
+    topBlock: '',
+    bottomBlock: '',
+    grailText: ''
+  };
+
+  function getFullFilterText() {
+    if (communityMode.active) {
+      var top = document.getElementById('community-top-block').value;
+      var grail = document.getElementById('community-grail-text').value;
+      var mid = document.getElementById('community-filter-text').value;
+      var bot = document.getElementById('community-bottom-block').value;
+      var parts = [];
+      if (top.trim()) parts.push(top);
+      if (grail.trim()) parts.push(grail);
+      if (mid.trim()) parts.push(mid);
+      if (bot.trim()) parts.push(bot);
+      return parts.join('\n');
+    }
+    return codeEditor.value;
+  }
+
+  function updateCommunityGrailSection() {
+    var grailText = document.getElementById('community-grail-text').value;
+    var section = document.getElementById('community-grail-section');
+    var countEl = document.getElementById('community-grail-count');
+    if (grailText.trim()) {
+      section.style.display = '';
+      var lc = grailText.split('\n').length;
+      countEl.textContent = lc + ' lines (read-only)';
+    } else {
+      section.style.display = 'none';
+    }
+  }
+
+  function saveCommunityState() {
+    try {
+      if (communityMode.active) {
+        communityMode.topBlock = document.getElementById('community-top-block').value;
+        communityMode.bottomBlock = document.getElementById('community-bottom-block').value;
+        communityMode.filterText = document.getElementById('community-filter-text').value;
+        communityMode.grailText = document.getElementById('community-grail-text').value;
+        localStorage.setItem(COMMUNITY_STORAGE_KEY, JSON.stringify(communityMode));
+        localStorage.setItem(STORAGE_KEY, getFullFilterText());
+      } else {
+        localStorage.removeItem(COMMUNITY_STORAGE_KEY);
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function loadCommunityState() {
+    try {
+      var saved = localStorage.getItem(COMMUNITY_STORAGE_KEY);
+      if (saved) {
+        var state = JSON.parse(saved);
+        if (state && state.active) {
+          communityMode = state;
+          enterCommunityMode(state.filterText, state.filterName, state.authorName, state.fileUrl, true);
+          return true;
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return false;
+  }
+
+  function enterCommunityMode(filterText, filterName, authorName, fileUrl, isRestore) {
+    communityMode.active = true;
+    communityMode.filterName = filterName;
+    communityMode.authorName = authorName;
+    communityMode.fileUrl = fileUrl;
+    communityMode.filterText = filterText;
+
+    document.getElementById('community-filter-name').textContent = filterName + ' by ' + authorName;
+    document.getElementById('community-filter-text').value = filterText;
+    var lc = filterText.split('\n').length;
+    document.getElementById('community-line-count').textContent = lc + ' lines (read-only)';
+
+    if (isRestore) {
+      document.getElementById('community-top-block').value = communityMode.topBlock || '';
+      document.getElementById('community-bottom-block').value = communityMode.bottomBlock || '';
+    } else {
+      document.getElementById('community-top-block').value = '';
+      document.getElementById('community-bottom-block').value = '';
+    }
+
+    // Restore grail section if present
+    var grailText = isRestore ? (communityMode.grailText || '') : '';
+    document.getElementById('community-grail-text').value = grailText;
+    updateCommunityGrailSection();
+
+    // Community filter starts collapsed (user clicks Show to expand)
+    document.getElementById('community-mid-wrap').style.display = 'none';
+    document.getElementById('btn-community-toggle').textContent = 'Show';
+
+    document.getElementById('pane-code').style.display = 'none';
+    document.getElementById('pane-community').style.display = 'block';
+    document.getElementById('pane-preview').style.display = 'none';
+    var grailPane = document.getElementById('pane-grail');
+    if (grailPane) grailPane.style.display = 'none';
+
+    document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelector('[data-tab="code"]').classList.add('active');
+
+    codeEditor.value = getFullFilterText();
+    updateLineNumbers();
+    highlightAllCommunityTAs();
+
+    if (!isRestore) {
+      saveCommunityState();
+    }
+  }
+
+  function exitCommunityMode() {
+    codeEditor.value = getFullFilterText();
+    communityMode.active = false;
+
+    document.getElementById('pane-community').style.display = 'none';
+    document.getElementById('pane-code').style.display = 'block';
+
+    updateLineNumbers();
+    highlightCode();
+    saveToStorage();
+    saveCommunityState();
+  }
+
+  function refreshCommunityFilter() {
+    if (!communityMode.fileUrl) return;
+    var el = document.getElementById('community-line-count');
+    el.textContent = 'Refreshing...';
+
+    fetch(communityMode.fileUrl)
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.arrayBuffer();
+      })
+      .then(function (buf) {
+        var text = new TextDecoder('utf-8').decode(buf);
+        if (text.indexOf('\uFFFD') !== -1) {
+          text = new TextDecoder('windows-1252').decode(buf);
+        }
+        communityMode.filterText = text;
+        document.getElementById('community-filter-text').value = text;
+        var lc = text.split('\n').length;
+        el.textContent = lc + ' lines (read-only) \u2014 updated!';
+        codeEditor.value = getFullFilterText();
+        updateLineNumbers();
+        highlightCommunityTA('community-filter-text');
+        saveCommunityState();
+        setTimeout(function () { el.textContent = lc + ' lines (read-only)'; }, 3000);
+      })
+      .catch(function () {
+        el.textContent = 'Failed to refresh. Try again later.';
+        setTimeout(function () {
+          var lc = communityMode.filterText.split('\n').length;
+          el.textContent = lc + ' lines (read-only)';
+        }, 3000);
+      });
+  }
+
+  function initCommunityMode() {
+    var btnRefresh = document.getElementById('btn-community-refresh');
+    var btnExit = document.getElementById('btn-community-exit');
+    var btnToggle = document.getElementById('btn-community-toggle');
+    var topBlock = document.getElementById('community-top-block');
+    var bottomBlock = document.getElementById('community-bottom-block');
+    var midWrap = document.getElementById('community-mid-wrap');
+    var grailWrap = document.getElementById('community-grail-wrap');
+    var btnGrailToggle = document.getElementById('btn-community-grail-toggle');
+
+    if (!btnRefresh) return;
+
+    btnRefresh.addEventListener('click', refreshCommunityFilter);
+
+    btnGrailToggle.addEventListener('click', function () {
+      var isHidden = grailWrap.style.display === 'none';
+      grailWrap.style.display = isHidden ? '' : 'none';
+      btnGrailToggle.textContent = isHidden ? 'Hide' : 'Show';
+      if (isHidden) highlightCommunityTA('community-grail-text');
+    });
+
+    btnExit.addEventListener('click', function () {
+      if (!confirm('Switch to Full Editor?\n\nYour top block, community filter, and bottom block will be merged into one editable document. You can always re-import the community filter later.')) return;
+      exitCommunityMode();
+    });
+
+    btnToggle.addEventListener('click', function () {
+      var isHidden = midWrap.style.display === 'none';
+      midWrap.style.display = isHidden ? '' : 'none';
+      btnToggle.textContent = isHidden ? 'Hide' : 'Show';
+      if (isHidden) highlightCommunityTA('community-filter-text');
+    });
+
+    var saveDebounce = null;
+    function onBlockInput() {
+      highlightCommunityTA(this.id);
+      codeEditor.value = getFullFilterText();
+      updateLineNumbers();
+      clearTimeout(saveDebounce);
+      saveDebounce = setTimeout(function () {
+        saveCommunityState();
+      }, 500);
+    }
+
+    topBlock.addEventListener('input', onBlockInput);
+    bottomBlock.addEventListener('input', onBlockInput);
   }
 
   // ==========================================
@@ -5340,6 +5705,7 @@
     var step1 = document.getElementById('author-step-1');
     var step2 = document.getElementById('author-step-2');
     var step3 = document.getElementById('author-step-3');
+    var step4 = document.getElementById('author-step-4');
     var authorList = document.getElementById('author-list');
     var fileList = document.getElementById('filter-file-list');
     var selectedName = document.getElementById('author-selected-name');
@@ -5359,6 +5725,7 @@
       step1.style.display = n === 1 ? 'block' : 'none';
       step2.style.display = n === 2 ? 'block' : 'none';
       step3.style.display = n === 3 ? 'block' : 'none';
+      step4.style.display = n === 4 ? 'block' : 'none';
     }
 
     btnOpen.addEventListener('click', showModal);
@@ -5501,14 +5868,40 @@
           if (text.indexOf('\uFFFD') !== -1) {
             text = new TextDecoder('windows-1252').decode(buf);
           }
-          if (codeEditor.value.trim() && !confirm('Load "' + file.name + '" from ' + author.author + '? This will replace your current filter.')) {
-            showStep(2);
-            return;
-          }
-          codeEditor.value = text;
-          updateLineNumbers();
-          saveToStorage();
-          hideModal();
+          // Show step 4: choice between community mode and full editor
+          document.getElementById('author-choice-file').textContent = file.name + ' by ' + author.author;
+          showStep(4);
+
+          var btnCommunity = document.getElementById('btn-import-community');
+          var btnFull = document.getElementById('btn-import-full');
+
+          // Remove old listeners by cloning
+          var newBtnC = btnCommunity.cloneNode(true);
+          var newBtnF = btnFull.cloneNode(true);
+          btnCommunity.parentNode.replaceChild(newBtnC, btnCommunity);
+          btnFull.parentNode.replaceChild(newBtnF, btnFull);
+
+          newBtnC.addEventListener('click', function () {
+            enterCommunityMode(text, file.name, author.author, file.url, false);
+            hideModal();
+          });
+
+          newBtnF.addEventListener('click', function () {
+            if (codeEditor.value.trim() && !confirm('This will replace your current filter. Continue?')) {
+              showStep(4);
+              return;
+            }
+            if (communityMode.active) {
+              communityMode.active = false;
+              saveCommunityState();
+              document.getElementById('pane-community').style.display = 'none';
+              document.getElementById('pane-code').style.display = 'block';
+            }
+            codeEditor.value = text;
+            updateLineNumbers();
+            saveToStorage();
+            hideModal();
+          });
         })
         .catch(function () {
           loadingMsg.innerHTML = 'Failed to download file.';
@@ -5525,6 +5918,9 @@
     loadFromStorage();
     updateLineNumbers();
 
+    // Restore community edit mode if it was active
+    loadCommunityState();
+
     initChips();
     initPanelToggles();
     initValueConditions();
@@ -5539,6 +5935,7 @@
     initItemCodeFinder();
     initItemCodeAutocomplete();
     initAuthorImport();
+    initCommunityMode();
     initAllItems();
 
     // Auto-open author import if ?author= in URL
