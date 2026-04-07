@@ -1515,41 +1515,75 @@
   font-size: 0.85rem;
 }
 
-.community-textarea {
-  display: block;
-  width: 100%;
+.community-wrap {
+  position: relative;
+  overflow: auto;
   min-height: 80px;
   max-height: 400px;
-  resize: vertical;
-  overflow: auto;
-  font-family: var(--font-mono, 'Consolas', 'Courier New', monospace);
-  font-size: 0.82rem;
-  line-height: 1.55;
-  padding: 0.5rem;
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--bg-primary);
-  color: var(--text-primary);
-  caret-color: var(--text-primary);
-  tab-size: 4;
-  white-space: pre;
 }
 
-.community-textarea:focus {
+.community-wrap:focus-within {
   outline: 2px solid var(--accent-primary);
   outline-offset: -1px;
 }
 
-.community-textarea::placeholder {
+.community-wrap-readonly {
+  max-height: none;
+  background: var(--bg-secondary);
+  opacity: 0.85;
+}
+
+.community-hl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  padding: 0.5rem;
+  font-family: var(--font-mono, 'Consolas', 'Courier New', monospace);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  white-space: pre;
+  tab-size: 4;
+  pointer-events: none;
+}
+
+.community-ta {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 80px;
+  min-width: 100%;
+  width: max-content;
+  resize: none;
+  overflow: hidden;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--text-primary);
+  font-family: var(--font-mono, 'Consolas', 'Courier New', monospace);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  white-space: pre;
+  tab-size: 4;
+  z-index: 1;
+}
+
+.community-ta:focus {
+  outline: none;
+}
+
+.community-ta::placeholder {
   color: var(--text-secondary);
   opacity: 0.5;
 }
 
-.community-textarea-readonly {
-  opacity: 0.7;
+.community-ta-readonly {
   cursor: default;
-  background: var(--bg-secondary);
-  max-height: 500px;
 }
 
 /* ============================================

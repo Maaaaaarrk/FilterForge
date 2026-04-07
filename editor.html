@@ -87,15 +87,15 @@
 
             <!-- Step 4: Choose import mode -->
             <div id="author-step-4" style="display:none">
-              <p style="margin-bottom:1rem"><strong id="author-choice-file">Filter</strong> downloaded. How would you like to use it?</p>
+              <p style="margin-bottom:1rem"><strong id="author-choice-file">Filter</strong></p>
               <div style="display:flex;flex-direction:column;gap:0.75rem">
-                <button class="btn btn-primary" id="btn-import-community" style="text-align:left;padding:0.75rem 1rem">
+                <button class="btn btn-secondary" id="btn-import-community" style="text-align:left;padding:0.75rem 1rem">
                   <strong>Community Edit Mode</strong><br>
-                  <span class="text-muted" style="font-size:0.82rem">The community filter stays read-only and auto-updates. You add your own rules above and below it.</span>
+                  <small class="text-muted">Read-only filter with auto-updates. Add your rules above/below.</small>
                 </button>
                 <button class="btn btn-secondary" id="btn-import-full" style="text-align:left;padding:0.75rem 1rem">
                   <strong>Load into Full Editor</strong><br>
-                  <span class="text-muted" style="font-size:0.82rem">Load the entire filter into the editor for full control. No auto-updates.</span>
+                  <small class="text-muted">Full control to edit everything. No auto-updates.</small>
                 </button>
               </div>
             </div>
@@ -832,8 +832,24 @@
             </div>
             <div class="community-block">
               <label class="community-block-label" for="community-top-block">Your Top Block <span class="text-muted">(rules here override the community filter)</span></label>
-              <textarea class="community-textarea" id="community-top-block" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
-                placeholder="// Add your custom rules here. These will appear ABOVE the community filter and take priority."></textarea>
+              <div class="community-wrap">
+                <div class="community-hl" id="community-top-hl" aria-hidden="true"></div>
+                <textarea class="community-ta" id="community-top-block" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  placeholder="// Add your custom rules here. These will appear ABOVE the community filter and take priority."></textarea>
+              </div>
+            </div>
+            <div class="community-block community-block-locked" id="community-grail-section" style="display:none">
+              <div class="community-block-header">
+                <label class="community-block-label">Holy Grail <span class="text-muted">(read-only, managed from Grail tab)</span></label>
+                <button class="btn btn-secondary btn-small" id="btn-community-grail-toggle" title="Show/hide grail rules">Show</button>
+              </div>
+              <div class="community-preview-collapsed" id="community-grail-collapsed">
+                <span class="text-muted" id="community-grail-count">0 lines</span>
+              </div>
+              <div class="community-wrap community-wrap-readonly" id="community-grail-wrap" style="display:none">
+                <div class="community-hl" id="community-grail-hl" aria-hidden="true"></div>
+                <textarea class="community-ta community-ta-readonly" id="community-grail-text" readonly spellcheck="false"></textarea>
+              </div>
             </div>
             <div class="community-block community-block-locked">
               <div class="community-block-header">
@@ -843,12 +859,18 @@
               <div class="community-preview-collapsed" id="community-collapsed-info">
                 <span class="text-muted" id="community-line-count">0 lines</span>
               </div>
-              <textarea class="community-textarea community-textarea-readonly" id="community-filter-text" readonly spellcheck="false" style="display:none"></textarea>
+              <div class="community-wrap community-wrap-readonly" id="community-mid-wrap" style="display:none">
+                <div class="community-hl" id="community-mid-hl" aria-hidden="true"></div>
+                <textarea class="community-ta community-ta-readonly" id="community-filter-text" readonly spellcheck="false"></textarea>
+              </div>
             </div>
             <div class="community-block">
               <label class="community-block-label" for="community-bottom-block">Your Bottom Block <span class="text-muted">(fallback rules)</span></label>
-              <textarea class="community-textarea" id="community-bottom-block" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
-                placeholder="// Add fallback rules here. These appear BELOW the community filter."></textarea>
+              <div class="community-wrap">
+                <div class="community-hl" id="community-bottom-hl" aria-hidden="true"></div>
+                <textarea class="community-ta" id="community-bottom-block" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"
+                  placeholder="// Add fallback rules here. These appear BELOW the community filter."></textarea>
+              </div>
             </div>
           </div>
 

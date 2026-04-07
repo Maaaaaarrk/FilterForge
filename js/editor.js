@@ -916,6 +916,30 @@
     showHighlight();
   }
 
+  // Community editor syntax highlighting
+  function highlightCommunityTA(id) {
+    var ta = document.getElementById(id);
+    var hlMap = {
+      'community-top-block': 'community-top-hl',
+      'community-filter-text': 'community-mid-hl',
+      'community-bottom-block': 'community-bottom-hl',
+      'community-grail-text': 'community-grail-hl'
+    };
+    var hl = document.getElementById(hlMap[id]);
+    if (!ta || !hl) return;
+    var lines = ta.value.split('\n');
+    hl.innerHTML = lines.map(function (l) { return highlightLine(l); }).join('\n') + '\n';
+    // Auto-size textarea to content so the container scrolls
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }
+
+  function highlightAllCommunityTAs() {
+    highlightCommunityTA('community-top-block');
+    highlightCommunityTA('community-filter-text');
+    highlightCommunityTA('community-bottom-block');
+  }
+
   function syncScroll() {
     var wrap = document.querySelector('.code-editor-wrap');
     lineNumbers.scrollTop = wrap.scrollTop;
@@ -947,6 +971,7 @@
   }
 
   function afterCommunityInsert(target) {
+    highlightCommunityTA(target.id);
     codeEditor.value = getFullFilterText();
     updateLineNumbers();
     saveCommunityState();
@@ -1377,6 +1402,19 @@
       document.getElementById('pane-allitems').style.display = 'none';
     }
 
+    function afterGrailInsert() {
+      if (communityMode.active) {
+        updateCommunityGrailSection();
+        highlightCommunityTA('community-grail-text');
+        codeEditor.value = getFullFilterText();
+        updateLineNumbers();
+        saveCommunityState();
+      } else {
+        updateLineNumbers();
+        saveToStorage();
+      }
+    }
+
     btnGenerate.addEventListener('click', function () {
       var lines = buildGrailLines();
       if (lines.length <= 4) {
@@ -1384,26 +1422,41 @@
         return;
       }
 
-      // Switch to code tab FIRST so textarea is visible for auto-resize
       switchToCodeTab();
-      var currentCode = removeGrailSection(codeEditor.value);
-      codeEditor.value = lines.join('\n') + '\n' + currentCode;
-      updateLineNumbers();
-      saveToStorage();
+      if (communityMode.active) {
+        // In community mode, grail goes into its own read-only section
+        document.getElementById('community-grail-text').value = lines.join('\n');
+      } else {
+        var currentCode = removeGrailSection(codeEditor.value);
+        codeEditor.value = lines.join('\n') + '\n' + currentCode;
+      }
+      afterGrailInsert();
     });
 
     btnUpdate.addEventListener('click', function () {
-      var currentCode = codeEditor.value;
-      if (currentCode.indexOf('// HOLY GRAIL') === -1) {
-        alert('No grail section found in the filter. Use "Insert Grail Rules" first.');
-        return;
+      if (communityMode.active) {
+        // In community mode, just regenerate the grail section
+        var grailTA = document.getElementById('community-grail-text');
+        if (!grailTA.value.trim()) {
+          alert('No grail section found. Use "Insert Grail Rules" first.');
+          return;
+        }
+        var lines = buildGrailLines();
+        switchToCodeTab();
+        grailTA.value = lines.join('\n');
+        afterGrailInsert();
+      } else {
+        var currentCode = codeEditor.value;
+        if (currentCode.indexOf('// HOLY GRAIL') === -1) {
+          alert('No grail section found in the filter. Use "Insert Grail Rules" first.');
+          return;
+        }
+        var lines = buildGrailLines();
+        switchToCodeTab();
+        var cleaned = removeGrailSection(currentCode);
+        codeEditor.value = lines.join('\n') + '\n' + cleaned;
+        afterGrailInsert();
       }
-      var lines = buildGrailLines();
-      switchToCodeTab();
-      var cleaned = removeGrailSection(currentCode);
-      codeEditor.value = lines.join('\n') + '\n' + cleaned;
-      updateLineNumbers();
-      saveToStorage();
     });
 
     // Wire style options to live preview
@@ -1478,8 +1531,10 @@
         targetTextarea = document.getElementById('community-filter-text');
         localLine = lineNum - (topText.trim() ? topLines : 0);
         // Expand the community filter if collapsed
-        if (targetTextarea.style.display === 'none') {
-          targetTextarea.style.display = 'block';
+        var midWrap = document.getElementById('community-mid-wrap');
+        if (midWrap.style.display === 'none') {
+          midWrap.style.display = '';
+          highlightCommunityTA('community-filter-text');
           document.getElementById('btn-community-toggle').textContent = 'Hide';
         }
       } else {
@@ -2248,21 +2303,37 @@
     fileUrl: '',
     filterText: '',
     topBlock: '',
-    bottomBlock: ''
+    bottomBlock: '',
+    grailText: ''
   };
 
   function getFullFilterText() {
     if (communityMode.active) {
       var top = document.getElementById('community-top-block').value;
+      var grail = document.getElementById('community-grail-text').value;
       var mid = document.getElementById('community-filter-text').value;
       var bot = document.getElementById('community-bottom-block').value;
       var parts = [];
       if (top.trim()) parts.push(top);
+      if (grail.trim()) parts.push(grail);
       if (mid.trim()) parts.push(mid);
       if (bot.trim()) parts.push(bot);
       return parts.join('\n');
     }
     return codeEditor.value;
+  }
+
+  function updateCommunityGrailSection() {
+    var grailText = document.getElementById('community-grail-text').value;
+    var section = document.getElementById('community-grail-section');
+    var countEl = document.getElementById('community-grail-count');
+    if (grailText.trim()) {
+      section.style.display = '';
+      var lc = grailText.split('\n').length;
+      countEl.textContent = lc + ' lines (read-only)';
+    } else {
+      section.style.display = 'none';
+    }
   }
 
   function saveCommunityState() {
@@ -2271,6 +2342,7 @@
         communityMode.topBlock = document.getElementById('community-top-block').value;
         communityMode.bottomBlock = document.getElementById('community-bottom-block').value;
         communityMode.filterText = document.getElementById('community-filter-text').value;
+        communityMode.grailText = document.getElementById('community-grail-text').value;
         localStorage.setItem(COMMUNITY_STORAGE_KEY, JSON.stringify(communityMode));
         localStorage.setItem(STORAGE_KEY, getFullFilterText());
       } else {
@@ -2314,8 +2386,13 @@
       document.getElementById('community-bottom-block').value = '';
     }
 
+    // Restore grail section if present
+    var grailText = isRestore ? (communityMode.grailText || '') : '';
+    document.getElementById('community-grail-text').value = grailText;
+    updateCommunityGrailSection();
+
     // Community filter starts collapsed (user clicks Show to expand)
-    document.getElementById('community-filter-text').style.display = 'none';
+    document.getElementById('community-mid-wrap').style.display = 'none';
     document.getElementById('btn-community-toggle').textContent = 'Show';
 
     document.getElementById('pane-code').style.display = 'none';
@@ -2329,6 +2406,7 @@
 
     codeEditor.value = getFullFilterText();
     updateLineNumbers();
+    highlightAllCommunityTAs();
 
     if (!isRestore) {
       saveCommunityState();
@@ -2369,6 +2447,7 @@
         el.textContent = lc + ' lines (read-only) \u2014 updated!';
         codeEditor.value = getFullFilterText();
         updateLineNumbers();
+        highlightCommunityTA('community-filter-text');
         saveCommunityState();
         setTimeout(function () { el.textContent = lc + ' lines (read-only)'; }, 3000);
       })
@@ -2387,11 +2466,20 @@
     var btnToggle = document.getElementById('btn-community-toggle');
     var topBlock = document.getElementById('community-top-block');
     var bottomBlock = document.getElementById('community-bottom-block');
-    var filterTextArea = document.getElementById('community-filter-text');
+    var midWrap = document.getElementById('community-mid-wrap');
+    var grailWrap = document.getElementById('community-grail-wrap');
+    var btnGrailToggle = document.getElementById('btn-community-grail-toggle');
 
     if (!btnRefresh) return;
 
     btnRefresh.addEventListener('click', refreshCommunityFilter);
+
+    btnGrailToggle.addEventListener('click', function () {
+      var isHidden = grailWrap.style.display === 'none';
+      grailWrap.style.display = isHidden ? '' : 'none';
+      btnGrailToggle.textContent = isHidden ? 'Hide' : 'Show';
+      if (isHidden) highlightCommunityTA('community-grail-text');
+    });
 
     btnExit.addEventListener('click', function () {
       if (!confirm('Switch to Full Editor?\n\nYour top block, community filter, and bottom block will be merged into one editable document. You can always re-import the community filter later.')) return;
@@ -2399,13 +2487,15 @@
     });
 
     btnToggle.addEventListener('click', function () {
-      var isHidden = filterTextArea.style.display === 'none';
-      filterTextArea.style.display = isHidden ? 'block' : 'none';
+      var isHidden = midWrap.style.display === 'none';
+      midWrap.style.display = isHidden ? '' : 'none';
       btnToggle.textContent = isHidden ? 'Hide' : 'Show';
+      if (isHidden) highlightCommunityTA('community-filter-text');
     });
 
     var saveDebounce = null;
     function onBlockInput() {
+      highlightCommunityTA(this.id);
       codeEditor.value = getFullFilterText();
       updateLineNumbers();
       clearTimeout(saveDebounce);
