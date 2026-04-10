@@ -5463,6 +5463,40 @@
       });
     });
 
+    // Generate ETH variants for MAG items (equipment only, not jewelry/charms)
+    var magEthSkip = ['rin', 'amu', 'jew', 'cm1', 'cm2', 'cm3'];
+    var magBases = items.filter(function (it) {
+      return it.cat === 'mag' && magEthSkip.indexOf(it.code) === -1 &&
+        it.flags.indexOf('ETH') === -1 &&
+        it.flags.indexOf('MISC') === -1 && it.flags.indexOf('CHARM') === -1 &&
+        it.flags.indexOf('JEWELRY') === -1;
+    });
+    magBases.forEach(function (base) {
+      var ethFlags = base.flags.slice();
+      ethFlags.push('ETH');
+      items.push({
+        key: base.key + '-eth', code: base.code, name: 'Eth ' + base.name,
+        flags: ethFlags, values: Object.assign({}, base.values), cat: 'mag', hasFullData: false
+      });
+    });
+
+    // Generate ETH variants for RARE items (equipment only, not jewelry)
+    var rareEthSkip = ['rin', 'amu', 'jew'];
+    var rareBases = items.filter(function (it) {
+      return it.cat === 'rare' && rareEthSkip.indexOf(it.code) === -1 &&
+        it.flags.indexOf('ETH') === -1 &&
+        it.flags.indexOf('MISC') === -1 &&
+        it.flags.indexOf('JEWELRY') === -1;
+    });
+    rareBases.forEach(function (base) {
+      var ethFlags = base.flags.slice();
+      ethFlags.push('ETH');
+      items.push({
+        key: base.key + '-eth', code: base.code, name: 'Eth ' + base.name,
+        flags: ethFlags, values: Object.assign({}, base.values), cat: 'rare', hasFullData: false
+      });
+    });
+
     return items;
   }
 
