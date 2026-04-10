@@ -677,12 +677,10 @@
       }
 
       if (mapIcon) {
-        if (mapIconColor) {
-          var iconBase = mapIcon.replace(/%/g, '');
-          output += '%' + iconBase + '-' + mapIconColor + '%';
-        } else {
-          output += mapIcon;
-        }
+        var iconBase = mapIcon.replace(/%/g, '');
+        // BORDER, MAP, DOT, PX require a color code — default to FF if none given
+        var effectiveColor = mapIconColor || 'FF';
+        output += '%' + iconBase + '-' + effectiveColor + '%';
       }
 
       if (sound) {
@@ -857,6 +855,8 @@
         var baseTok = tok.replace(/-.*/, '');
         if (KNOWN_OUTPUT_TOKENS.indexOf(baseTok) !== -1) return m;
         // Notification tokens (BORDER-XX, MAP-XX, DOT-XX, SOUNDID-XXXX, etc.)
+        // Warn if BORDER/MAP/DOT/PX is used without a color code (e.g. %BORDER% instead of %BORDER-FF%)
+        if (/^(BORDER|MAP|DOT|PX)$/.test(tok)) return '<span class="hl-warn" title="' + m + ' requires a color code (e.g. %' + tok + '-FF%)">' + m + '</span>';
         if (/^(BORDER|MAP|DOT|PX|SOUNDID|SOUND|NOTIFY|TIER|STAT\d+|SK\d+|CLSK\d+|TABSK\d+|MULTI)/.test(tok)) return m;
         // Escaped percent
         if (tok === '') return m;
