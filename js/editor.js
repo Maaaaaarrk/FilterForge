@@ -500,29 +500,41 @@
     // Belts
     ['lbl','zlb','ulc'],['vbl','zvb','uvc'],['mbl','zmb','umc'],['tbl','ztb','utc'],['hbl','zhb','uhc'],
     // Axes
-    ['hax','9ha','7wa'],['axe','9ax','72a'],['2ax','92a','72a'],['mpi','9mp','7bt'],['wax','9wa','7ga'],['lax','9la','7gi'],['bax','9ba','7la'],['btx','9bt','7bt'],['gax','9ga','7ga'],['gix','9gi','7gi'],
+    ['hax','9ha','7ha'],['axe','9ax','7ax'],['2ax','92a','72a'],['mpi','9mp','7mp'],['wax','9wa','7wa'],['lax','9la','7la'],['bax','9ba','7ba'],['btx','9bt','7bt'],['gax','9ga','7ga'],['gix','9gi','7gi'],
     // Maces
-    ['clb','9cl','7wh'],['spc','9sp','7wh'],['mac','9ma','7m7'],['mst','9mt','7m7'],['fla','9fl','7gm'],['whm','9wh','7wh'],['mau','9m9','7m7'],['gma','9gm','7gm'],
+    ['clb','9cl','7cl'],['spc','9sp','7sp'],['mac','9ma','7ma'],['mst','9mt','7mt'],['fla','9fl','7fl'],['whm','9wh','7wh'],['mau','9m9','7m7'],['gma','9gm','7gm'],
     // Swords
-    ['ssd','9ss','7cr'],['scm','9sm','7cr'],['sbr','9sb','7fb'],['flc','9fc','7fb'],['crs','9cr','7cr'],['bsd','9bs','7ls'],['lsd','9ls','7ls'],['wsd','9wd','7gd'],['2hs','92h','7fb'],['clm','9cm','7gd'],['gis','9gs','7gd'],['bsw','9b9','7gd'],['flb','9fb','7fb'],['gsd','9gd','7gd'],
+    ['ssd','9ss','7ss'],['scm','9sm','7sm'],['sbr','9sb','7sb'],['flc','9fc','7fc'],['crs','9cr','7cr'],['bsd','9bs','7bs'],['lsd','9ls','7ls'],['wsd','9wd','7wd'],['2hs','92h','72h'],['clm','9cm','7cm'],['gis','9gs','7gs'],['bsw','9b9','7b7'],['flb','9fb','7fb'],['gsd','9gd','7gd'],
     // Daggers
     ['dgr','9dg','7dg'],['dir','9di','7di'],['kri','9kr','7kr'],['bld','9bl','7bl'],
     // Spears
-    ['spr','9sr','7s7'],['tri','9tr','7s7'],['brn','9br','7s7'],['spt','9st','7p7'],['pik','9p9','7p7'],
+    ['spr','9sr','7sr'],['tri','9tr','7tr'],['brn','9br','7br'],['spt','9st','7st'],['pik','9p9','7p7'],
     // Polearms
-    ['bar','9b7','7pa'],['vou','9vo','7pa'],['scy','9s8','7s8'],['pax','9pa','7pa'],['hal','9h9','7p7'],['wsc','9wc','7s8'],
+    ['bar','9b7','7o7'],['vou','9vo','7vo'],['scy','9s8','7s8'],['pax','9pa','7pa'],['hal','9h9','7h7'],['wsc','9wc','7wc'],
     // Javelins
-    ['jav','9ja','7ja'],['pil','9pi','7pi'],['ssp','9s9','7s9'],['glv','9gl','7gl'],['tsp','9ts','7ts'],
+    ['jav','9ja','7ja'],['pil','9pi','7pi'],['ssp','9s9','7s7'],['glv','9gl','7gl'],['tsp','9ts','7ts'],
     // Throwing
     ['tkf','9tk','7tk'],['tax','9ta','7ta'],['bkf','9bk','7bk'],['bal','9b8','7b8'],
     // Bows
-    ['sbw','9sb','6lw'],['hbw','9lw','6sw'],['lbw','9sw','6lw'],['cbw','9cb','6lw'],
+    ['sbw','8sb','6sb'],['hbw','8hb','6hb'],['lbw','8lb','6lb'],['cbw','8cb','6cb'],['sbb','8s8','6s7'],['lbb','8l8','6l7'],['swb','8sw','6sw'],['lwb','8lw','6lw'],
     // Crossbows
-    ['lxb','9lx','6mx'],['mxb','9mx','6mx'],['hxb','9hx','6rx'],['rxb','9rx','6rx'],
+    ['lxb','8lx','6lx'],['mxb','8mx','6mx'],['hxb','8hx','6hx'],['rxb','8rx','6rx'],
     // Staves
-    ['sst','9ss','6ws'],['lst','9ls','6ls'],['cst','9cs','6cs'],['bst','9bs','6bs'],['wst','9ws','6ws'],
+    ['sst','8ss','6ss'],['lst','8ls','6ls'],['cst','8cs','6cs'],['bst','8bs','6bs'],['wst','8ws','6ws'],
     // Scepters
-    ['scp','9qs','7ws'],['gsc','9sc','7ws'],['wsp','9ws','7ws']
+    ['scp','9qs','7qs'],['gsc','9sc','7sc'],['wsp','9ws','7ws'],
+    // Assassin Katars
+    ['ktr','9ar','7ar'],['wrb','9wb','7wb'],['axf','9xf','7xf'],['ces','9cs','7cs'],['clw','9lw','7lw'],['btl','9tw','7tw'],['skr','9qr','7qr'],
+    // Amazon Bows
+    ['am1','am6','amb'],['am2','am7','amc'],
+    // Amazon Spears/Pikes/Javelins
+    ['am3','am8','amd'],['am4','am9','ame'],['am5','ama','amf'],
+    // Druid Pelts
+    ['dr1','dr6','drb'],['dr2','dr7','drc'],['dr3','dr8','drd'],['dr4','dr9','dre'],['dr5','dra','drf'],
+    // Barbarian Helms
+    ['ba1','ba6','bab'],['ba2','ba7','bac'],['ba3','ba8','bad'],['ba4','ba9','bae'],['ba5','baa','baf'],
+    // Paladin Shields
+    ['pa1','pa6','pab'],['pa2','pa7','pac'],['pa3','pa8','pad'],['pa4','pa9','pae'],['pa5','paa','paf']
   ];
   var ITEM_TIER_MAP = {};
   ITEM_TIER_GROUPS.forEach(function (group) {
