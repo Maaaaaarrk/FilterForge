@@ -950,6 +950,7 @@
     highlightCommunityTA('community-top-block');
     highlightCommunityTA('community-filter-text');
     highlightCommunityTA('community-bottom-block');
+    highlightCommunityTA('community-grail-text');
   }
 
   function syncScroll() {
