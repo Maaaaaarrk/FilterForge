@@ -1084,6 +1084,12 @@
         if (text.indexOf('\uFFFD') !== -1) {
           text = new TextDecoder('windows-1252').decode(buf);
         }
+        if (communityMode.active) {
+          communityMode.active = false;
+          saveCommunityState();
+          document.getElementById('pane-community').style.display = 'none';
+          document.getElementById('pane-code').style.display = 'block';
+        }
         codeEditor.value = text;
         updateLineNumbers();
         saveToStorage();
