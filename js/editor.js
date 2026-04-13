@@ -807,8 +807,8 @@
   // Known valid condition tokens for validation
   var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','EQUIPPED','INVENTORY','STASH','CUBE','SHOP','MERC','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7'];
   var KNOWN_NEGATES = KNOWN_FLAGS.map(function (f) { return '!' + f; });
-  var KNOWN_VALUE_CODES = ['SOCKETS','SOCK','DEF','ED','EDEF','EDAM','ILVL','CLVL','ALVL','QLVL','RUNE','GOLD','PRICE','SELLPRICE','FRES','CRES','LRES','PRES','RES','STR','DEX','LIFE','MANA','FCR','IAS','FHR','FRW','MFIND','LVLREQ','MAXSOCKETS','GEMLEVEL','GEM','GEMTYPE','FILTLVL','DIFF','MAPID','MAPTIER','ALLSK','QTY','TABSK0','TABSK1','TABSK2','TABSK3','TABSK4','TABSK5','TABSK6','CHARSTAT'];
-  var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY','LVLREQ'];
+  var KNOWN_VALUE_CODES = ['SOCKETS','SOCK','DEF','ED','EDEF','EDAM','ILVL','CLVL','ALVL','QLVL','RUNE','GOLD','PRICE','SELLPRICE','FRES','CRES','LRES','PRES','RES','STR','DEX','LIFE','MANA','FCR','IAS','FHR','FRW','MFIND','LVLREQ','MAXSOCKETS','GEMLEVEL','GEM','GEMTYPE','FILTLVL','DIFF','MAPID','MAPTIER','ALLSK','QTY','TABSK0','TABSK1','TABSK2','TABSK3','TABSK4','TABSK5','TABSK6','CHARSTAT','WIDTH','HEIGHT','AREA','UPDEX','UPSTR','UPLVL','MAXRES','ALLATTRIB','BASEBLOCK','REQLVL','REQSTR','REQDEX','BASEMINONEH','BASEMAXONEH','BASEMINTWOH','BASEMAXTWOH','BASEMINSMITE','BASEMAXSMITE','BASEMINTHROW','BASEMAXTHROW','BASEMINKICK','BASEMAXKICK'];
+  var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY','LVLREQ','WIDTH','HEIGHT','AREA','UPDEX','UPSTR','UPLVL','MAXRES','ALLATTRIB','BASEBLOCK','REQLVL','REQSTR','REQDEX','BASEMINONEH','BASEMAXONEH','BASEMINTWOH','BASEMAXTWOH','BASEMINSMITE','BASEMAXSMITE','BASEMINTHROW','BASEMAXTHROW','BASEMINKICK','BASEMAXKICK'];
 
   function escapeForHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -832,6 +832,13 @@
       return pre + '<span class="hl-alias-kw">Alias</span>[<span class="hl-alias-name">' + escapeForHtml(aliasMatch[2]) + '</span>]: <span class="hl-alias-val">' + escapeForHtml(aliasMatch[3]) + '</span>';
     }
 
+    // Formula line
+    var formulaMatch = trimmed.match(/^(Formula\s*)\[([^\]]*)\]\s*:\s*(.*)/);
+    if (formulaMatch) {
+      var pre = line.substring(0, line.indexOf('Formula'));
+      return pre + '<span class="hl-alias-kw">Formula</span>[<span class="hl-alias-name">' + escapeForHtml(formulaMatch[2]) + '</span>]: <span class="hl-alias-val">' + escapeForHtml(formulaMatch[3]) + '</span>';
+    }
+
     // ItemDisplay line
     var ruleMatch = trimmed.match(/^(ItemDisplay\s*)\[([^\]]*)\]\s*:\s*(.*)/);
     if (ruleMatch) {
@@ -840,7 +847,16 @@
       var output = ruleMatch[3];
 
       // Validate and highlight condition tokens
-      var highlightedConds = escapeForHtml(conditions).replace(/!?[A-Za-z][A-Za-z0-9_]*/g, function (tok) {
+      // First, mark $f(...) inline formulas so they are not flagged as unknown
+      var escapedConds = escapeForHtml(conditions);
+      // Replace $f(...) with a placeholder to avoid word-token warnings inside formulas
+      var formulaPlaceholders = [];
+      escapedConds = escapedConds.replace(/\$f\([^)]*\)/g, function (m) {
+        var idx = formulaPlaceholders.length;
+        formulaPlaceholders.push(m);
+        return '\x00FORMULA_PH_' + idx + '\x00';
+      });
+      var highlightedConds = escapedConds.replace(/!?[A-Za-z][A-Za-z0-9_]*/g, function (tok) {
         // Skip OR keyword
         if (tok === 'OR') return tok;
         // Strip leading ! for base token check
@@ -851,10 +867,16 @@
         if (KNOWN_VALUE_CODES.indexOf(baseTok) !== -1) return tok;
         // Dynamic stat/skill tokens: STAT###, SK###, CLSK###, TABSK###, MULTI###
         if (/^!?(STAT|SK|CLSK|TABSK|CHARSTAT|MULTI)\d*$/.test(tok)) return tok;
+        // Formula references: FORMULA followed by a key (e.g. FORMULAA, FORMULA_B)
+        if (/^!?FORMULA[A-Z_0-9]+$/.test(tok)) return tok;
         // Item codes (2-4 alphanumeric chars) — allow lowercase
         if (baseTok.length <= 4 && baseTok.length >= 2) return tok;
         // Unknown token — warn
         return '<span class="hl-warn" title="Unknown condition: ' + tok + '">' + tok + '</span>';
+      });
+      // Restore $f(...) formula placeholders
+      highlightedConds = highlightedConds.replace(/\x00FORMULA_PH_(\d+)\x00/g, function (m, idx) {
+        return formulaPlaceholders[parseInt(idx, 10)];
       });
 
       // Highlight color tokens in output with their actual color, validate others
@@ -870,6 +892,8 @@
         // Warn if BORDER/MAP/DOT/PX is used without a color code (e.g. %BORDER% instead of %BORDER-FF%)
         if (/^(BORDER|MAP|DOT|PX)$/.test(tok)) return '<span class="hl-warn" title="' + m + ' requires a color code (e.g. %' + tok + '-FF%)">' + m + '</span>';
         if (/^(BORDER|MAP|DOT|PX|SOUNDID|SOUND|NOTIFY|TIER|STAT\d+|SK\d+|CLSK\d+|TABSK\d+|MULTI)/.test(tok)) return m;
+        // Formula references: %FORMULAA%, %FORMULA_B%, etc.
+        if (/^FORMULA[A-Z_0-9]+$/.test(tok)) return m;
         // Escaped percent
         if (tok === '') return m;
         // Unknown — warn
@@ -886,6 +910,11 @@
 
     // Only flag lines that look like broken rules (start with ItemDisplay but malformed)
     if (trimmed.indexOf('ItemDisplay') === 0 && !trimmed.match(/^ItemDisplay\s*\[/)) {
+      return '<span class="hl-error">' + escapeForHtml(line) + '</span>';
+    }
+
+    // Flag malformed Formula lines
+    if (trimmed.indexOf('Formula') === 0 && !trimmed.match(/^Formula\s*\[/)) {
       return '<span class="hl-error">' + escapeForHtml(line) + '</span>';
     }
 
@@ -1990,6 +2019,12 @@
       return true;
     }
 
+    // Inline formula condition: $f(...) — cannot evaluate in preview, assume true
+    if (token.indexOf('$f(') !== -1) return true;
+
+    // Formula reference condition: FORMULAA>5, FORMULA_B=1, etc. — cannot evaluate in preview
+    if (/^FORMULA[A-Z_0-9]+/.test(token)) return true;
+
     // Value condition: CODE<val, CODE>val, CODE=val, CODE~min-max
     var valueMatch = token.match(/^([A-Z0-9]+)([<>=~])(.+)$/);
     if (valueMatch) {
@@ -2182,6 +2217,34 @@
     text = text.replace(/%QTY%/g, item.values.QTY || '0');
     text = text.replace(/%MAPTIER%/g, item.values.MAPTIER || '0');
     text = text.replace(/%BASENAME%/g, item.name);
+    text = text.replace(/%LVLREQ%/g, item.values.LVLREQ || '0');
+    // New BH keys — dimensions, upgrade reqs, current reqs, base damage, etc.
+    text = text.replace(/%WIDTH%/g, item.values.WIDTH || '0');
+    text = text.replace(/%HEIGHT%/g, item.values.HEIGHT || '0');
+    text = text.replace(/%AREA%/g, item.values.AREA || '0');
+    text = text.replace(/%UPDEX%/g, item.values.UPDEX || '0');
+    text = text.replace(/%UPSTR%/g, item.values.UPSTR || '0');
+    text = text.replace(/%UPLVL%/g, item.values.UPLVL || '0');
+    text = text.replace(/%MAXRES%/g, item.values.MAXRES || '0');
+    text = text.replace(/%ALLATTRIB%/g, item.values.ALLATTRIB || '0');
+    text = text.replace(/%BASEBLOCK%/g, item.values.BASEBLOCK || '0');
+    text = text.replace(/%REQLVL%/g, item.values.REQLVL || '0');
+    text = text.replace(/%REQSTR%/g, item.values.REQSTR || '0');
+    text = text.replace(/%REQDEX%/g, item.values.REQDEX || '0');
+    text = text.replace(/%BASEMINONEH%/g, item.values.BASEMINONEH || '0');
+    text = text.replace(/%BASEMAXONEH%/g, item.values.BASEMAXONEH || '0');
+    text = text.replace(/%BASEMINTWOH%/g, item.values.BASEMINTWOH || '0');
+    text = text.replace(/%BASEMAXTWOH%/g, item.values.BASEMAXTWOH || '0');
+    text = text.replace(/%BASEMINSMITE%/g, item.values.BASEMINSMITE || '0');
+    text = text.replace(/%BASEMAXSMITE%/g, item.values.BASEMAXSMITE || '0');
+    text = text.replace(/%BASEMINTHROW%/g, item.values.BASEMINTHROW || '0');
+    text = text.replace(/%BASEMAXTHROW%/g, item.values.BASEMAXTHROW || '0');
+    text = text.replace(/%BASEMINKICK%/g, item.values.BASEMINKICK || '0');
+    text = text.replace(/%BASEMAXKICK%/g, item.values.BASEMAXKICK || '0');
+    // Formula references — show 0 in preview (real values computed by BH client)
+    text = text.replace(/%FORMULA[A-Z_0-9]+%/g, '0');
+    // Inline $f(...) formulas — show 0 in preview (real values computed by BH client)
+    text = text.replace(/\$f\([^)]*\)/g, '0');
     // Generic STAT### tokens — show 0 for unknown
     text = text.replace(/%STAT\d+%/g, '0');
     text = text.replace(/%CLSK\d+%/g, '0');
