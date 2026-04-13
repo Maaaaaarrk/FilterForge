@@ -1132,35 +1132,35 @@
   var GRAIL_DATA = {
     'Helms': [
       {code:'uap',name:'Shako'},{code:'urn',name:'Crown of Ages'},{code:'ci3',name:"Griffon's Eye"},
-      {code:'ci2',name:"Kira's Guardian"},{code:'uhm',name:'Steel Shade'},{code:'bae',name:'Vampire Gaze'},
-      {code:'7pa',name:'Veil of Steel'},{code:'xrn',name:"Blackhorn's Face"},{code:'bhm',name:'Rockstopper'},
-      {code:'xh9',name:'Stealskull'},{code:'xlm',name:'Darksight Helm'},{code:'cap',name:'Biggin\'s Bonnet'},
+      {code:'ci2',name:"Kira's Guardian"},{code:'ulm',name:'Steel Shade'},{code:'xh9',name:'Vampire Gaze'},
+      {code:'uhm',name:'Veil of Steel'},{code:'xsk',name:"Blackhorn's Face"},{code:'xkp',name:'Rockstopper'},
+      {code:'xlm',name:'Stealskull'},{code:'xhl',name:'Darksight Helm'},{code:'cap',name:'Biggin\'s Bonnet'},
       {code:'skp',name:'Tarnhelm'},{code:'hlm',name:'Coif of Glory'},{code:'fhl',name:'Duskdeep'},
-      {code:'ghm',name:'Howltusk'},{code:'crn',name:'Peasant Crown'},{code:'msk',name:'Wormskull'},
-      {code:'xap',name:'The Face of Horror'},{code:'xkp',name:'Sander\'s Paragon'},
+      {code:'ghm',name:'Howltusk'},{code:'xap',name:'Peasant Crown'},{code:'bhm',name:'Wormskull'},
+      {code:'msk',name:'The Face of Horror'},{code:'cap',name:'Sander\'s Paragon'},
       {code:'xrn',name:'Crown of Thieves'}
     ],
     'Body Armor': [
-      {code:'utp',name:"Tyrael's Might"},{code:'uui',name:"Ormus' Robes"},
-      {code:'umc',name:'Guardian Angel'},{code:'uul',name:"Gladiator's Bane"},{code:'uhc',name:"Templar's Might"},
-      {code:'ulm',name:'Steel Carapace'},{code:'xhn',name:"Duriel's Shell"},{code:'xui',name:"Skullder's Ire"},
-      {code:'upl',name:"Arkaine's Valor"},{code:'xla',name:'The Spirit Shroud'},{code:'xrs',name:'Skin of the Vipermagi'},
-      {code:'xpl',name:'Iron Pelt'},{code:'ltp',name:'Greyform'},{code:'brs',name:'Blinkbat\'s Form'},
-      {code:'mpl',name:'The Centurion'},{code:'fld',name:'Twitchthroe'},{code:'gth',name:'Darkglow'},
-      {code:'chn',name:'Sparking Mail'},{code:'plt',name:'Venom Ward'},{code:'stu',name:'Iceblink'},
-      {code:'aar',name:'Silks of the Victor'},{code:'ful',name:'Heavenly Garb'},{code:'dra',name:'Goldskin'}
+      {code:'uar',name:"Tyrael's Might"},{code:'uui',name:"Ormus' Robes"},
+      {code:'xlt',name:'Guardian Angel'},{code:'utu',name:"Gladiator's Bane"},{code:'uar',name:"Templar's Might"},
+      {code:'uul',name:'Steel Carapace'},{code:'xrs',name:"Duriel's Shell"},{code:'xpl',name:"Skullder's Ire"},
+      {code:'upl',name:"Arkaine's Valor"},{code:'xui',name:'The Spirit Shroud'},{code:'xea',name:'Skin of the Vipermagi'},
+      {code:'xtu',name:'Iron Pelt'},{code:'qui',name:'Greyform'},{code:'lea',name:'Blinkbat\'s Form'},
+      {code:'hla',name:'The Centurion'},{code:'stu',name:'Twitchthroe'},{code:'rng',name:'Darkglow'},
+      {code:'chn',name:'Sparking Mail'},{code:'brs',name:'Venom Ward'},{code:'spl',name:'Iceblink'},
+      {code:'aar',name:'Silks of the Victor'},{code:'ltp',name:'Heavenly Garb'},{code:'ful',name:'Goldskin'}
     ],
     'Shields': [
-      {code:'uit',name:'Stormshield'},{code:'nef',name:'Lidless Wall'},{code:'xsh',name:"Head Hunter's Glory"},
-      {code:'pa9',name:'Herald of Zakarum'},{code:'8mx',name:'Alma Negra'},
+      {code:'uit',name:'Stormshield'},{code:'xsh',name:'Lidless Wall'},{code:'ush',name:"Head Hunter's Glory"},
+      {code:'pa9',name:'Herald of Zakarum'},{code:'pac',name:'Alma Negra'},
       {code:'buc',name:'Pelta Lunata'},{code:'sml',name:'Umbral Disk'},{code:'lrg',name:'Stormguild'},
-      {code:'kit',name:'Swordback Hold'},{code:'tow',name:'Steelclash'},{code:'gts',name:'Bverrit Keep'},
-      {code:'bsh',name:'The Ward'},{code:'spk',name:'Lance Guard'},{code:'xit',name:'Tiamat\'s Rebuke'},
+      {code:'spk',name:'Swordback Hold'},{code:'kit',name:'Steelclash'},{code:'tow',name:'Bverrit Keep'},
+      {code:'gts',name:'The Ward'},{code:'xpk',name:'Lance Guard'},{code:'xit',name:'Tiamat\'s Rebuke'},
       {code:'upk',name:'Spike Thorn'}
     ],
     'Gloves': [
-      {code:'upl',name:'Steelrend'},{code:'umg',name:"Dracul's Grasp"},{code:'uhg',name:'Laying of Hands'},
-      {code:'xvg',name:"Trang-Oul's Claws"},{code:'xlg',name:'Ghoulhide'},
+      {code:'uhg',name:'Steelrend'},{code:'uvg',name:"Dracul's Grasp"},{code:'ulg',name:'Laying of Hands'},
+      {code:'xmg',name:"Trang-Oul's Claws"},{code:'xmg',name:'Ghoulhide'},
       {code:'lgl',name:'The Hand of Broc'},{code:'vgl',name:'Bloodfist'},{code:'mgl',name:'Chance Guards'},
       {code:'tgl',name:'Magefist'},{code:'hgl',name:'Frostburn'}
     ],
@@ -1172,64 +1172,64 @@
       {code:'tbt',name:'Tearhaunch'}
     ],
     'Belts': [
-      {code:'ulc',name:'Arachnid Mesh'},{code:'uvc',name:"Verdungo's Hearty Cord"},
+      {code:'ulc',name:'Arachnid Mesh'},{code:'umc',name:"Verdungo's Hearty Cord"},
       {code:'zhb',name:"Thundergod's Vigor"},
       {code:'zlb',name:'String of Ears'},{code:'zvb',name:'Razortail'},
       {code:'zmb',name:'Gloom\'s Trap'},{code:'lbl',name:'Lenymo'},{code:'vbl',name:'Snakecord'},
-      {code:'mbl',name:'Nightsmoke'},{code:'hbl',name:'Goldwrap'},{code:'tbl',name:'Bladebuckle'}
+      {code:'mbl',name:'Nightsmoke'},{code:'tbl',name:'Goldwrap'},{code:'hbl',name:'Bladebuckle'}
     ],
     'Weapons - Swords': [
-      {code:'7gm',name:'Doombringer'},{code:'7gd',name:'Ethereal Edge'},{code:'9gm',name:'The Grandfather'},
-      {code:'7cr',name:'Demon Limb'},{code:'7ls',name:'Flamebellow'},{code:'8rx',name:'Headstriker'},
-      {code:'7bs',name:'Lightsabre'},{code:'7fb',name:'Azurewrath'}
+      {code:'7b7',name:'Doombringer'},{code:'7ba',name:'Ethereal Edge'},{code:'7gd',name:'The Grandfather'},
+      {code:'7sp',name:'Demon Limb'},{code:'7gs',name:'Flamebellow'},{code:'9bs',name:'Headstriker'},
+      {code:'7cr',name:'Lightsabre'},{code:'7cr',name:'Azurewrath'}
     ],
     'Weapons - Axes & Maces': [
-      {code:'7gw',name:'Death Cleaver'},{code:'7wh',name:'Windhammer'},{code:'7ws',name:'Cranebeak'},
-      {code:'7b7',name:'Stormlash'},{code:'7b8',name:"Horizon's Tornado"},{code:'7mp',name:"Baranar's Star"},
-      {code:'7wc',name:'Earth Shifter'},{code:'7m7',name:'The Cranium Basher'}
+      {code:'7wa',name:'Death Cleaver'},{code:'7m7',name:'Windhammer'},{code:'7mp',name:'Cranebeak'},
+      {code:'7fl',name:'Stormlash'},{code:'7fl',name:"Horizon's Tornado"},{code:'7mt',name:"Baranar's Star"},
+      {code:'7gm',name:'Earth Shifter'},{code:'7gm',name:'The Cranium Basher'}
     ],
     'Weapons - Polearms & Spears': [
-      {code:'9la',name:'Tomb Reaver'},{code:'7p7',name:"Astreon's Iron Ward"},
-      {code:'xhb',name:'Viperfork'},{code:'7fl',name:'Rift'}
+      {code:'7pa',name:'Tomb Reaver'},{code:'7ws',name:"Astreon's Iron Ward"},
+      {code:'7br',name:'Viperfork'}
     ],
     'Weapons - Bows & Crossbows': [
-      {code:'amf',name:'Windforce'},{code:'aar',name:"Lycander's Aim"},{code:'9bw',name:'Eaglehorn'},
-      {code:'6lw',name:"Gargoyle's Bite"},{code:'6rx',name:'Buriza-Do Kyanon'}
+      {code:'6lw',name:'Windforce'},{code:'am7',name:"Lycander's Aim"},{code:'6l7',name:'Eaglehorn'},
+      {code:'7ts',name:"Gargoyle's Bite"},{code:'8hx',name:'Buriza-Do Kyanon'}
     ],
     'Weapons - Staves & Wands': [
-      {code:'7s8',name:"Mang Song's Lesson"},{code:'7xf',name:"Death's Fathom"},
-      {code:'xlt',name:'The Oculus'},{code:'8sb',name:'Ondal\'s Wisdom'}
+      {code:'6ws',name:"Mang Song's Lesson"},{code:'obf',name:"Death's Fathom"},
+      {code:'oba',name:'The Oculus'},{code:'6cs',name:'Ondal\'s Wisdom'}
     ],
     'Weapons - Throwing': [
-      {code:'6bs',name:'Lacerator'},{code:'6ws',name:'Warshrike'},{code:'6sw',name:'Gimmershred'},
-      {code:'ama',name:"Titan's Revenge"},{code:'7ts',name:'Thunderstroke'}
+      {code:'7b8',name:'Lacerator'},{code:'7bk',name:'Warshrike'},{code:'7ta',name:'Gimmershred'},
+      {code:'ama',name:"Titan's Revenge"},{code:'amf',name:'Thunderstroke'}
     ],
     'Class Items - Amazon': [
-      {code:'ama',name:"Titan's Revenge"},{code:'aar',name:"Lycander's Aim"},
-      {code:'amf',name:"Lycander's Flank"}
+      {code:'ama',name:"Titan's Revenge"},{code:'am7',name:"Lycander's Aim"},
+      {code:'am9',name:"Lycander's Flank"}
     ],
     'Class Items - Sorceress': [
-      {code:'xlt',name:'The Oculus'},{code:'7xf',name:"Death's Fathom"},
-      {code:'7s8',name:"Mang Song's Lesson"}
+      {code:'oba',name:'The Oculus'},{code:'obf',name:"Death's Fathom"},
+      {code:'6ws',name:"Mang Song's Lesson"}
     ],
     'Class Items - Necromancer': [
-      {code:'nee',name:'Homunculus'},{code:'ned',name:'Boneflame'},{code:'nef',name:'Darkforce Spawn'}
+      {code:'nea',name:'Homunculus'},{code:'nee',name:'Boneflame'},{code:'nef',name:'Darkforce Spawn'}
     ],
     'Class Items - Paladin': [
-      {code:'pa9',name:'Herald of Zakarum'},{code:'8mx',name:'Alma Negra'},
+      {code:'pa9',name:'Herald of Zakarum'},{code:'pac',name:'Alma Negra'},
       {code:'paf',name:"Griswold's Honor"}
     ],
     'Class Items - Barbarian': [
-      {code:'8cb',name:"Arreat's Face"},{code:'bae',name:'Vampire Gaze'},
-      {code:'drd',name:"Cerebus' Bite"}
+      {code:'baa',name:"Arreat's Face"},{code:'xh9',name:'Vampire Gaze'},
+      {code:'drb',name:"Cerebus' Bite"}
     ],
     'Class Items - Druid': [
-      {code:'dre',name:'Spirit Keeper'},{code:'drd',name:"Cerebus' Bite"},
-      {code:'zvb',name:"Jalal's Mane"},{code:'zhb',name:'Ravenlore'},{code:'drc',name:'Wolfhowl'}
+      {code:'drd',name:'Spirit Keeper'},{code:'drb',name:"Cerebus' Bite"},
+      {code:'dra',name:"Jalal's Mane"},{code:'dre',name:'Ravenlore'},{code:'bac',name:'Wolfhowl'}
     ],
     'Class Items - Assassin': [
-      {code:'obf',name:"Bartuc's Cut-Throat"},{code:'9gi',name:"Firelizard's Talons"},
-      {code:'9lw',name:'Jade Talon'}
+      {code:'9tw',name:"Bartuc's Cut-Throat"},{code:'7lw',name:"Firelizard's Talons"},
+      {code:'7wb',name:'Jade Talon'}
     ],
     'Jewelry': [
       {code:'rin',name:'The Stone of Jordan'},{code:'rin',name:'Bul-Kathos\' Wedding Band'},
@@ -1371,7 +1371,7 @@
 
     function updateGrailPreview() {
       var style = getGrailStyle();
-      var example = buildGrailLine("Mang Song's Lesson", '7s8', style);
+      var example = buildGrailLine("Mang Song's Lesson", '6ws', style);
       var previewEl = document.getElementById('grail-style-preview');
       // Render colored preview
       var colorMap = {'%PURPLE%':'#a000c8','%RED%':'#ff4040','%ORANGE%':'#ff8000','%YELLOW%':'#ffff40','%GREEN%':'#00c000','%BLUE%':'#6464ff','%GOLD%':'#c8a040','%WHITE%':'#ffffff','%TEAL%':'#008080'};
