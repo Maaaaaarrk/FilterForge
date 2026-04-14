@@ -61,17 +61,17 @@
     'rune-sol': { code: 'r12s', name: 'Sol Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 12, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
     'rune-el': { code: 'r01s', name: 'El Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 1, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
     // Unique items (!ID — unidentified, %NAME% shows base type name)
-    'uni-shako': { code: 'uap', name: 'Shako', flags: ['GROUND', 'UNI', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 69, DEF: 141, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'uni-griffon': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'UNI', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, DEF: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'uni-coa': { code: 'urn', name: 'Corona', flags: ['GROUND', 'UNI', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 85, DEF: 349, SOCKETS: 2, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'uni-arach': { code: 'ulc', name: 'Spiderweb Sash', flags: ['GROUND', 'UNI', 'ELT', 'BELT', 'ARMOR', 'EQ6'], values: { ILVL: 85, DEF: 119, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'uni-stormshield': { code: 'uit', name: 'Monarch', flags: ['GROUND', 'UNI', 'ELT', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 85, DEF: 136, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'uni-shako': { code: 'uap', name: 'Shako', flags: ['GROUND', 'UNI', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 69, DEF: 141, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, MAXSOCKETS: 2, REQLVL: 43, REQSTR: 50 } },
+    'uni-griffon': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'UNI', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, DEF: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, MAXSOCKETS: 3, REQLVL: 64 } },
+    'uni-coa': { code: 'urn', name: 'Corona', flags: ['GROUND', 'UNI', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 85, DEF: 349, SOCKETS: 2, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, MAXSOCKETS: 2, REQLVL: 66, REQSTR: 111 } },
+    'uni-arach': { code: 'ulc', name: 'Spiderweb Sash', flags: ['GROUND', 'UNI', 'ELT', 'BELT', 'ARMOR', 'EQ6'], values: { ILVL: 85, DEF: 119, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 1, AREA: 2, REQLVL: 51, REQSTR: 50 } },
+    'uni-stormshield': { code: 'uit', name: 'Monarch', flags: ['GROUND', 'UNI', 'ELT', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 85, DEF: 136, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 3, AREA: 6, MAXSOCKETS: 4, BASEBLOCK: 52, REQLVL: 54, REQSTR: 156 } },
     'uni-facet': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'UNI', 'JEWELRY'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'uni-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'UNI', 'JEWELRY'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'uni-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'UNI', 'JEWELRY'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'uni-anni': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'uni-torch': { code: 'cm2', name: 'Large Charm', flags: ['GROUND', 'UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'uni-gheeds': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'uni-anni': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 1, AREA: 1 } },
+    'uni-torch': { code: 'cm2', name: 'Large Charm', flags: ['GROUND', 'UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 2, AREA: 2 } },
+    'uni-gheeds': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3 } },
     // Set items (!ID — unidentified, %NAME% shows base type name)
     'set-ik-armor': { code: 'uth', name: 'Lacquered Plate', flags: ['GROUND', 'SET', 'ELT', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 487, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'set-tal-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'SET', 'JEWELRY'], values: { ILVL: 26, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
@@ -81,35 +81,35 @@
     'rare-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'RARE', 'JEWELRY'], values: { ILVL: 85, ALVL: 81, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'rare-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'RARE', 'JEWELRY'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'rare-circlet': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'RARE', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, DEF: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'rare-boots-elt': { code: 'uhb', name: 'Myrmidon Greaves', flags: ['GROUND', 'RARE', 'ELT', 'BOOTS', 'ARMOR', 'EQ5'], values: { ILVL: 85, DEF: 62, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'rare-gloves-elt': { code: 'utg', name: 'Crusader Gauntlets', flags: ['GROUND', 'RARE', 'ELT', 'GLOVES', 'ARMOR', 'EQ4'], values: { ILVL: 85, DEF: 59, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'rare-boots-elt': { code: 'uhb', name: 'Myrmidon Greaves', flags: ['GROUND', 'RARE', 'ELT', 'BOOTS', 'ARMOR', 'EQ5'], values: { ILVL: 85, DEF: 62, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, REQSTR: 208, REQLVL: 67, BASEMINKICK: 23, BASEMAXKICK: 59 } },
+    'rare-gloves-elt': { code: 'utg', name: 'Crusader Gauntlets', flags: ['GROUND', 'RARE', 'ELT', 'GLOVES', 'ARMOR', 'EQ4'], values: { ILVL: 85, DEF: 59, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, REQSTR: 151, REQLVL: 65 } },
     'craft-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'CRAFT', 'JEWELRY'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     // Magic items (!ID — unidentified, %NAME% shows base type name)
     'mag-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 45, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 85, CRAFTALVL: 90, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'mag-gc-99': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'mag-gc': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'mag-sc': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'mag-lc': { code: 'cm2', name: 'Large Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'mag-gc-99': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3 } },
+    'mag-gc': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3 } },
+    'mag-sc': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 1, AREA: 1 } },
+    'mag-lc': { code: 'cm2', name: 'Large Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 2, AREA: 2 } },
     'mag-monarch': { code: 'uit', name: 'Monarch', flags: ['GROUND', 'MAG', 'ELT', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 72, DEF: 133, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     // Runeword bases
-    'base-eth-ap': { code: 'utp', name: 'Archon Plate', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'SUP', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 524, SOCKETS: 4, ED: 15, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-monarch-4': { code: 'uit', name: 'Monarch', flags: ['GROUND', 'NMAG', 'ELT', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 72, DEF: 133, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-pb-5': { code: '7cr', name: 'Phase Blade', flags: ['GROUND', 'NMAG', 'ELT', 'SWORD', 'WEAPON', '1H'], values: { ILVL: 73, SOCKETS: 5, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-eth-thresh': { code: '7s7', name: 'Thresher', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'POLEARM', 'WEAPON', '2H'], values: { ILVL: 85, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-eth-zerker': { code: '7wa', name: 'Berserker Axe', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'AXE', 'WEAPON', '1H'], values: { ILVL: 85, SOCKETS: 5, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-eth-cb': { code: '7gd', name: 'Colossus Blade', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'SWORD', 'WEAPON', '2H'], values: { ILVL: 85, SOCKETS: 6, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-diadem-0': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'NMAG', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, SOCKETS: 0, MAXSOCKETS: 3, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-flail-4': { code: 'fla', name: 'Flail', flags: ['GROUND', 'NMAG', 'NORM', 'MACE', 'WEAPON', '1H'], values: { ILVL: 36, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-crystal-4': { code: 'crs', name: 'Crystal Sword', flags: ['GROUND', 'NMAG', 'NORM', 'SWORD', 'WEAPON', '1H'], values: { ILVL: 26, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'base-pala-45res': { code: 'pab', name: 'Sacred Targe', flags: ['GROUND', 'NMAG', 'ELT', 'DIN', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 85, SOCKETS: 4, RES: 45, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'base-eth-ap': { code: 'utp', name: 'Archon Plate', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'SUP', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 524, SOCKETS: 4, ED: 15, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 3, AREA: 6, MAXSOCKETS: 4, REQSTR: 103, REQLVL: 63 } },
+    'base-monarch-4': { code: 'uit', name: 'Monarch', flags: ['GROUND', 'NMAG', 'ELT', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 72, DEF: 133, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 3, AREA: 6, MAXSOCKETS: 4, BASEBLOCK: 52, REQSTR: 156, REQLVL: 54 } },
+    'base-pb-5': { code: '7cr', name: 'Phase Blade', flags: ['GROUND', 'NMAG', 'ELT', 'SWORD', 'WEAPON', '1H'], values: { ILVL: 73, SOCKETS: 5, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3, MAXSOCKETS: 3, REQDEX: 136, REQSTR: 25, REQLVL: 54, BASEMINONEH: 31, BASEMAXONEH: 35 } },
+    'base-eth-thresh': { code: '7s7', name: 'Thresher', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'POLEARM', 'WEAPON', '2H'], values: { ILVL: 85, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 4, AREA: 8, MAXSOCKETS: 4, REQSTR: 152, REQDEX: 118, REQLVL: 53, BASEMINTWOH: 12, BASEMAXTWOH: 141 } },
+    'base-eth-zerker': { code: '7wa', name: 'Berserker Axe', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'AXE', 'WEAPON', '1H'], values: { ILVL: 85, SOCKETS: 5, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 3, AREA: 6, MAXSOCKETS: 6, REQSTR: 138, REQDEX: 59, REQLVL: 64, BASEMINONEH: 24, BASEMAXONEH: 71 } },
+    'base-eth-cb': { code: '7gd', name: 'Colossus Blade', flags: ['GROUND', 'NMAG', 'ELT', 'ETH', 'SWORD', 'WEAPON', '2H'], values: { ILVL: 85, SOCKETS: 6, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 4, AREA: 8, MAXSOCKETS: 6, REQSTR: 189, REQDEX: 110, REQLVL: 63, BASEMINONEH: 25, BASEMAXONEH: 65, BASEMINTWOH: 58, BASEMAXTWOH: 115 } },
+    'base-diadem-0': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'NMAG', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, SOCKETS: 0, MAXSOCKETS: 3, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, REQLVL: 64 } },
+    'base-flail-4': { code: 'fla', name: 'Flail', flags: ['GROUND', 'NMAG', 'NORM', 'MACE', 'WEAPON', '1H'], values: { ILVL: 36, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3, MAXSOCKETS: 3, REQDEX: 35, REQSTR: 41, REQLVL: 15, BASEMINONEH: 1, BASEMAXONEH: 24 } },
+    'base-crystal-4': { code: 'crs', name: 'Crystal Sword', flags: ['GROUND', 'NMAG', 'NORM', 'SWORD', 'WEAPON', '1H'], values: { ILVL: 26, SOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3, MAXSOCKETS: 3, REQSTR: 43, REQLVL: 11, BASEMINONEH: 5, BASEMAXONEH: 15 } },
+    'base-pala-45res': { code: 'pab', name: 'Sacred Targe', flags: ['GROUND', 'NMAG', 'ELT', 'DIN', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 85, SOCKETS: 4, RES: 45, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, MAXSOCKETS: 4, BASEBLOCK: 60, REQSTR: 86, REQLVL: 47, BASEMINSMITE: 6, BASEMAXSMITE: 14 } },
     // Normal items
     'norm-cap': { code: 'cap', name: 'Cap', flags: ['GROUND', 'NMAG', 'NORM', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 1, DEF: 3, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'norm-belt-elt': { code: 'uhc', name: 'Colossus Girdle', flags: ['GROUND', 'NMAG', 'ELT', 'BELT', 'ARMOR', 'EQ6'], values: { ILVL: 85, DEF: 71, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'norm-1os': { code: 'hlm', name: 'Helm', flags: ['GROUND', 'NMAG', 'NORM', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 10, DEF: 15, SOCKETS: 1, RUNE: 0, GOLD: 0, GEM: 0 } },
     'norm-inf': { code: 'lea', name: 'Leather Armor', flags: ['GROUND', 'NMAG', 'NORM', 'INF', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 5, DEF: 12, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'norm-sup-ap': { code: 'utp', name: 'Archon Plate', flags: ['GROUND', 'NMAG', 'ELT', 'SUP', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 524, SOCKETS: 0, ED: 15, MAXSOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'norm-sup-ap': { code: 'utp', name: 'Archon Plate', flags: ['GROUND', 'NMAG', 'ELT', 'SUP', 'CHEST', 'ARMOR', 'EQ2'], values: { ILVL: 85, DEF: 524, SOCKETS: 0, ED: 15, MAXSOCKETS: 4, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 3, AREA: 6, REQSTR: 103, REQLVL: 63 } },
     // Consumables
     'gold-5000': { code: 'gold', name: '5000 Gold', flags: ['GROUND'], values: { GOLD: 5000, ILVL: 0, SOCKETS: 0, RUNE: 0, GEM: 0 } },
     'gold-500': { code: 'gold', name: '500 Gold', flags: ['GROUND'], values: { GOLD: 500, ILVL: 0, SOCKETS: 0, RUNE: 0, GEM: 0 } },
@@ -851,7 +851,7 @@
       var escapedConds = escapeForHtml(conditions);
       // Replace $f(...) with a placeholder to avoid word-token warnings inside formulas
       var formulaPlaceholders = [];
-      escapedConds = escapedConds.replace(/\$f\([^)]*\)/g, function (m) {
+      escapedConds = escapedConds.replace(/\$f\((?:[^()]*|\([^()]*\))*\)/g, function (m) {
         var idx = formulaPlaceholders.length;
         formulaPlaceholders.push(m);
         return '\x00FORMULA_PH_' + idx + '\x00';
@@ -2251,7 +2251,7 @@
     // Formula references — show 0 in preview (real values computed by BH client)
     text = text.replace(/%FORMULA[A-Z_0-9]+%/g, '0');
     // Inline $f(...) formulas — show 0 in preview (real values computed by BH client)
-    text = text.replace(/\$f\([^)]*\)/g, '0');
+    text = text.replace(/\$f\((?:[^()]*|\([^()]*\))*\)/g, '0');
     // Generic STAT### tokens — show 0 for unknown
     text = text.replace(/%STAT\d+%/g, '0');
     text = text.replace(/%CLSK\d+%/g, '0');
