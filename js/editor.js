@@ -1513,6 +1513,45 @@
       if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', updateGrailPreview);
     });
 
+    // Import grail data from ?graildata= URL parameter (e.g. from pd2grail.com).
+    // Payload: base64(JSON.stringify({ found: ["ItemName", ...] }))
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var grailParam = params.get('graildata');
+      if (!grailParam) return;
+      try {
+        var payload = JSON.parse(atob(grailParam));
+        if (!Array.isArray(payload.found)) return;
+        // Build reverse lookup: item name -> categories it appears in
+        var nameMap = {};
+        Object.keys(GRAIL_DATA).forEach(function (cat) {
+          GRAIL_DATA[cat].forEach(function (item) {
+            if (!nameMap[item.name]) nameMap[item.name] = [];
+            nameMap[item.name].push(cat);
+          });
+        });
+        var count = 0;
+        payload.found.forEach(function (name) {
+          var cats = nameMap[name];
+          if (!cats) return;
+          cats.forEach(function (cat) {
+            var key = cat + ':' + name;
+            if (!found[key]) { found[key] = true; count++; }
+          });
+        });
+        if (count > 0) saveGrail();
+        params.delete('graildata');
+        history.replaceState(null, '', window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash);
+        if (count > 0) {
+          var notice = document.createElement('div');
+          notice.className = 'grail-import-notice';
+          notice.textContent = '\u2713 ' + count + ' item' + (count !== 1 ? 's' : '') + ' imported from Project Grail';
+          grailList.insertAdjacentElement('beforebegin', notice);
+          setTimeout(function () { if (notice.parentNode) notice.parentNode.removeChild(notice); }, 6000);
+        }
+      } catch (e) {}
+    }());
+
     renderGrail('');
     updateGrailPreview();
   }
