@@ -1513,6 +1513,49 @@
       if (el) el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', updateGrailPreview);
     });
 
+    // Import grail data from ?graildata= URL parameter (e.g. from pd2grail.com).
+    // Payload: base64(JSON.stringify({ found: ["ItemName", ...] }))
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var grailParam = params.get('graildata');
+      if (!grailParam) return;
+      if (grailParam.length > 100000) return;
+      try {
+        var payload = JSON.parse(atob(grailParam));
+        if (!Array.isArray(payload.found)) return;
+        // Object.create(null) so payload entries like "__proto__" or "toString"
+        // don't hit inherited properties and short-circuit the import.
+        var nameMap = Object.create(null);
+        Object.keys(GRAIL_DATA).forEach(function (cat) {
+          GRAIL_DATA[cat].forEach(function (item) {
+            if (!nameMap[item.name]) nameMap[item.name] = [];
+            nameMap[item.name].push(cat);
+          });
+        });
+        var count = 0;
+        payload.found.forEach(function (name) {
+          var cats = nameMap[name];
+          if (!cats) return;
+          cats.forEach(function (cat) {
+            var key = cat + ':' + name;
+            if (!found[key]) { found[key] = true; count++; }
+          });
+        });
+        if (count > 0) saveGrail();
+        params.delete('graildata');
+        history.replaceState(null, '', window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash);
+        var notice = document.createElement('div');
+        notice.className = count > 0 ? 'grail-import-notice' : 'grail-import-notice empty';
+        notice.textContent = count > 0
+          ? '\u2713 ' + count + ' item' + (count !== 1 ? 's' : '') + ' imported from Project Grail'
+          : 'No matching items in imported grail data';
+        grailList.insertAdjacentElement('beforebegin', notice);
+        setTimeout(function () { if (notice.parentNode) notice.parentNode.removeChild(notice); }, 6000);
+      } catch (e) {
+        console.warn('Grail import failed', e);
+      }
+    }());
+
     renderGrail('');
     updateGrailPreview();
   }
