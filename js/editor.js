@@ -1519,11 +1519,13 @@
       var params = new URLSearchParams(window.location.search);
       var grailParam = params.get('graildata');
       if (!grailParam) return;
+      if (grailParam.length > 100000) return;
       try {
         var payload = JSON.parse(atob(grailParam));
         if (!Array.isArray(payload.found)) return;
-        // Build reverse lookup: item name -> categories it appears in
-        var nameMap = {};
+        // Object.create(null) so payload entries like "__proto__" or "toString"
+        // don't hit inherited properties and short-circuit the import.
+        var nameMap = Object.create(null);
         Object.keys(GRAIL_DATA).forEach(function (cat) {
           GRAIL_DATA[cat].forEach(function (item) {
             if (!nameMap[item.name]) nameMap[item.name] = [];
@@ -1542,14 +1544,16 @@
         if (count > 0) saveGrail();
         params.delete('graildata');
         history.replaceState(null, '', window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash);
-        if (count > 0) {
-          var notice = document.createElement('div');
-          notice.className = 'grail-import-notice';
-          notice.textContent = '\u2713 ' + count + ' item' + (count !== 1 ? 's' : '') + ' imported from Project Grail';
-          grailList.insertAdjacentElement('beforebegin', notice);
-          setTimeout(function () { if (notice.parentNode) notice.parentNode.removeChild(notice); }, 6000);
-        }
-      } catch (e) {}
+        var notice = document.createElement('div');
+        notice.className = count > 0 ? 'grail-import-notice' : 'grail-import-notice empty';
+        notice.textContent = count > 0
+          ? '\u2713 ' + count + ' item' + (count !== 1 ? 's' : '') + ' imported from Project Grail'
+          : 'No matching items in imported grail data';
+        grailList.insertAdjacentElement('beforebegin', notice);
+        setTimeout(function () { if (notice.parentNode) notice.parentNode.removeChild(notice); }, 6000);
+      } catch (e) {
+        console.warn('Grail import failed', e);
+      }
     }());
 
     renderGrail('');

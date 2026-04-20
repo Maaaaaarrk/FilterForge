@@ -865,6 +865,12 @@
   font-size: 0.82rem;
 }
 
+.grail-import-notice.empty {
+  background: #3a321a;
+  border-color: #8a7a4a;
+  color: #e0cc88;
+}
+
 .grail-category {
   margin-bottom: 0.75rem;
 }
