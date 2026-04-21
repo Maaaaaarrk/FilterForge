@@ -805,10 +805,10 @@
   var highlightEl = document.getElementById('code-highlight');
 
   // Known valid condition tokens for validation
-  var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','EQUIPPED','INVENTORY','STASH','CUBE','SHOP','MERC','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7'];
+  var KNOWN_FLAGS = ['UNI','SET','RARE','MAG','NMAG','CRAFT','ETH','SUP','INF','ID','RW','NORM','EXC','ELT','ARMOR','WEAPON','HELM','CHEST','SHIELD','GLOVES','BOOTS','BELT','CIRC','AXE','MACE','CLUB','HAMMER','TMACE','SWORD','DAGGER','SPEAR','POLEARM','BOW','XBOW','STAFF','WAND','SCEPTER','JAV','THROWING','JEWELRY','CHARM','QUIVER','MISC','GEMMED','GROUND','EQUIPPED','INVENTORY','STASH','CUBE','SHOP','MERC','1H','2H','CLASS','ZON','SOR','NEC','DIN','BAR','DRU','SIN','AMAZON','SORCERESS','NECROMANCER','PALADIN','BARBARIAN','DRUID','ASSASSIN','CL1','CL2','CL3','CL4','CL5','CL6','CL7','EQ1','EQ2','EQ3','EQ4','EQ5','EQ6','EQ7','WP1','WP2','WP3','WP4','WP5','WP6','WP7','WP8','WP9','WP10','WP11','WP12','WP13'];
   var KNOWN_NEGATES = KNOWN_FLAGS.map(function (f) { return '!' + f; });
-  var KNOWN_VALUE_CODES = ['SOCKETS','SOCK','DEF','ED','EDEF','EDAM','ILVL','CLVL','ALVL','QLVL','RUNE','GOLD','PRICE','SELLPRICE','FRES','CRES','LRES','PRES','RES','STR','DEX','LIFE','MANA','FCR','IAS','FHR','FRW','MFIND','LVLREQ','MAXSOCKETS','GEMLEVEL','GEM','GEMTYPE','FILTLVL','DIFF','MAPID','MAPTIER','ALLSK','QTY','TABSK0','TABSK1','TABSK2','TABSK3','TABSK4','TABSK5','TABSK6','CHARSTAT','WIDTH','HEIGHT','AREA','UPDEX','UPSTR','UPLVL','MAXRES','ALLATTRIB','BASEBLOCK','REQLVL','REQSTR','REQDEX','BASEMINONEH','BASEMAXONEH','BASEMINTWOH','BASEMAXTWOH','BASEMINSMITE','BASEMAXSMITE','BASEMINTHROW','BASEMAXTHROW','BASEMINKICK','BASEMAXKICK'];
-  var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY','LVLREQ','WIDTH','HEIGHT','AREA','UPDEX','UPSTR','UPLVL','MAXRES','ALLATTRIB','BASEBLOCK','REQLVL','REQSTR','REQDEX','BASEMINONEH','BASEMAXONEH','BASEMINTWOH','BASEMAXTWOH','BASEMINSMITE','BASEMAXSMITE','BASEMINTHROW','BASEMAXTHROW','BASEMINKICK','BASEMAXKICK'];
+  var KNOWN_VALUE_CODES = ['SOCKETS','SOCK','DEF','ED','EDEF','EDAM','ILVL','CLVL','ALVL','QLVL','RUNE','GOLD','PRICE','SELLPRICE','BUYPRICE','FRES','CRES','LRES','PRES','RES','STR','DEX','LIFE','MANA','AR','ARPER','MINDMG','MAXDMG','MAXDUR','FCR','IAS','FHR','FBR','FRW','MFIND','GFIND','LVLREQ','MAXSOCKETS','GEMLEVEL','GEM','GEMTYPE','FILTLVL','DIFF','MAPID','MAPTIER','ALLSK','QTY','TABSK0','TABSK1','TABSK2','TABSK3','TABSK4','TABSK5','TABSK6','CHARSTAT','WIDTH','HEIGHT','AREA','UPDEX','UPSTR','UPLVL','MAXRES','ALLATTRIB','BASEBLOCK','REQLVL','REQSTR','REQDEX','BASEMINONEH','BASEMAXONEH','BASEMINTWOH','BASEMAXTWOH','BASEMINSMITE','BASEMAXSMITE','BASEMINTHROW','BASEMAXTHROW','BASEMINKICK','BASEMAXKICK','DTM','FOOLS','MAEK','OS','REPAIR','REPLIFE','PREFIX','SUFFIX','AUTOMOD'];
+  var KNOWN_OUTPUT_TOKENS = ['NAME','RUNENAME','RUNENUM','ILVL','ALVL','CRAFTALVL','REROLLALVL','SOCKETS','SOCK','MAXSOCKETS','DEF','ED','EDEF','EDAM','RES','PRICE','SELLPRICE','BUYPRICE','QTY','MAPTIER','BASENAME','CODE','RANGE','WPNSPD','GEMTYPE','GEMLEVEL','CONTINUE','NL','CL','CS','WHITE','GRAY','RED','GREEN','DARK_GREEN','BLUE','GOLD','YELLOW','ORANGE','PURPLE','TAN','BLACK','CORAL','SAGE','TEAL','LIGHT_GRAY','LVLREQ','STR','DEX','AR','WIDTH','HEIGHT','AREA','UPDEX','UPSTR','UPLVL','MAXRES','ALLATTRIB','BASEBLOCK','REQLVL','REQSTR','REQDEX','BASEMINONEH','BASEMAXONEH','BASEMINTWOH','BASEMAXTWOH','BASEMINSMITE','BASEMAXSMITE','BASEMINTHROW','BASEMAXTHROW','BASEMINKICK','BASEMAXKICK'];
 
   function escapeForHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -4118,76 +4118,76 @@
         ['SK30','LghtBolt',0],['SK31','ChrgStrk',1],['SK32','PlgJav',1],['SK33','Fend',0],
         ['SK34','LghtStrk',1],['SK35','LghtFury',1]
       ];
-      // Sorceress
+      // Sorceress — IDs and names per PD2 wiki + HiimFilter staffmod upstream
       var sorSkills = [
-        ['SK36','FireBolt',0],['SK37','Warmth',0],['SK38','Inferno',0],['SK39','Blaze',0],
-        ['SK40','FireBall',1],['SK41','FireWall',0],['SK42','Enchant',1],['SK43','Meteor',1],
-        ['SK44','FireMstry',1],['SK45','Hydra',1],
-        ['SK46','ChrgBolt',0],['SK47','StatFld',0],['SK48','Telekinesis',0],['SK49','Nova',1],
-        ['SK50','ShivArm',1],['SK51','Lghtn',1],['SK52','ChainLght',1],['SK53','ThndStorm',1],
-        ['SK54','Teleport',1],['SK55','LghtMstry',1],['SK56','EnrgShld',1],
-        ['SK57','FrstBolt',0],['SK58','IceBlst',0],['SK59','FrstNova',1],['SK60','Blizzard',1],
-        ['SK61','GlacSpike',1],['SK62','ColdMstry',1],['SK63','FrzOrb',1],['SK64','ShvrArm',1],
-        ['SK65','ColdSnap',1]
+        ['SK36','FireBlt',1],['SK37','Warmth',1],['SK38','ChrgBlt',1],['SK39','IceBlt',1],
+        ['SK40','ColdEncht',1],['SK41','Inferno',1],['SK42','Static',1],['SK43','Teleki',1],
+        ['SK44','FrstNova',1],['SK45','IceBlst',1],
+        ['SK46','Blaze',1],['SK47','FireBall',1],['SK48','Nova',1],['SK49','Lightning',1],
+        ['SK50','ShivArm',1],['SK51','FireWall',1],['SK52','EnchtFire',1],['SK53','ChainLight',1],
+        ['SK54','Tele',1],['SK55','GlacSpk',1],['SK56','Meteor',1],['SK57','TStorm',1],
+        ['SK58','EnrgShld',1],['SK59','Blizz',1],['SK60','ChilArm',1],['SK61','FireMstr',1],
+        ['SK62','Hydra',1],['SK63','LightMstr',1],['SK64','FOrb',1],['SK65','ColdMstr',1],
+        ['SK369','IceBarr',1],['SK376','Combust',1],['SK383','LilHydra',1]
       ];
-      // Necromancer
+      // Necromancer — IDs and names per PD2 wiki + HiimFilter staffmod upstream
       var necSkills = [
-        ['SK66','AmpDmg',1],['SK67','Terror',1],['SK68','Weaken',1],['SK69','LifeTap',1],
-        ['SK70','IronMaid',1],['SK71','Confuse',0],['SK72','Attract',0],['SK73','Decrepify',1],
-        ['SK74','LwrRes',1],['SK75','DimVsn',1],
-        ['SK79','SkeletonMsry',1],['SK80','CorpExpl',1],['SK83','BneSpear',1],
-        ['SK84','BneWall',1],['SK85','BnePrison',1],['SK87','BneSpirit',1],
-        ['SK89','PsnNova',1],['SK91','PsnExpl',0],['SK92','Revive',1],
-        ['SK94','SkelMage',1],['SK95','BloodGolem',1]
+        ['SK66','AmpDmg',1],['SK67','Teeth',1],['SK68','BneArm',1],['SK69','SkelMastr',1],
+        ['SK70','SkelWarr',1],['SK71','DimVis',0],['SK72','Weaken',0],['SK73','PsnStk',1],
+        ['SK74','CrpsExpl',1],['SK75','ClayGol',1],['SK76','IrnMdn',0],['SK77','Terror',0],
+        ['SK78','BneWal',0],['SK79','GolMastr',1],['SK80','SkeleMge',1],['SK81','Confuse',0],
+        ['SK82','LTap',0],['SK83','Desecrate',1],['SK84','BneSpr',1],['SK85','BlodGol',1],
+        ['SK86','Attrct',0],['SK87','Decrep',1],['SK88','BnePris',0],['SK89','SkeleArchr',1],
+        ['SK90','IrnGol',0],['SK91','LwrRes',1],['SK92','PsnNova',1],['SK93','BneSpirt',0],
+        ['SK94','FireGol',1],['SK95','Revive',1],
+        ['SK367','BWarp',1],['SK374','CurMastr',0],['SK381','DPact',1]
       ];
-      // Paladin
+      // Paladin — IDs and names per PD2 wiki + HiimFilter staffmod upstream
       var palSkills = [
-        ['SK99','Sacrifice',1],['SK101','HlyBolt',1],['SK102','Zeal',1],
-        ['SK105','Charge',1],['SK109','Vengeance',1],['SK110','BlessHammer',1],
-        ['SK111','Conversion',0],['SK112','HlyShld',1],['SK113','FistHvns',1],
-        ['SK114','Might',1],['SK116','HlyFire',1],['SK117','Thorns',0],
-        ['SK118','Defiance',1],['SK119','Resist',1],['SK121','Cleansing',1],
-        ['SK122','Vigor',1],['SK123','Meditate',1],['SK125','Conviction',1],
-        ['SK364','Fanaticism',1]
+        ['SK96','Sac',0],['SK97','Smite',0],['SK98','Might',0],['SK99','Pray',1],
+        ['SK100','ResFire',1],['SK101','HlyBlt',1],['SK102','HlyFire',1],['SK103','Thorn',0],
+        ['SK104','Defiance',0],['SK105','ResCold',1],['SK106','Zeal',0],['SK107','Chrge',0],
+        ['SK108','BlessAim',0],['SK109','Cleanse',1],['SK110','ResLght',0],['SK111','Veng',1],
+        ['SK112','BlssHamr',1],['SK113','Conc',1],['SK114','HlyFrz',1],['SK115','Vigor',0],
+        ['SK116','HlySwd',1],['SK117','HlyShld',1],['SK118','HlyShck',1],['SK119','Sanc',1],
+        ['SK120','Meditat',0],['SK121','FOH',1],['SK122','Fanat',1],['SK123','Convic',1],
+        ['SK124','Redempt',0],['SK125','Salv',1],
+        ['SK364','HlyNova',1],['SK371','HlyLght',0],['SK378','Joust',0]
       ];
-      // Barbarian
+      // Barbarian — IDs and names per PD2 wiki + HiimFilter staffmod upstream
       var barSkills = [
-        ['SK126','Bash',0],['SK128','GenMstry',1],['SK130','Howl',0],
-        ['SK131','FindPot',0],['SK132','Taunt',0],['SK133','Shout',1],
-        ['SK134','Stun',1],['SK135','DblSwng',1],['SK136','Leap',1],
-        ['SK137','DblThrow',0],['SK138','LeapAtk',1],['SK139','Concentrate',0],
-        ['SK140','IrnSkin',1],['SK141','BattleCry',1],['SK142','Frenzy',0],
-        ['SK143','Whirlwind',1],['SK144','Berserk',0],['SK145','NatRes',1],
-        ['SK146','WarCry',1],['SK147','BattleOrders',1],['SK148','GrimWrd',1],
-        ['SK149','BattleCommand',1],['SK150','FindItem',0],['SK151','IncSpeed',1],
-        ['SK153','CombMstry',1],['SK154','AxeMstry',1],['SK155','MaceMstry',1],['SK368','PolearmMstry',1]
+        ['SK126','Bash',0],['SK128','GenMstry',1],['SK130','Howl',0],['SK131','FindPot',0],
+        ['SK132','Leap',0],['SK133','DblSwng',1],['SK134','PolSprMstry',1],['SK135','ThrwMstry',1],
+        ['SK136','SprMstry',1],['SK137','Taunt',0],['SK138','Shout',0],['SK139','Stun',0],
+        ['SK140','DblThrw',1],['SK141','CmbtRflx',1],['SK142','FindItem',0],['SK143','LeapAtk',1],
+        ['SK144','Concnt',0],['SK145','IrnSkn',1],['SK146','BattleCry',1],['SK147','Frenzy',1],
+        ['SK148','IncSpd',1],['SK149','BattleOrd',1],['SK150','GrimWrd',0],['SK151','Whirlwind',1],
+        ['SK152','Berserk',0],['SK153','NatRes',1],['SK154','WarCry',1],['SK155','BattleCmd',1],
+        ['SK368','DeepWnd',1]
       ];
-      // Druid
+      // Druid — IDs and names per PD2 wiki + HiimFilter staffmod upstream
       var druSkills = [
-        ['SK222','Raven',1],['SK223','PlagPoppy',0],['SK224','OakSage',1],
-        ['SK225','SumSpirit',0],['SK226','Carrion',1],['SK227','HoW',1],
-        ['SK228','SumGrizzly',1],['SK229','SumDire',1],
-        ['SK230','Werewolf',0],['SK231','Lycanthrpy',0],['SK232','Werebear',0],
-        ['SK233','FeralRage',0],['SK234','Maul',0],['SK235','Rabies',1],
-        ['SK236','FireClaws',1],['SK237','Hunger',1],['SK238','ShockWave',0],
-        ['SK239','Fury',0],
-        ['SK240','Firestorm',0],['SK241','MoltenBldr',0],['SK242','Arctic',0],
-        ['SK243','Fissure',1],['SK244','CycloneArmr',1],['SK245','Twister',1],
-        ['SK246','Volcano',1],['SK247','Tornado',1],['SK248','Armageddon',1],
-        ['SK249','Hurricane',1],['SK370','SumVine',1]
+        ['SK221','Raven',0],['SK222','PsnCrpr',1],['SK223','Werewolf',0],['SK224','Lycan',0],
+        ['SK225','Firestorm',0],['SK226','OakSage',1],['SK227','SprWolf',0],['SK228','Werebear',0],
+        ['SK229','MoltnBldr',1],['SK230','ArcBlst',0],['SK231','CarrVine',0],['SK232','FrlRage',0],
+        ['SK233','Maul',0],['SK234','Fissure',1],['SK235','CycArm',1],['SK236','HoW',1],
+        ['SK237','DireWolf',1],['SK238','Rabies',0],['SK239','FireClaws',0],['SK240','Twister',1],
+        ['SK241','SolCrpr',0],['SK242','Hunger',0],['SK243','ShkWave',0],['SK244','Volcano',1],
+        ['SK245','Tornado',1],['SK246','SprBarbs',0],['SK247','Grizzly',1],['SK248','Fury',0],
+        ['SK249','Armageddon',1],['SK250','Hurricane',0],
+        ['SK370','Gust',1]
       ];
-      // Assassin
+      // Assassin — IDs and names per PD2 wiki + HiimFilter staffmod upstream
       var sinSkills = [
-        ['SK251','FireBlast',0],['SK252','ClawMstry',1],['SK253','PsyHammer',0],
-        ['SK254','TigerStrk',0],['SK255','DrgnTalon',0],['SK256','ShckWeb',0],
-        ['SK257','BladeSent',1],['SK258','BurstSpd',1],['SK259','FistOFire',1],
-        ['SK260','DrgnClaw',0],['SK261','ChrgBoltSent',1],['SK262','WakeOFire',1],
-        ['SK263','WpnBlock',1],['SK264','CloakShadow',0],['SK265','CobraStrk',0],
-        ['SK266','BladeFury',1],['SK267','Fade',1],['SK268','ShadowWarr',0],
-        ['SK269','ClawsThund',1],['SK270','DrgnTail',0],['SK271','LghtSent',1],
-        ['SK272','WakeInferno',1],['SK273','MindBlast',1],['SK274','BladeIce',1],
-        ['SK275','DrgnFlight',1],['SK276','DeathSent',1],['SK277','BladeShield',1],
-        ['SK278','Venom',1],['SK279','ShadowMstr',0],['SK280','PhnxStrk',1],['SK366','LghtSentry',1]
+        ['SK251','FireBlst',0],['SK252','ClwMast',1],['SK253','PsyHamr',0],['SK254','TigerStrk',0],
+        ['SK255','DrgTaln',0],['SK256','ShckWeb',0],['SK257','BldSent',1],['SK258','BurstSpd',1],
+        ['SK259','FistOFire',1],['SK260','DrgClw',0],['SK261','ChrgBoltSent',1],['SK262','WkeOFire',1],
+        ['SK263','WpnBlck',1],['SK264','ClkShadow',0],['SK265','CbraStrik',0],['SK266','BldFury',1],
+        ['SK267','Fade',1],['SK268','ShdowWarr',0],['SK269','ClwsThund',1],['SK270','DrgTail',0],
+        ['SK271','ChnLghtSent',1],['SK272','WakeInf',1],['SK273','MindBlst',1],['SK274','BldOfIce',1],
+        ['SK275','DrgFlight',1],['SK276','DeathSent',1],['SK277','BldShld',1],['SK278','Venom',1],
+        ['SK279','ShdwMster',0],['SK280','PhnxStrk',1],
+        ['SK366','LghtSent',1]
       ];
 
       var allClassSkills = [
@@ -5786,14 +5786,14 @@
       {name:"item.filter",url:"https://raw.githubusercontent.com/Kryszard-POD/Kryszard-s-PD2-Loot-Filter/main/item.filter",size:720579}
     ]},
     {name:"Kassahi's PD2 Filter",author:"Kassahi",repo:"KassahiPD2/Kassahi",files:[
-      {name:"Meme-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme-Hyper.filter",size:1003410},
-      {name:"Meme.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme.filter",size:1002787},
-      {name:"Mystery-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Hyper.filter",size:1003541},
-      {name:"Mystery-Luxe.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Luxe.filter",size:1006420},
-      {name:"Mystery.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery.filter",size:1002924},
-      {name:"Regular-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Hyper.filter",size:1001978},
-      {name:"Regular-Luxe.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Luxe.filter",size:1004813},
-      {name:"Regular.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular.filter",size:1001355}
+      {name:"Meme-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme-Hyper.filter",size:916495},
+      {name:"Meme.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme.filter",size:916052},
+      {name:"Mystery-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Hyper.filter",size:916362},
+      {name:"Mystery-Luxe.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Luxe.filter",size:919171},
+      {name:"Mystery.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery.filter",size:915909},
+      {name:"Regular-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Hyper.filter",size:915063},
+      {name:"Regular-Luxe.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Luxe.filter",size:917819},
+      {name:"Regular.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular.filter",size:914620}
     ]},
     {name:"Erazure's PD2 Loot Filter",author:"Erazure",repo:"FiltersBy-Erazure/PD2-Loot-Filter",files:[
       {name:"Erazure-BIG-GG-PoE.filter",displayName:"BIG GG \u2014 PoE Sounds",description:"Strict filter with PoE-style drop sounds.",url:"https://raw.githubusercontent.com/FiltersBy-Erazure/PD2-Loot-Filter/main/Erazure-BIG-GG-PoE.filter",size:775381},
@@ -5804,33 +5804,33 @@
     {name:"HiimFilter by Maaaark + HiimDave",author:"HiimFilter",repo:"Maaaaaarrk/HiimFilter-PD2-Filter",
       definitionsUrl:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/filter_definitions.json",
       files:[
-      {name:"Hiim.filter",displayName:"Hiim \u2014 Standard",description:"All-in-one balanced filter. The standard recommendation for most players.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim.filter",size:695221},
-      {name:"Hiim_Crafting_Amazon_Focused.filter",displayName:"Class \u2014 Amazon",description:"Class filter tuned for Amazon. Shows Amazon-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Amazon_Focused.filter",size:691835},
-      {name:"Hiim_Crafting_Assassin_Focused.filter",displayName:"Class \u2014 Assassin",description:"Class filter tuned for Assassin. Shows Assassin-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Assassin_Focused.filter",size:691556},
-      {name:"Hiim_Crafting_Barbarian_Focused.filter",displayName:"Class \u2014 Barbarian",description:"Class filter tuned for Barbarian. Shows Barbarian-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Barbarian_Focused.filter",size:692662},
-      {name:"Hiim_Crafting_Druid_Focused.filter",displayName:"Class \u2014 Druid",description:"Class filter tuned for Druid. Shows Druid-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Druid_Focused.filter",size:691185},
-      {name:"Hiim_Crafting_Necromancer_Focused.filter",displayName:"Class \u2014 Necromancer",description:"Class filter tuned for Necromancer. Shows Necromancer-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Necromancer_Focused.filter",size:690811},
-      {name:"Hiim_Crafting_Paladin_Focused.filter",displayName:"Class \u2014 Paladin",description:"Class filter tuned for Paladin. Shows Paladin-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Paladin_Focused.filter",size:691266},
-      {name:"Hiim_Crafting_Sorceress_Focused.filter",displayName:"Class \u2014 Sorceress",description:"Class filter tuned for Sorceress. Shows Sorceress-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Sorceress_Focused.filter",size:690551},
-      {name:"Hiim_Crafting.filter",displayName:"Crafting",description:"Same as the standard filter, but good crafting bases are not limited in higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting.filter",size:695038},
-      {name:"Hiim_Grail.filter",displayName:"Grail Friendly",description:"All-in-one filter that always shows Uniques and Set items on filter levels 1-8.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Grail.filter",size:695072},
-      {name:"Hiim_LLD_Focused.filter",displayName:"LLD",description:"Shows LLD-relevant items at higher filter levels. Includes LLD jewel point evaluation and LLD tags.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Focused.filter",size:698176},
-      {name:"Hiim_LLD_Hyper.filter",displayName:"LLD \u2014 Hyper",description:"LLD Focused filter with a Hyper visual theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Hyper.filter",size:699474},
-      {name:"Hiim_Mystery.filter",displayName:"Mystery",description:"All-in-one filter where Runes Pul+ and GG uniques are renamed to hide their identity.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Mystery.filter",size:701089},
-      {name:"Hiim_Only_Filter.filter",displayName:"Only A Filter",description:"Filtering only, no annotations or re-naming.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Only_Filter.filter",size:190498},
-      {name:"Hiim_Hyper.filter",displayName:"Style \u2014 Hyper",description:"All-in-one filter with a Hyper visual theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Hyper.filter",size:696423},
-      {name:"Hiim_TalRasha_Themed.filter",displayName:"Style \u2014 TalRasha",description:"All-in-one filter with a TalRasha color theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_TalRasha_Themed.filter",size:695227},
-      {name:"Hiim_Vanilla_Plus.filter",displayName:"Vanilla Plus",description:"All-in-one filter without item re-naming.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Vanilla_Plus.filter",size:609129},
-      {name:"Hiim_Closed_Beta.filter",displayName:"Closed Beta",description:"Filter for closed beta testing.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Closed_Beta.filter",size:695339}
+      {name:"Hiim.filter",displayName:"Hiim \u2014 Standard",description:"All-in-one balanced filter. The standard recommendation for most players.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim.filter",size:490035},
+      {name:"Hiim_Crafting_Amazon_Focused.filter",displayName:"Class \u2014 Amazon",description:"Class filter tuned for Amazon. Shows Amazon-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Amazon_Focused.filter",size:486367},
+      {name:"Hiim_Crafting_Assassin_Focused.filter",displayName:"Class \u2014 Assassin",description:"Class filter tuned for Assassin. Shows Assassin-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Assassin_Focused.filter",size:486088},
+      {name:"Hiim_Crafting_Barbarian_Focused.filter",displayName:"Class \u2014 Barbarian",description:"Class filter tuned for Barbarian. Shows Barbarian-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Barbarian_Focused.filter",size:487194},
+      {name:"Hiim_Crafting_Druid_Focused.filter",displayName:"Class \u2014 Druid",description:"Class filter tuned for Druid. Shows Druid-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Druid_Focused.filter",size:485717},
+      {name:"Hiim_Crafting_Necromancer_Focused.filter",displayName:"Class \u2014 Necromancer",description:"Class filter tuned for Necromancer. Shows Necromancer-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Necromancer_Focused.filter",size:485343},
+      {name:"Hiim_Crafting_Paladin_Focused.filter",displayName:"Class \u2014 Paladin",description:"Class filter tuned for Paladin. Shows Paladin-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Paladin_Focused.filter",size:485798},
+      {name:"Hiim_Crafting_Sorceress_Focused.filter",displayName:"Class \u2014 Sorceress",description:"Class filter tuned for Sorceress. Shows Sorceress-relevant items and crafting bases at higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Sorceress_Focused.filter",size:485083},
+      {name:"Hiim_Crafting.filter",displayName:"Crafting",description:"Same as the standard filter, but good crafting bases are not limited in higher filter levels.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting.filter",size:489570},
+      {name:"Hiim_Grail.filter",displayName:"Grail Friendly",description:"All-in-one filter that always shows Uniques and Set items on filter levels 1-8.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Grail.filter",size:489886},
+      {name:"Hiim_LLD_Focused.filter",displayName:"LLD",description:"Shows LLD-relevant items at higher filter levels. Includes LLD jewel point evaluation and LLD tags.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Focused.filter",size:492706},
+      {name:"Hiim_LLD_Hyper.filter",displayName:"LLD \u2014 Hyper",description:"LLD Focused filter with a Hyper visual theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Hyper.filter",size:494190},
+      {name:"Hiim_Mystery.filter",displayName:"Mystery",description:"All-in-one filter where Runes Pul+ and GG uniques are renamed to hide their identity.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Mystery.filter",size:495903},
+      {name:"Hiim_Only_Filter.filter",displayName:"Only A Filter",description:"Filtering only, no annotations or re-naming.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Only_Filter.filter",size:203500},
+      {name:"Hiim_Hyper.filter",displayName:"Style \u2014 Hyper",description:"All-in-one filter with a Hyper visual theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Hyper.filter",size:491423},
+      {name:"Hiim_TalRasha_Themed.filter",displayName:"Style \u2014 TalRasha",description:"All-in-one filter with a TalRasha color theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_TalRasha_Themed.filter",size:490041},
+      {name:"Hiim_Vanilla_Plus.filter",displayName:"Vanilla Plus",description:"All-in-one filter without item re-naming.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Vanilla_Plus.filter",size:397716},
+      {name:"Hiim_Closed_Beta.filter",displayName:"Closed Beta",description:"Filter for closed beta testing.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Closed_Beta.filter",size:490140}
     ]},
     {name:"eqN's PD2 Filters",author:"eqN",repo:"eqNj/eqN-PD2-Filter",files:[
-      {name:"eqN-All-In-One.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-All-In-One.filter",size:1050813},
-      {name:"eqN-Potionless.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Potionless.filter",size:1052580},
-      {name:"eqN-Specialized-LLD.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-LLD.filter",size:5339620},
-      {name:"eqN-Specialized-SSF.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-SSF.filter",size:1054432}
+      {name:"eqN-All-In-One.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-All-In-One.filter",size:842601},
+      {name:"eqN-Potionless.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Potionless.filter",size:844331},
+      {name:"eqN-Specialized-LLD.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-LLD.filter",size:5131167},
+      {name:"eqN-Specialized-SSF.filter",url:"https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-SSF.filter",size:846233}
     ]},
     {name:"DarkHumility + ADev Filter",author:"ADevDH",repo:"DarkHumility/DHFilter",files:[
-      {name:"dark.filter",url:"https://raw.githubusercontent.com/DarkHumility/DHFilter/main/dark.filter",size:337513}
+      {name:"dark.filter",url:"https://raw.githubusercontent.com/DarkHumility/DHFilter/main/dark.filter",size:337534}
     ]},
     {name:"PiLLLa Filter",author:"PiLLLa",repo:"PiLLLaa/pd2",files:[
       {name:"S12_Blank.filter",url:"https://raw.githubusercontent.com/PiLLLaa/pd2/main/S12_Blank.filter",size:1768449},

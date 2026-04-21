@@ -23,14 +23,14 @@
     "author": "Kassahi",
     "repo": "KassahiPD2/Kassahi",
     "files": [
-      {"name": "Meme-Hyper.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme-Hyper.filter", "size": 1003410},
-      {"name": "Meme.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme.filter", "size": 1002787},
-      {"name": "Mystery-Hyper.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Hyper.filter", "size": 1003541},
-      {"name": "Mystery-Luxe.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Luxe.filter", "size": 1006420},
-      {"name": "Mystery.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery.filter", "size": 1002924},
-      {"name": "Regular-Hyper.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Hyper.filter", "size": 1001978},
-      {"name": "Regular-Luxe.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Luxe.filter", "size": 1004813},
-      {"name": "Regular.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular.filter", "size": 1001355}
+      {"name": "Meme-Hyper.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme-Hyper.filter", "size": 916495},
+      {"name": "Meme.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme.filter", "size": 916052},
+      {"name": "Mystery-Hyper.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Hyper.filter", "size": 916362},
+      {"name": "Mystery-Luxe.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Luxe.filter", "size": 919171},
+      {"name": "Mystery.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery.filter", "size": 915909},
+      {"name": "Regular-Hyper.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Hyper.filter", "size": 915063},
+      {"name": "Regular-Luxe.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Luxe.filter", "size": 917819},
+      {"name": "Regular.filter", "url": "https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular.filter", "size": 914620}
     ]
   },
   {
@@ -50,24 +50,24 @@
     "repo": "Maaaaaarrk/HiimFilter-PD2-Filter",
     "definitionsUrl": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/filter_definitions.json",
     "files": [
-      {"name": "Hiim.filter", "displayName": "Hiim — Standard", "description": "All-in-one balanced filter. The standard recommendation for most players.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim.filter", "size": 695221},
-      {"name": "Hiim_Crafting_Amazon_Focused.filter", "displayName": "Class — Amazon", "description": "Class filter tuned for Amazon. Shows Amazon-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Amazon_Focused.filter", "size": 691835},
-      {"name": "Hiim_Crafting_Assassin_Focused.filter", "displayName": "Class — Assassin", "description": "Class filter tuned for Assassin. Shows Assassin-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Assassin_Focused.filter", "size": 691556},
-      {"name": "Hiim_Crafting_Barbarian_Focused.filter", "displayName": "Class — Barbarian", "description": "Class filter tuned for Barbarian. Shows Barbarian-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Barbarian_Focused.filter", "size": 692662},
-      {"name": "Hiim_Crafting_Druid_Focused.filter", "displayName": "Class — Druid", "description": "Class filter tuned for Druid. Shows Druid-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Druid_Focused.filter", "size": 691185},
-      {"name": "Hiim_Crafting_Necromancer_Focused.filter", "displayName": "Class — Necromancer", "description": "Class filter tuned for Necromancer. Shows Necromancer-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Necromancer_Focused.filter", "size": 690811},
-      {"name": "Hiim_Crafting_Paladin_Focused.filter", "displayName": "Class — Paladin", "description": "Class filter tuned for Paladin. Shows Paladin-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Paladin_Focused.filter", "size": 691266},
-      {"name": "Hiim_Crafting_Sorceress_Focused.filter", "displayName": "Class — Sorceress", "description": "Class filter tuned for Sorceress. Shows Sorceress-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Sorceress_Focused.filter", "size": 690551},
-      {"name": "Hiim_Crafting.filter", "displayName": "Crafting", "description": "Same as the standard filter, but good crafting bases are not limited in higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting.filter", "size": 695038},
-      {"name": "Hiim_Grail.filter", "displayName": "Grail Friendly", "description": "All-in-one filter that always shows Uniques and Set items on filter levels 1-8.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Grail.filter", "size": 695072},
-      {"name": "Hiim_LLD_Focused.filter", "displayName": "LLD", "description": "Shows LLD-relevant items at higher filter levels. Includes LLD jewel point evaluation and LLD tags on valuable Set/Unique items.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Focused.filter", "size": 698176},
-      {"name": "Hiim_LLD_Hyper.filter", "displayName": "LLD — Hyper", "description": "LLD Focused filter with a Hyper visual theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Hyper.filter", "size": 699474},
-      {"name": "Hiim_Mystery.filter", "displayName": "Mystery", "description": "All-in-one filter where Runes Pul (21)+ and GG uniques are renamed to hide their identity.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Mystery.filter", "size": 701089},
-      {"name": "Hiim_Only_Filter.filter", "displayName": "Only A Filter", "description": "All-in-one filter with no item display changes — filtering only, no annotations or re-naming.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Only_Filter.filter", "size": 190498},
-      {"name": "Hiim_Hyper.filter", "displayName": "Style — Hyper", "description": "All-in-one filter with a Hyper visual theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Hyper.filter", "size": 696423},
-      {"name": "Hiim_TalRasha_Themed.filter", "displayName": "Style — TalRasha", "description": "All-in-one filter with a TalRasha color theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_TalRasha_Themed.filter", "size": 695227},
-      {"name": "Hiim_Vanilla_Plus.filter", "displayName": "Vanilla Plus", "description": "All-in-one filter without item re-naming (e.g. identified rares and unidentified uniques show their original names).", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Vanilla_Plus.filter", "size": 609129},
-      {"name": "Hiim_Closed_Beta.filter", "displayName": "Closed Beta", "description": "Filter for closed beta testing.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Closed_Beta.filter", "size": 695339}
+      {"name": "Hiim.filter", "displayName": "Hiim — Standard", "description": "All-in-one balanced filter. The standard recommendation for most players.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim.filter", "size": 490035},
+      {"name": "Hiim_Crafting_Amazon_Focused.filter", "displayName": "Class — Amazon", "description": "Class filter tuned for Amazon. Shows Amazon-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Amazon_Focused.filter", "size": 486367},
+      {"name": "Hiim_Crafting_Assassin_Focused.filter", "displayName": "Class — Assassin", "description": "Class filter tuned for Assassin. Shows Assassin-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Assassin_Focused.filter", "size": 486088},
+      {"name": "Hiim_Crafting_Barbarian_Focused.filter", "displayName": "Class — Barbarian", "description": "Class filter tuned for Barbarian. Shows Barbarian-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Barbarian_Focused.filter", "size": 487194},
+      {"name": "Hiim_Crafting_Druid_Focused.filter", "displayName": "Class — Druid", "description": "Class filter tuned for Druid. Shows Druid-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Druid_Focused.filter", "size": 485717},
+      {"name": "Hiim_Crafting_Necromancer_Focused.filter", "displayName": "Class — Necromancer", "description": "Class filter tuned for Necromancer. Shows Necromancer-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Necromancer_Focused.filter", "size": 485343},
+      {"name": "Hiim_Crafting_Paladin_Focused.filter", "displayName": "Class — Paladin", "description": "Class filter tuned for Paladin. Shows Paladin-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Paladin_Focused.filter", "size": 485798},
+      {"name": "Hiim_Crafting_Sorceress_Focused.filter", "displayName": "Class — Sorceress", "description": "Class filter tuned for Sorceress. Shows Sorceress-relevant items and crafting bases at higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting_Sorceress_Focused.filter", "size": 485083},
+      {"name": "Hiim_Crafting.filter", "displayName": "Crafting", "description": "Same as the standard filter, but good crafting bases are not limited in higher filter levels.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Crafting.filter", "size": 489570},
+      {"name": "Hiim_Grail.filter", "displayName": "Grail Friendly", "description": "All-in-one filter that always shows Uniques and Set items on filter levels 1-8.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Grail.filter", "size": 489886},
+      {"name": "Hiim_LLD_Focused.filter", "displayName": "LLD", "description": "Shows LLD-relevant items at higher filter levels. Includes LLD jewel point evaluation and LLD tags on valuable Set/Unique items.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Focused.filter", "size": 492706},
+      {"name": "Hiim_LLD_Hyper.filter", "displayName": "LLD — Hyper", "description": "LLD Focused filter with a Hyper visual theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_LLD_Hyper.filter", "size": 494190},
+      {"name": "Hiim_Mystery.filter", "displayName": "Mystery", "description": "All-in-one filter where Runes Pul (21)+ and GG uniques are renamed to hide their identity.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Mystery.filter", "size": 495903},
+      {"name": "Hiim_Only_Filter.filter", "displayName": "Only A Filter", "description": "All-in-one filter with no item display changes — filtering only, no annotations or re-naming.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Only_Filter.filter", "size": 203500},
+      {"name": "Hiim_Hyper.filter", "displayName": "Style — Hyper", "description": "All-in-one filter with a Hyper visual theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Hyper.filter", "size": 491423},
+      {"name": "Hiim_TalRasha_Themed.filter", "displayName": "Style — TalRasha", "description": "All-in-one filter with a TalRasha color theme.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_TalRasha_Themed.filter", "size": 490041},
+      {"name": "Hiim_Vanilla_Plus.filter", "displayName": "Vanilla Plus", "description": "All-in-one filter without item re-naming (e.g. identified rares and unidentified uniques show their original names).", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Vanilla_Plus.filter", "size": 397716},
+      {"name": "Hiim_Closed_Beta.filter", "displayName": "Closed Beta", "description": "Filter for closed beta testing.", "url": "https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/Hiim_Closed_Beta.filter", "size": 490140}
     ]
   },
   {
@@ -75,10 +75,10 @@
     "author": "eqN",
     "repo": "eqNj/eqN-PD2-Filter",
     "files": [
-      {"name": "eqN-All-In-One.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-All-In-One.filter", "size": 1050813},
-      {"name": "eqN-Potionless.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Potionless.filter", "size": 1052580},
-      {"name": "eqN-Specialized-LLD.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-LLD.filter", "size": 5339620},
-      {"name": "eqN-Specialized-SSF.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-SSF.filter", "size": 1054432}
+      {"name": "eqN-All-In-One.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-All-In-One.filter", "size": 842601},
+      {"name": "eqN-Potionless.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Potionless.filter", "size": 844331},
+      {"name": "eqN-Specialized-LLD.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-LLD.filter", "size": 5131167},
+      {"name": "eqN-Specialized-SSF.filter", "url": "https://raw.githubusercontent.com/eqNj/eqN-PD2-Filter/main/eqN-Specialized-SSF.filter", "size": 846233}
     ]
   },
   {
@@ -86,7 +86,7 @@
     "author": "ADevDH",
     "repo": "DarkHumility/DHFilter",
     "files": [
-      {"name": "dark.filter", "url": "https://raw.githubusercontent.com/DarkHumility/DHFilter/main/dark.filter", "size": 337513}
+      {"name": "dark.filter", "url": "https://raw.githubusercontent.com/DarkHumility/DHFilter/main/dark.filter", "size": 337534}
     ]
   },
   {
