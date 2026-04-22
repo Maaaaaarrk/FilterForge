@@ -4107,15 +4107,15 @@
       });
 
       // Individual skill staffmods — data: [SK#, name, top] where top=true means show at all FILTLVL
-      // Amazon
+      // Amazon — IDs and names per PD2 wiki + SKILL_DATA (engine IDs are interleaved across tabs, not sequential)
       var aznSkills = [
-        ['SK6','MagicArw',0],['SK7','FireArw',0],['SK8','ColdArw',0],['SK9','MultShot',0],['SK10','ExplArw',0],
-        ['SK11','IceArw',1],['SK12','GuidArw',1],['SK13','Strafe',1],['SK14','Immolation',1],
-        ['SK16','InnerSight',0],['SK17','CritStrike',0],['SK18','Dodge',0],['SK19','SlwMissle',0],
-        ['SK20','Avoid',0],['SK21','Penetrate',0],['SK22','Decoy',0],['SK23','Evade',0],
-        ['SK24','Valkyrie',1],['SK25','Pierce',1],
-        ['SK26','Jab',0],['SK27','PwrStrk',0],['SK28','PoisJav',0],['SK29','Impale',0],
-        ['SK30','LghtBolt',0],['SK31','ChrgStrk',1],['SK32','PlgJav',1],['SK33','Fend',0],
+        ['SK6','MagicArw',0],['SK7','FireArw',0],['SK8','InnerSight',0],['SK9','CritStrike',0],
+        ['SK10','Jab',0],['SK11','ColdArw',0],['SK12','MultShot',0],['SK13','Dodge',0],
+        ['SK14','PwrStrk',0],['SK15','PoisJav',0],['SK16','ExplArw',0],['SK17','SlwMissle',0],
+        ['SK18','Avoid',0],['SK19','JavMstry',0],['SK20','LghtBolt',0],['SK21','IceArw',1],
+        ['SK22','GuidArw',1],['SK23','Penetrate',0],['SK24','ChrgStrk',1],['SK25','PlgJav',1],
+        ['SK26','Strafe',1],['SK27','Immolation',1],['SK28','Decoy',0],['SK29','Evade',0],
+        ['SK30','Fend',0],['SK31','FrzArw',1],['SK32','Valkyrie',1],['SK33','Pierce',1],
         ['SK34','LghtStrk',1],['SK35','LghtFury',1]
       ];
       // Sorceress — IDs and names per PD2 wiki + HiimFilter staffmod upstream
