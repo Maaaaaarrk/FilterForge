@@ -140,10 +140,10 @@
     "author": "Phyx10n",
     "repo": "Phyx10n/PD2-Filter",
     "files": [
-      {"name": "crafting+revealed.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/crafting+revealed.filter", "size": 175253},
-      {"name": "crafting.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/crafting.filter", "size": 175254},
-      {"name": "main.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/main.filter", "size": 175255},
-      {"name": "revealed.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/revealed.filter", "size": 175254}
+      {"name": "crafting+revealed.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/crafting+revealed.filter", "size": 162987},
+      {"name": "crafting.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/crafting.filter", "size": 162988},
+      {"name": "main.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/main.filter", "size": 162989},
+      {"name": "revealed.filter", "url": "https://raw.githubusercontent.com/Phyx10n/PD2-Filter/main/revealed.filter", "size": 162988}
     ]
   }
 ]
