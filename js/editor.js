@@ -3457,7 +3457,7 @@
           ['UNI !ID xrn', 'Crown of Thieves'],
           ['UNI !ID xh9', 'Vampire Gaze'],
           // Elite Helms
-          ['UNI !ID uap', 'Shako'],
+          ['UNI !ID uap', 'Harlequin Crest'],
           ['UNI !ID ulm', 'Steel Shade'],
           ['UNI !ID uhl', 'Sages Defiance'],
           ['UNI !ID uhm', 'Veil of Steel or Nightwings Veil'],
