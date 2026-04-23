@@ -3236,25 +3236,26 @@
 
       // Tier 1: High Runes (Lo #28 through Zod #33)
       lines.push('// --- High Runes (Lo - Zod) ---');
-      lines.push('ItemDisplay[RUNE~28-33]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify);
+      lines.push('ItemDisplay[RUNE~28-33]: ' + colorHR + decoHR_L + '%RUNENAME% Rune' + decoHR_R + ' (#%RUNENUM%)' + hrNotify + '%CONTINUE%');
 
       // Tier 2: Mid-high Runes (Ist #24 through Ohm #27)
       lines.push('// --- Mid-High Runes (Ist - Ohm) ---');
-      lines.push('ItemDisplay[RUNE>23 RUNE<28]: ' + colorMidRune + decoMid_L + '%RUNENAME% Rune' + decoMid_R + ' (#%RUNENUM%)' + midNotify);
+      lines.push('ItemDisplay[RUNE>23 RUNE<28]: ' + colorMidRune + decoMid_L + '%RUNENAME% Rune' + decoMid_R + ' (#%RUNENUM%)' + midNotify + '%CONTINUE%');
 
       // Tier 3: Mid Runes (Lem #20 through Mal #23)
       lines.push('// --- Mid Runes (Lem - Mal) ---');
-      lines.push('ItemDisplay[RUNE>19 RUNE<24]: ' + colorMidRune + decoLow_L + '%RUNENAME% Rune' + decoLow_R + ' (#%RUNENUM%)' + midRuneNotify);
+      lines.push('ItemDisplay[RUNE>19 RUNE<24]: ' + colorMidRune + decoLow_L + '%RUNENAME% Rune' + decoLow_R + ' (#%RUNENUM%)' + midRuneNotify + '%CONTINUE%');
 
       // Tier 4: Low Runes (El #1 through Fal #19)
       lines.push('// --- Low Runes (El - Fal) ---');
-      lines.push('ItemDisplay[RUNE>14 RUNE<20]: ' + colorLowRune + '%RUNENAME% Rune (#%RUNENUM%)' + lowRuneDot);
-      lines.push('ItemDisplay[RUNE>10 RUNE<15]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
-      lines.push('ItemDisplay[RUNE>0 RUNE<11]: %ORANGE%%RUNENAME% (#%RUNENUM%)');
+      lines.push('ItemDisplay[RUNE>14 RUNE<20]: ' + colorLowRune + '%RUNENAME% Rune (#%RUNENUM%)' + lowRuneDot + '%CONTINUE%');
+      lines.push('ItemDisplay[RUNE>10 RUNE<15]: %ORANGE%%RUNENAME% (#%RUNENUM%)%CONTINUE%');
+      lines.push('ItemDisplay[RUNE>0 RUNE<11]: %ORANGE%%RUNENAME% (#%RUNENUM%)%CONTINUE%');
       lines.push('');
 
       // Rune stacking display (from Wolfie/HiimFilter)
-      // Must come after all tier rules so CONTINUE doesn't suppress tier decoration
+      // Tier rules above use %CONTINUE% so this rule fires for stacks,
+      // appending the quantity while preserving the tier decoration.
       lines.push('// --- Rune Stack Display ---');
       lines.push('ItemDisplay[RUNE>0 QTY>1]: %NAME% %TAN%x%QTY%{%NAME%}%CONTINUE%');
       lines.push('');
