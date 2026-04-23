@@ -1167,7 +1167,7 @@
   // ==========================================
   var GRAIL_DATA = {
     'Helms': [
-      {code:'uap',name:'Shako'},{code:'urn',name:'Crown of Ages'},{code:'ci3',name:"Griffon's Eye"},
+      {code:'uap',name:'Harlequin Crest'},{code:'urn',name:'Crown of Ages'},{code:'ci3',name:"Griffon's Eye"},
       {code:'ci2',name:"Kira's Guardian"},{code:'ulm',name:'Steel Shade'},{code:'xh9',name:'Vampire Gaze'},
       {code:'uhm',name:'Veil of Steel'},{code:'xsk',name:"Blackhorn's Face"},{code:'xkp',name:'Rockstopper'},
       {code:'xlm',name:'Stealskull'},{code:'xhl',name:'Darksight Helm'},{code:'cap',name:'Biggin\'s Bonnet'},
@@ -3457,7 +3457,7 @@
           ['UNI !ID xrn', 'Crown of Thieves'],
           ['UNI !ID xh9', 'Vampire Gaze'],
           // Elite Helms
-          ['UNI !ID uap', 'Shako'],
+          ['UNI !ID uap', 'Harlequin Crest'],
           ['UNI !ID ulm', 'Steel Shade'],
           ['UNI !ID uhl', 'Sages Defiance'],
           ['UNI !ID uhm', 'Veil of Steel or Nightwings Veil'],
@@ -5071,7 +5071,7 @@
       ['sml','Umbral Disk - Small Shield'],['spc','Stoutnail - Spiked Club'],['spk','Swordback Hold - Spiked Shield'],['spl','Iceblink - Splint Mail'],['spr','The Dragon Chang - Spear'],
       ['spt','Lance of Yaggai - Spetum'],['ssd','Rixots Keen - Short Sword'],['ssp','Short Spear (No Unique for this base)'],['sst','Bane Ash - Short Staff'],['stu','Twitchthroe - Studded Leather'],
       ['swb','Hellclap - Short War Bow'],['tax','Throwing Axe (No Unique for this base)'],['tbl','Goldwrap - Heavy Belt'],['tbt','Goblin Toe - Light Plated Boots'],['tgl','Magefist - Light Gauntlets'],
-      ['tkf','Throwing Knife (No Unique for this base)'],['tow','Bverrit Keep - Tower Shield'],['tri','Razortine - Trident'],['tsp','Throwing Spear (No Unique for this base)'],['uap','SHAKO'],
+      ['tkf','Throwing Knife (No Unique for this base)'],['tow','Bverrit Keep - Tower Shield'],['tri','Razortine - Trident'],['tsp','Throwing Spear (No Unique for this base)'],['uap','Harlequin Crest - Shako'],
       ['ucl','Loricated Mail (No Unique for this base)'],['uea','Wyrmhide (No Unique for this base)'],['uh9','Giant Skull or Overlords Helm - Bone Visage'],['uhb','Shadow Dancer - Myrmidon Greaves'],['uhc','Siggard\'s Staunch - Colossus Girdle'],
       ['uhg','Steelrend - Ogre Gauntlets'],['uhl','Sages Defiance - Giant Conch'],['uhm','Veil of Steel or Nightwings Veil'],['uhn','Cage of the Unsullied'],['uit','Stormshield'],
       ['ukp','Hydraskull (No Unique for this base)'],['ula','Scarab Husk (No Unique for this base)'],['ulb','Merman\'s Sprocket - Wyrmhide Boots'],['ulc','Arachnid Mesh - Spiderweb Sash'],['uld','Leviathan - Kraken Shell'],
