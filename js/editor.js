@@ -4366,13 +4366,13 @@
           }
         }
 
-        // Superior ED=15 bases (from Kryszard/Phyx10n — top-tier bases)
-        lines.push('// --- Superior ED=15 Bases (best-in-slot) ---');
+        // Superior ED=20 bases (from Kryszard/Phyx10n — top-tier bases)
+        lines.push('// --- Superior ED=20 Bases (best-in-slot) ---');
         if (showEthBases) {
-          lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=15 ELT CHEST (SOCK=0 OR SOCK>2)]: %GOLD%15ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
-          lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=15 ELT POLEARM (SOCK=0 OR SOCK>3)]: %GOLD%15ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+          lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=20 ELT CHEST (SOCK=0 OR SOCK>2)]: %GOLD%20ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
+          lines.push('ItemDisplay[NMAG !INF !RW ETH SUP ED=20 ELT POLEARM (SOCK=0 OR SOCK>3)]: %GOLD%20ED %GRAY%ETH %WHITE%%NAME%' + rwNotify);
         }
-        lines.push('ItemDisplay[NMAG !INF !RW SUP ED=15 ELT (CHEST OR SHIELD) (SOCK=0 OR SOCK>2)]: %GOLD%15ED %WHITE%%NAME%' + (wantMapIcons ? '%DOT-D6%' : ''));
+        lines.push('ItemDisplay[NMAG !INF !RW SUP ED=20 ELT (CHEST OR SHIELD) (SOCK=0 OR SOCK>2)]: %GOLD%20ED %WHITE%%NAME%' + (wantMapIcons ? '%DOT-D6%' : ''));
         lines.push('');
 
         // GG specific bases (from HiimFilter — high-value eth bases with DEF/skill checks)
