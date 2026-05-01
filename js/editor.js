@@ -5786,15 +5786,17 @@
       {name:"futureal.filter",url:"https://raw.githubusercontent.com/Kryszard-POD/Kryszard-s-PD2-Loot-Filter/main/futureal.filter",size:724417},
       {name:"item.filter",url:"https://raw.githubusercontent.com/Kryszard-POD/Kryszard-s-PD2-Loot-Filter/main/item.filter",size:720579}
     ]},
-    {name:"Kassahi's PD2 Filter",author:"Kassahi",repo:"KassahiPD2/Kassahi",files:[
-      {name:"Meme-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme-Hyper.filter",size:916495},
-      {name:"Meme.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme.filter",size:916052},
-      {name:"Mystery-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Hyper.filter",size:916362},
-      {name:"Mystery-Luxe.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Luxe.filter",size:919171},
-      {name:"Mystery.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery.filter",size:915909},
-      {name:"Regular-Hyper.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Hyper.filter",size:915063},
-      {name:"Regular-Luxe.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Luxe.filter",size:917819},
-      {name:"Regular.filter",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular.filter",size:914620}
+    {name:"Kassahi's PD2 Filter",author:"Kassahi",repo:"KassahiPD2/Kassahi",
+      definitionsUrl:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/filter_definitions.json",
+      files:[
+      {name:"Regular.filter",displayName:"Regular-Standard",description:"All-in-one balanced filter. The standard recommendation for most players.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular.filter",size:914620},
+      {name:"Regular-Hyper.filter",displayName:"Regular-Hyper",description:"Standard filter with a Hyper visual theme.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Hyper.filter",size:915063},
+      {name:"Regular-Luxe.filter",displayName:"Regular-philanthropy777",description:"Standard filter with a philanthropy777 visual theme.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Regular-Luxe.filter",size:917819},
+      {name:"Meme.filter",displayName:"Meme-Standard",description:"Standard filter with meme item names for a humorous experience.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme.filter",size:916052},
+      {name:"Meme-Hyper.filter",displayName:"Meme-Hyper",description:"Meme filter with a Hyper visual theme.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Meme-Hyper.filter",size:916495},
+      {name:"Mystery.filter",displayName:"Mystery-Standard",description:"Filter where high-value items are renamed to hide their identity.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery.filter",size:915909},
+      {name:"Mystery-Hyper.filter",displayName:"Mystery-Hyper",description:"Mystery filter with a Hyper visual theme.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Hyper.filter",size:916362},
+      {name:"Mystery-Luxe.filter",displayName:"Mystery-philanthropy777",description:"Mystery filter with a philanthropy777 visual theme.",url:"https://raw.githubusercontent.com/KassahiPD2/Kassahi/main/Mystery-Luxe.filter",size:919171}
     ]},
     {name:"Erazure's PD2 Loot Filter",author:"Erazure",repo:"FiltersBy-Erazure/PD2-Loot-Filter",files:[
       {name:"Erazure-BIG-GG-PoE.filter",displayName:"BIG GG \u2014 PoE Sounds",description:"Strict filter with PoE-style drop sounds.",url:"https://raw.githubusercontent.com/FiltersBy-Erazure/PD2-Loot-Filter/main/Erazure-BIG-GG-PoE.filter",size:775381},
