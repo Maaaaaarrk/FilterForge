@@ -66,7 +66,7 @@
     'uni-coa': { code: 'urn', name: 'Corona', flags: ['GROUND', 'UNI', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 85, DEF: 349, SOCKETS: 2, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, MAXSOCKETS: 2, REQLVL: 66, REQSTR: 111 } },
     'uni-arach': { code: 'ulc', name: 'Spiderweb Sash', flags: ['GROUND', 'UNI', 'ELT', 'BELT', 'ARMOR', 'EQ6'], values: { ILVL: 85, DEF: 119, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 1, AREA: 2, REQLVL: 51, REQSTR: 50 } },
     'uni-stormshield': { code: 'uit', name: 'Monarch', flags: ['GROUND', 'UNI', 'ELT', 'SHIELD', 'ARMOR', 'EQ3'], values: { ILVL: 85, DEF: 136, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 3, AREA: 6, MAXSOCKETS: 4, BASEBLOCK: 52, REQLVL: 54, REQSTR: 156 } },
-    'uni-facet': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'UNI', 'JEWELRY'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'uni-facet': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'UNI'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'uni-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'UNI', 'JEWELRY'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'uni-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'UNI', 'JEWELRY'], values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'uni-anni': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'UNI', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 1, AREA: 1 } },
@@ -79,7 +79,7 @@
     // Rare / Crafted (!ID — unidentified, %NAME% shows base type name)
     'rare-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'RARE', 'JEWELRY'], values: { ILVL: 85, ALVL: 90, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'rare-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'RARE', 'JEWELRY'], values: { ILVL: 85, ALVL: 81, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'rare-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'RARE', 'JEWELRY'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'rare-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'RARE'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'rare-circlet': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'RARE', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, DEF: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'rare-boots-elt': { code: 'uhb', name: 'Myrmidon Greaves', flags: ['GROUND', 'RARE', 'ELT', 'BOOTS', 'ARMOR', 'EQ5'], values: { ILVL: 85, DEF: 62, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, REQSTR: 208, REQLVL: 67, BASEMINKICK: 23, BASEMAXKICK: 59 } },
     'rare-gloves-elt': { code: 'utg', name: 'Crusader Gauntlets', flags: ['GROUND', 'RARE', 'ELT', 'GLOVES', 'ARMOR', 'EQ4'], values: { ILVL: 85, DEF: 59, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, REQSTR: 151, REQLVL: 65 } },
@@ -87,7 +87,7 @@
     // Magic items (!ID — unidentified, %NAME% shows base type name)
     'mag-ring': { code: 'rin', name: 'Ring', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 45, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-amu': { code: 'amu', name: 'Amulet', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 85, CRAFTALVL: 90, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
-    'mag-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'MAG', 'JEWELRY'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
+    'mag-jewel': { code: 'jew', name: 'Jewel', flags: ['GROUND', 'MAG'], values: { ILVL: 87, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'mag-gc-99': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 99, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3 } },
     'mag-gc': { code: 'cm3', name: 'Grand Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 3, AREA: 3 } },
     'mag-sc': { code: 'cm1', name: 'Small Charm', flags: ['GROUND', 'MAG', 'CHARM'], values: { ILVL: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 1, HEIGHT: 1, AREA: 1 } },
@@ -4853,7 +4853,7 @@
       lines.push('');
       lines.push('// --- FILTLVL 2+: ---');
       lines.push('ItemDisplay[NMAG !SUP !ETH NORM FILTLVL>1]:');
-      lines.push('ItemDisplay[MAG !ID !JEWELRY !CHARM FILTLVL>1]:');
+      lines.push('ItemDisplay[MAG !ID !JEWELRY !CHARM !jew FILTLVL>1]:');
       lines.push('');
       lines.push('// --- FILTLVL 3+: ---');
       lines.push('ItemDisplay[NMAG !SUP !ETH EXC FILTLVL>2]:');
@@ -4861,7 +4861,7 @@
       lines.push('');
       lines.push('// --- FILTLVL 4+: Very strict ---');
       lines.push('ItemDisplay[NMAG !ETH !RW !SUP ELT SOCK=0 FILTLVL>3]:');
-      lines.push('ItemDisplay[MAG !ID !JEWELRY !CHARM FILTLVL>3]:');
+      lines.push('ItemDisplay[MAG !ID !JEWELRY !CHARM !jew FILTLVL>3]:');
       lines.push('');
 
       // ==========================
@@ -5409,9 +5409,9 @@
           values.ILVL = 1;
         } else if (codeCat === 'uni') {
           flags.push('UNI');
-          if (['rin', 'amu', 'jew'].indexOf(code) !== -1) flags.push('JEWELRY');
+          if (['rin', 'amu'].indexOf(code) !== -1) flags.push('JEWELRY');
           else if (isCharm) flags.push('CHARM');
-          else flags.push('ARMOR');
+          else if (code !== 'jew') flags.push('ARMOR');
         } else if (codeCat === 'set') {
           flags.push('SET');
           if (['rin', 'amu'].indexOf(code) !== -1) flags.push('JEWELRY');
@@ -5422,14 +5422,15 @@
             return;
           }
           flags.push('NMAG', 'NORM');
-          if (code.match(/^(aq|cq)/)) flags.push('MISC');
+          if (code.match(/^(aq|cq)/)) flags.push('MISC', 'QUIVER');
           else flags.push('ARMOR');
         } else if (codeCat === 'exc') {
           flags.push('NMAG', 'EXC');
           flags.push('ARMOR');
         } else if (codeCat === 'elt') {
           flags.push('NMAG', 'ELT');
-          flags.push('ARMOR');
+          if (code.match(/^(aq|cq)/)) flags.push('MISC', 'QUIVER');
+          else flags.push('ARMOR');
         } else if (codeCat === 'classitems') {
           flags.push('NMAG');
           flags.push('WEAPON');
@@ -5468,7 +5469,7 @@
 
     // Generate MAG and RARE entries for all equipment bases and charms
     var equipCats = ['norm', 'exc', 'elt', 'classitems'];
-    var magRareSkip = ['aqv', 'cqv']; // quivers: no magic/rare
+    var magRareSkip = ['aqv', 'cqv']; // norm quivers: no magic/rare
     equipCats.forEach(function (codeCat) {
       ITEM_CODES[codeCat].forEach(function (entry) {
         var code = entry[0];
@@ -5476,14 +5477,17 @@
         if (magRareSkip.indexOf(code) !== -1) return;
 
         var tierFlag = codeCat === 'exc' ? 'EXC' : codeCat === 'elt' ? 'ELT' : 'NORM';
-        var equipFlag = codeCat === 'classitems' ? 'WEAPON' : 'ARMOR';
+        var isQuiver = /^(aq|cq)/.test(code);
+        var typeFlagsForCode = isQuiver
+          ? ['MISC', 'QUIVER']
+          : [codeCat === 'classitems' ? 'WEAPON' : 'ARMOR'];
 
         // MAG version
         var magKey = 'mag-gen-' + code;
         if (!items.some(function (it) { return it.code === code && it.cat === 'mag'; })) {
           items.push({
             key: magKey, code: code, name: name,
-            flags: ['GROUND', 'MAG', tierFlag, equipFlag],
+            flags: ['GROUND', 'MAG', tierFlag].concat(typeFlagsForCode),
             values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
             cat: 'mag', hasFullData: false
           });
@@ -5494,7 +5498,7 @@
         if (!items.some(function (it) { return it.code === code && it.cat === 'rare'; })) {
           items.push({
             key: rareKey, code: code, name: name,
-            flags: ['GROUND', 'RARE', tierFlag, equipFlag],
+            flags: ['GROUND', 'RARE', tierFlag].concat(typeFlagsForCode),
             values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
             cat: 'rare', hasFullData: false
           });
@@ -5515,26 +5519,30 @@
       }
     });
 
-    // MAG jewelry
-    [['rin','Ring'],['amu','Amulet'],['jew','Jewel']].forEach(function (entry) {
-      var code = entry[0], name = entry[1];
+    // MAG jewelry (rin/amu get JEWELRY; jew is its own type, no JEWELRY flag)
+    [['rin','Ring','JEWELRY'],['amu','Amulet','JEWELRY'],['jew','Jewel',null]].forEach(function (entry) {
+      var code = entry[0], name = entry[1], typeFlag = entry[2];
       if (!items.some(function (it) { return it.code === code && it.cat === 'mag'; })) {
+        var magFlags = ['GROUND', 'MAG'];
+        if (typeFlag) magFlags.push(typeFlag);
         items.push({
           key: 'mag-jewel-' + code, code: code, name: name,
-          flags: ['GROUND', 'MAG', 'JEWELRY'],
+          flags: magFlags,
           values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
           cat: 'mag', hasFullData: false
         });
       }
     });
 
-    // RARE jewelry
-    [['rin','Ring'],['amu','Amulet'],['jew','Jewel']].forEach(function (entry) {
-      var code = entry[0], name = entry[1];
+    // RARE jewelry (rin/amu get JEWELRY; jew is its own type, no JEWELRY flag)
+    [['rin','Ring','JEWELRY'],['amu','Amulet','JEWELRY'],['jew','Jewel',null]].forEach(function (entry) {
+      var code = entry[0], name = entry[1], typeFlag = entry[2];
       if (!items.some(function (it) { return it.code === code && it.cat === 'rare'; })) {
+        var rareFlags = ['GROUND', 'RARE'];
+        if (typeFlag) rareFlags.push(typeFlag);
         items.push({
           key: 'rare-jewel-' + code, code: code, name: name,
-          flags: ['GROUND', 'RARE', 'JEWELRY'],
+          flags: rareFlags,
           values: { ILVL: 85, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 },
           cat: 'rare', hasFullData: false
         });
