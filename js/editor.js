@@ -5623,14 +5623,23 @@
   var ALL_ITEMS_CACHE = null;
 
   function parseFilterLevelNames(text) {
+    // Supports both syntaxes used by community filters:
+    //   ItemDisplayFilterName[]: Name        (sequential — Wolfie, Hiim, eqN, Sven, Roofoo, Dauracul, ...)
+    //   ItemDisplayFilterName[3]: Name       (explicit index — Kassahi)
     var names = {};
     var lines = text.split('\n');
-    var level = 1;
+    var seqLevel = 1;
     for (var i = 0; i < lines.length; i++) {
-      var m = lines[i].match(/^ItemDisplayFilterName\s*\[\s*\]\s*:\s*(.+)/);
+      var m = lines[i].match(/^ItemDisplayFilterName\s*\[\s*(\d*)\s*\]\s*:\s*(.+)/);
       if (m) {
-        names[level] = m[1].trim();
-        level++;
+        // Strip trailing "// comment" some filters use to label the level number
+        var raw = m[2].replace(/\s*\/\/.*$/, '').trim();
+        if (m[1]) {
+          names[parseInt(m[1], 10)] = raw;
+        } else {
+          names[seqLevel] = raw;
+          seqLevel++;
+        }
       }
     }
     return names;
@@ -5640,7 +5649,11 @@
     var names = parseFilterLevelNames(text);
     var currentVal = selectEl.value || '1';
     selectEl.innerHTML = '<option value="0">0 — Off</option>';
-    var maxLevel = Math.max(Object.keys(names).length, 1);
+    // Use highest defined level (handles both sequential [] and indexed [N] syntax,
+    // including filters like Kassahi that go up to [12]).
+    var levelKeys = Object.keys(names).map(function (k) { return parseInt(k, 10); });
+    var maxLevel = levelKeys.length ? Math.max.apply(null, levelKeys) : 1;
+    if (maxLevel < 1) maxLevel = 1;
     for (var lvl = 1; lvl <= maxLevel; lvl++) {
       var label = names[lvl] ? lvl + ' — ' + names[lvl] : String(lvl);
       selectEl.innerHTML += '<option value="' + lvl + '"' + (String(lvl) === currentVal ? ' selected' : '') + '>' + label + '</option>';
