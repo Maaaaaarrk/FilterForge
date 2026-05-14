@@ -158,6 +158,81 @@
     '%LIGHT_GRAY%': '#c0c0c0'
   };
 
+  // D2 in-game color escape codes: "ÿc<char>" where <char> selects a palette entry.
+  // Used in filter-level names (e.g. HiimFilter) and item display output.
+  // ÿ is U+00FF; arrives as that JS char whether the source file was UTF-8 or
+  // Windows-1252 (both decode to U+00FF in TextDecoder).
+  var D2_ESCAPE_COLORS = {
+    '0': '#ffffff', // white
+    '1': '#ff4040', // red
+    '2': '#00c000', // set green
+    '3': '#6464ff', // magic blue
+    '4': '#c8a040', // gold (unique)
+    '5': '#808080', // gray
+    '6': '#000000', // black
+    '7': '#b0a080', // tan (low quality)
+    '8': '#ff8000', // orange (craft)
+    '9': '#ffff40', // yellow (rare)
+    ':': '#00c000', // green
+    ';': '#a000c8'  // purple
+  };
+
+  // Parse "ÿc#" color escapes into an array of {text, color} segments.
+  // Unrecognized escape codes are dropped (matching in-game behavior of staying
+  // on the current color). Returns one segment per color run.
+  function parseD2ColorEscapes(raw) {
+    if (raw == null) return [];
+    var s = String(raw);
+    var segments = [];
+    var color = '#ffffff';
+    var buf = '';
+    var i = 0;
+    while (i < s.length) {
+      // Match ÿc<char>. ÿ = U+00FF.
+      if (s.charCodeAt(i) === 0xFF && s.charAt(i + 1) === 'c' && i + 2 < s.length) {
+        if (buf) { segments.push({ text: buf, color: color }); buf = ''; }
+        var code = s.charAt(i + 2);
+        if (D2_ESCAPE_COLORS[code]) color = D2_ESCAPE_COLORS[code];
+        i += 3;
+        continue;
+      }
+      buf += s.charAt(i);
+      i++;
+    }
+    if (buf) segments.push({ text: buf, color: color });
+    return segments;
+  }
+
+  // Render a name containing D2 color escapes as colored HTML spans.
+  function renderD2ColorString(raw) {
+    var segs = parseD2ColorEscapes(raw);
+    if (!segs.length) return '';
+    var html = '';
+    for (var i = 0; i < segs.length; i++) {
+      html += '<span style="color:' + segs[i].color + '">' + escapeHtmlAttr(segs[i].text) + '</span>';
+    }
+    return html;
+  }
+
+  // Strip D2 color escapes, returning plain text. Used where HTML can't render
+  // (e.g. <option> element text).
+  function stripD2ColorEscapes(raw) {
+    var segs = parseD2ColorEscapes(raw);
+    var out = '';
+    for (var i = 0; i < segs.length; i++) out += segs[i].text;
+    return out;
+  }
+
+  // Minimal HTML escaper for use before escapeHtml() is in scope.
+  function escapeHtmlAttr(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   var RUNE_NAMES = [
     '', 'El', 'Eld', 'Tir', 'Nef', 'Eth', 'Ith', 'Tal', 'Ral', 'Ort', 'Thul',
     'Amn', 'Sol', 'Shael', 'Dol', 'Hel', 'Io', 'Lum', 'Ko', 'Fal', 'Lem',
@@ -5663,12 +5738,18 @@
     var maxLevel = levelKeys.length ? Math.max.apply(null, levelKeys) : 1;
     if (maxLevel < 1) maxLevel = 1;
     for (var lvl = 1; lvl <= maxLevel; lvl++) {
-      var label = names[lvl] ? lvl + ' — ' + names[lvl] : String(lvl);
-      selectEl.innerHTML += '<option value="' + lvl + '"' + (String(lvl) === currentVal ? ' selected' : '') + '>' + label + '</option>';
+      // <option> elements only render plain text, so strip D2 color escapes here.
+      var plain = names[lvl] ? stripD2ColorEscapes(names[lvl]) : '';
+      var label = plain ? lvl + ' — ' + plain : String(lvl);
+      selectEl.innerHTML += '<option value="' + lvl + '"' + (String(lvl) === currentVal ? ' selected' : '') + '>' + escapeHtmlAttr(label) + '</option>';
     }
-    // Show current level name at top
+    // Show current level name with D2 color escapes rendered as colored spans.
     var cur = parseInt(selectEl.value, 10);
-    nameEl.textContent = names[cur] || '';
+    if (names[cur]) {
+      nameEl.innerHTML = renderD2ColorString(names[cur]);
+    } else {
+      nameEl.textContent = '';
+    }
   }
 
   function initAllItems() {
@@ -5698,7 +5779,12 @@
 
     filtlvlSelect.addEventListener('change', function () {
       var names = parseFilterLevelNames(typeof getFullFilterText === 'function' ? getFullFilterText() : codeEditor.value);
-      filtlvlName.textContent = names[parseInt(this.value, 10)] || '';
+      var cur = names[parseInt(this.value, 10)];
+      if (cur) {
+        filtlvlName.innerHTML = renderD2ColorString(cur);
+      } else {
+        filtlvlName.textContent = '';
+      }
       renderAllItems();
     });
 
