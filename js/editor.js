@@ -1926,6 +1926,25 @@
     return rules;
   }
 
+  // Returns true if `str` would render to an empty/invisible name in-game.
+  // Strips only formatting/notification tokens (colors, borders, sounds, %CONTINUE%, etc.)
+  // — content-producing tokens like %NAME%, %BASENAME%, %ILVL%, %SOCK% are preserved
+  // because they expand to visible text. Without this distinction, an output like
+  // "%WHITE%%BASENAME%" would be wrongly classified as hidden.
+  function isHiddenName(str) {
+    if (!str) return true;
+    var s = str
+      .replace(/%(?:WHITE|RED|GREEN|DARK_GREEN|BLUE|GOLD|YELLOW|ORANGE|PURPLE|GRAY|BLACK|TAN|CORAL|SAGE|TEAL|LIGHT_GRAY)%/g, '')
+      .replace(/%(?:BORDER|MAP|DOT|PX)(?:-[0-9A-Fa-f]{1,2})?%/g, '')
+      .replace(/%SOUNDID-\d+%/g, '')
+      .replace(/%SOUND_\d+%/g, '')
+      .replace(/%NOTIFY[^%]*%/g, '')
+      .replace(/%CONTINUE%/g, '')
+      .replace(/%TIER-\d+%/g, '')
+      .replace(/%(?:CL|CS|NL)%/g, '');
+    return !s.trim();
+  }
+
   function matchItem(item, rules) {
     // PD2 %CONTINUE% semantics (from wiki):
     // - %CONTINUE% stores the current rule's output into %NAME% and continues checking.
@@ -1981,7 +2000,7 @@
         return {
           matched: true,
           rule: rule,
-          hidden: finalOutput === '' || !namePart.replace(/%[A-Z_0-9-]+%/g, '').trim(),
+          hidden: finalOutput === '' || isHiddenName(namePart),
           output: finalOutput,
           continued: anyMatched,
           allRules: allMatchedRules
@@ -1993,8 +2012,7 @@
     if (anyMatched) {
       var finalOut = storedName;
       if (storedDesc) finalOut = storedName + '{' + storedDesc + '}';
-      var nameVisible = storedName.replace(/%[A-Z_0-9-]+%/g, '').trim();
-      return { matched: true, rule: lastRule, hidden: !nameVisible, output: finalOut, continued: true, allRules: allMatchedRules };
+      return { matched: true, rule: lastRule, hidden: isHiddenName(storedName), output: finalOut, continued: true, allRules: allMatchedRules };
     }
     return { matched: false, hidden: false, output: '', rule: null, allRules: [] };
   }
