@@ -4781,10 +4781,9 @@
       if (c.extras.indexOf('lowrollcharm') !== -1) {
         lines.push('// --- Low-roll Charm Tag ---');
         var notTab = '!TABSK0 !TABSK1 !TABSK2 !TABSK8 !TABSK9 !TABSK10 !TABSK16 !TABSK17 !TABSK18 !TABSK24 !TABSK25 !TABSK26 !TABSK32 !TABSK33 !TABSK34 !TABSK40 !TABSK41 !TABSK42 !TABSK48 !TABSK49 !TABSK50';
-        var notClsk = '!CLSK0 !CLSK1 !CLSK2 !CLSK3 !CLSK4 !CLSK5 !CLSK6';
-        lines.push('ItemDisplay[cm1 MAG ID ' + notClsk + ' !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
-        lines.push('ItemDisplay[cm2 MAG ID ' + notClsk + ' !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
-        lines.push('ItemDisplay[cm3 MAG ID ' + notClsk + ' !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
+        lines.push('ItemDisplay[cm1 MAG ID !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
+        lines.push('ItemDisplay[cm2 MAG ID !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
+        lines.push('ItemDisplay[cm3 MAG ID !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
       }
       lines.push('');
 
