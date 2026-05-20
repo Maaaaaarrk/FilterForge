@@ -2921,6 +2921,7 @@
         circles: 'Circles', dots: 'Dots', crosses: 'Crosses', middot: 'Middle Dots',
         sockets: 'Socket Count', ilvl: 'Item Level', price: 'Vendor Price',
         crafting: 'Crafting Info', eth: 'Ethereal Tag', shortnames: 'Short Names', charmshort: 'Charm Short Names', uniquenames: 'Reveal Uniques', staffmods: 'Staffmods', wpnspeed: 'Weapon Speed',
+        gradejewelcharm: 'Grade Jewels & Charms', lowrollcharm: 'Tag low-roll charms',
         'all-rw': 'All Good Bases', 'eth-rw': 'Eth Bases Only', 'none-rw': 'None',
         hidegold: 'Hide Low Gold', hidekeys: 'Hide Keys',
         hidescrolls: 'Hide Scrolls', hidepots: 'Hide Small Potions',
@@ -4738,6 +4739,52 @@
       lines.push('ItemDisplay[WEAPON (MAG OR RARE OR CRAFT) ID EDAM>199]: %ORANGE%%EDAM%ED %NAME%%CONTINUE%{%NAME%}');
       // Chest DEF display
       lines.push('ItemDisplay[CHEST (MAG OR RARE OR CRAFT) ID DEF>400]: %TAN%%DEF%Def %NAME%%CONTINUE%{%NAME%}');
+
+      // Jewel & Charm grading (opt-in via extras toggles)
+      if (c.extras.indexOf('gradejewelcharm') !== -1) {
+        lines.push('// --- Jewel Grading ---');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID LIFE>14]: %RED%+%STAT7%Life %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID MANA>14]: %BLUE%+%STAT9%Mana %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID EDAM>29]: %RED%%EDAM%ED %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID STAT80>0]: %GREEN%%STAT80%MF %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID FCR>0]: %TAN%%STAT105%FCR %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID IAS>0]: %ORANGE%%STAT93%IAS %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID FHR>0]: %GOLD%%STAT99%FHR %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID FRW>0]: %GOLD%%STAT96%FRW %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[jew (MAG OR RARE) ID FBR>0]: %ORANGE%%STAT102%FBR %NAME%%CONTINUE%{%NAME%}');
+
+        lines.push('// --- Grand Charm Grading ---');
+        // Any +1 to a skill tab: OR across all class tab codes (no "any tab" shorthand in PD2 filter syntax)
+        var anyTab = '(TABSK0>0 OR TABSK1>0 OR TABSK2>0 OR TABSK8>0 OR TABSK9>0 OR TABSK10>0 OR TABSK16>0 OR TABSK17>0 OR TABSK18>0 OR TABSK24>0 OR TABSK25>0 OR TABSK26>0 OR TABSK32>0 OR TABSK33>0 OR TABSK34>0 OR TABSK40>0 OR TABSK41>0 OR TABSK42>0 OR TABSK48>0 OR TABSK49>0 OR TABSK50>0)';
+        lines.push('ItemDisplay[cm3 (MAG OR RARE) ID LIFE>34]: %RED%+%STAT7%Life %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm3 (MAG OR RARE) ID MANA>16]: %BLUE%+%STAT9%Mana %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm3 (MAG OR RARE) ID STAT80>24]: %GREEN%%STAT80%MF %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm3 (MAG OR RARE) ID RES>14]: %PURPLE%%RES%Res %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm3 (MAG OR RARE) ID FHR>9]: %GOLD%%STAT99%FHR %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm3 (MAG OR RARE) ID EDAM>0]: %RED%%EDAM%ED %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm3 (MAG OR RARE) ID ' + anyTab + ']: %PURPLE%+SkillTab %NAME%%CONTINUE%{%NAME%}');
+
+        lines.push('// --- Large Charm Grading ---');
+        lines.push('ItemDisplay[cm2 (MAG OR RARE) ID LIFE>29]: %RED%+%STAT7%Life %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm2 (MAG OR RARE) ID MANA>16]: %BLUE%+%STAT9%Mana %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm2 (MAG OR RARE) ID RES>14]: %PURPLE%%RES%Res %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm2 (MAG OR RARE) ID STAT80>14]: %GREEN%%STAT80%MF %NAME%%CONTINUE%{%NAME%}');
+
+        lines.push('// --- Small Charm Grading ---');
+        lines.push('ItemDisplay[cm1 (MAG OR RARE) ID LIFE>19]: %RED%+%STAT7%Life %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm1 (MAG OR RARE) ID MANA>9]: %BLUE%+%STAT9%Mana %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm1 (MAG OR RARE) ID RES>10]: %PURPLE%%RES%Res %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm1 (MAG OR RARE) ID STAT80>6]: %GREEN%%STAT80%MF %NAME%%CONTINUE%{%NAME%}');
+        lines.push('ItemDisplay[cm1 (MAG OR RARE) ID EDAM>0]: %RED%%EDAM%ED %NAME%%CONTINUE%{%NAME%}');
+      }
+
+      if (c.extras.indexOf('lowrollcharm') !== -1) {
+        lines.push('// --- Low-roll Charm Tag ---');
+        var notTab = '!TABSK0 !TABSK1 !TABSK2 !TABSK8 !TABSK9 !TABSK10 !TABSK16 !TABSK17 !TABSK18 !TABSK24 !TABSK25 !TABSK26 !TABSK32 !TABSK33 !TABSK34 !TABSK40 !TABSK41 !TABSK42 !TABSK48 !TABSK49 !TABSK50';
+        lines.push('ItemDisplay[cm1 MAG ID !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
+        lines.push('ItemDisplay[cm2 MAG ID !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
+        lines.push('ItemDisplay[cm3 MAG ID !RES !LIFE !MANA !STAT80 !FHR !EDAM ' + notTab + ']: %GRAY%[bad] %NAME%');
+      }
       lines.push('');
 
       // ==========================
