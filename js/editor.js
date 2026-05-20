@@ -6226,6 +6226,185 @@
   }
 
   // ==========================================
+  // In-editor Find (Ctrl+F, next/prev)
+  // ==========================================
+  function initEditorFind() {
+    var bar = document.getElementById('editor-find');
+    var input = document.getElementById('editor-find-input');
+    var countEl = document.getElementById('editor-find-count');
+    var caseBtn = document.getElementById('editor-find-case');
+    var prevBtn = document.getElementById('editor-find-prev');
+    var nextBtn = document.getElementById('editor-find-next');
+    var closeBtn = document.getElementById('editor-find-close');
+    var openBtn = document.getElementById('btn-find');
+    if (!bar || !input || !codeEditor) return;
+
+    var caseSensitive = false;
+    var matches = [];
+    var currentIdx = -1;
+
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function computeMatches() {
+      matches = [];
+      var term = input.value;
+      if (!term) {
+        currentIdx = -1;
+        updateCount();
+        return;
+      }
+      var flags = caseSensitive ? 'g' : 'gi';
+      var re;
+      try { re = new RegExp(escapeRegex(term), flags); } catch (e) { return; }
+      var text = codeEditor.value;
+      var m;
+      while ((m = re.exec(text)) !== null) {
+        matches.push({ start: m.index, end: m.index + m[0].length });
+        if (m[0].length === 0) re.lastIndex++;
+      }
+      updateCount();
+    }
+
+    function updateCount() {
+      if (!input.value) {
+        countEl.textContent = '0 / 0';
+        input.classList.remove('no-match');
+      } else if (matches.length === 0) {
+        countEl.textContent = '0 / 0';
+        input.classList.add('no-match');
+      } else {
+        countEl.textContent = (currentIdx + 1) + ' / ' + matches.length;
+        input.classList.remove('no-match');
+      }
+    }
+
+    function scrollMatchIntoView(match) {
+      var before = codeEditor.value.substring(0, match.start);
+      var lineNum = 0;
+      for (var i = 0; i < before.length; i++) {
+        if (before.charCodeAt(i) === 10) lineNum++;
+      }
+      var lineHeight = parseFloat(getComputedStyle(codeEditor).lineHeight) || 18;
+      var wrap = document.querySelector('.code-editor-wrap');
+      if (!wrap) return;
+      var targetY = lineNum * lineHeight;
+      var viewTop = wrap.scrollTop;
+      var viewBottom = viewTop + wrap.clientHeight;
+      if (targetY < viewTop || targetY + lineHeight > viewBottom) {
+        wrap.scrollTop = Math.max(0, targetY - wrap.clientHeight / 2);
+      }
+    }
+
+    function selectMatch(idx) {
+      if (matches.length === 0) { updateCount(); return; }
+      if (idx < 0) idx = matches.length - 1;
+      if (idx >= matches.length) idx = 0;
+      currentIdx = idx;
+      var m = matches[currentIdx];
+      codeEditor.focus();
+      codeEditor.setSelectionRange(m.start, m.end);
+      scrollMatchIntoView(m);
+      updateCount();
+    }
+
+    function findNext() {
+      if (matches.length === 0) computeMatches();
+      if (matches.length === 0) { updateCount(); return; }
+      selectMatch(currentIdx + 1);
+    }
+
+    function findPrev() {
+      if (matches.length === 0) computeMatches();
+      if (matches.length === 0) { updateCount(); return; }
+      selectMatch(currentIdx - 1);
+    }
+
+    function openFind() {
+      bar.hidden = false;
+      var caret = codeEditor.selectionStart;
+      var sel = codeEditor.value.substring(codeEditor.selectionStart, codeEditor.selectionEnd);
+      if (sel && sel.length < 200 && sel.indexOf('\n') === -1) {
+        input.value = sel;
+      }
+      computeMatches();
+      currentIdx = -1;
+      if (matches.length > 0 && input.value) {
+        var startIdx = 0;
+        for (var i = 0; i < matches.length; i++) {
+          if (matches[i].start >= caret) { startIdx = i; break; }
+          startIdx = 0;
+        }
+        selectMatch(startIdx);
+      }
+      input.focus();
+      input.select();
+    }
+
+    function closeFind() {
+      bar.hidden = true;
+      input.classList.remove('no-match');
+      codeEditor.focus();
+    }
+
+    input.addEventListener('input', function () {
+      computeMatches();
+      currentIdx = -1;
+      if (matches.length > 0) selectMatch(0);
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (e.shiftKey) findPrev(); else findNext();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeFind();
+      }
+    });
+
+    nextBtn.addEventListener('click', findNext);
+    prevBtn.addEventListener('click', findPrev);
+    closeBtn.addEventListener('click', closeFind);
+    if (openBtn) openBtn.addEventListener('click', function () {
+      if (bar.hidden) openFind(); else closeFind();
+    });
+
+    caseBtn.addEventListener('click', function () {
+      caseSensitive = !caseSensitive;
+      caseBtn.setAttribute('aria-pressed', caseSensitive ? 'true' : 'false');
+      computeMatches();
+      currentIdx = -1;
+      if (matches.length > 0) selectMatch(0);
+      input.focus();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      var key = e.key;
+      if ((e.ctrlKey || e.metaKey) && (key === 'f' || key === 'F')) {
+        var pane = document.getElementById('pane-code');
+        if (!pane || pane.style.display === 'none') return;
+        var active = document.activeElement;
+        var inEditorArea = active === codeEditor || active === input || (pane.contains(active));
+        if (!inEditorArea) return;
+        e.preventDefault();
+        if (bar.hidden) openFind(); else { input.focus(); input.select(); }
+      } else if (key === 'Escape' && !bar.hidden) {
+        e.preventDefault();
+        closeFind();
+      }
+    });
+
+    codeEditor.addEventListener('input', function () {
+      if (!bar.hidden) {
+        computeMatches();
+        currentIdx = -1;
+      }
+    });
+  }
+
+  // ==========================================
   // Initialize everything
   // ==========================================
   function init() {
@@ -6252,6 +6431,7 @@
     initAuthorImport();
     initCommunityMode();
     initAllItems();
+    initEditorFind();
 
     // Auto-open author import if ?author= in URL
     var urlParams2 = new URLSearchParams(window.location.search);
