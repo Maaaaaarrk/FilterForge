@@ -30,6 +30,21 @@
     "author": "HiimFilter"
   },
   {
+    "name": "HiimFilter - Hyper",
+    "url": "https://api.github.com/repos/Maaaaaarrk/HiimFilter-PD2-Filter/contents/filtergroups/hiimhyper",
+    "author": "Hiim - Hyper"
+  },
+  {
+    "name": "HiimFilter - TalRasha",
+    "url": "https://api.github.com/repos/Maaaaaarrk/HiimFilter-PD2-Filter/contents/filtergroups/hiimtalrasha",
+    "author": "Hiim - TalRasha"
+  },
+  {
+    "name": "HiimFilter - Vanilla+",
+    "url": "https://api.github.com/repos/Maaaaaarrk/HiimFilter-PD2-Filter/contents/filtergroups/hiimvanillaplus",
+    "author": "Hiim - Vanilla+"
+  },
+  {
     "name": "DarkHumility + ADev Filter",
     "url": "https://api.github.com/repos/DarkHumility/DHFilter/contents",
     "author": "ADevDH"
@@ -50,11 +65,6 @@
     "author": "PiLLLa"
   },
   {
-    "name": "Loot Goblin Filter",
-    "url": "https://api.github.com/repos/PreyInstinct/Loot-Goblin-Filter/contents",
-    "author": "PreyInstinct"
-  },
-  {
     "name": "Roofoo's Filter",
     "url": "https://api.github.com/repos/RoofooEvazan/Roofoo-s-PD2-Loot-Filter/contents",
     "author": "Roofoo"
@@ -63,5 +73,25 @@
     "name": "Phyx10n's Filter",
     "url": "https://api.github.com/repos/Phyx10n/PD2-Filter/contents",
     "author": "Phyx10n"
+  },
+  {
+    "name": "Vylens PD2 Filter",
+    "url": "https://api.github.com/repos/Vylens/Vylens-PD2-Filter/contents",
+    "author": "Vylens"
+  },
+  {
+    "name": "Kassahi & Philanthropy777 Filter",
+    "url": "https://api.github.com/repos/Maaaaaarrk/HiimFilter-PD2-Filter/contents/filtergroups/phil777",
+    "author": "Philanthropy777"
+  },
+  {
+    "name": "THE MATRIX ARCHITECT",
+    "url": "https://api.github.com/repos/huns1313/THE-MATRIX-ARCHITECT/contents",
+    "author": "huns1313"
+  },
+  {
+    "name": "Loot Goblin Filter",
+    "url": "https://api.github.com/repos/PreyInstinct/Loot-Goblin-Filter/contents",
+    "author": "PreyInstinct"
   }
 ]
