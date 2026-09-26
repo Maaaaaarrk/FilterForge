@@ -14,15 +14,16 @@
   top: 0;
   width: 2.25rem;
   height: 2.25rem;
-  background: var(--bg-tertiary);
-  border: 2px solid var(--accent-primary);
-  border-radius: 50%;
+  background: var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--button-primary-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-primary);
+  color: var(--accent-contrast);
+  font-family: var(--font-num);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: calc(1.6rem * var(--num-scale));
 }
 
 .guide-step h2 {
@@ -32,7 +33,7 @@
 .guide-step h3 {
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
-  color: var(--text-primary);
+  color: var(--text-strong);
 }
 
 .guide-step ul, .guide-step ol {
@@ -56,6 +57,6 @@
   .step-number {
     width: 2rem;
     height: 2rem;
-    font-size: 0.9rem;
+    font-size: calc(1.4rem * var(--num-scale));
   }
 }

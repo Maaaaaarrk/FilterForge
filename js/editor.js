@@ -1006,7 +1006,7 @@
 
   function hideHighlight() {
     highlightEl.style.display = 'none';
-    codeEditor.style.color = 'var(--text-primary)';
+    codeEditor.style.color = 'var(--text)';
   }
 
   function highlightCode() {
@@ -5393,7 +5393,7 @@
       }
       listEl.innerHTML = '';
       if (!items.length) {
-        listEl.innerHTML = '<div style="padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;">No matches</div>';
+        listEl.innerHTML = '<div style="padding:0.5rem;color:var(--text-muted);font-size:0.8rem;">No matches</div>';
         return;
       }
       items.forEach(function (item) {
@@ -5468,7 +5468,7 @@
           listEl.appendChild(row);
         });
         if (!unique.length) {
-          listEl.innerHTML = '<div style="padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;">No matches</div>';
+          listEl.innerHTML = '<div style="padding:0.5rem;color:var(--text-muted);font-size:0.8rem;">No matches</div>';
         }
       } else {
         renderItems(currentCat, '');

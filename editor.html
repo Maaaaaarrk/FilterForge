@@ -16,11 +16,13 @@
   <meta name="description" content="Create and edit Project Diablo 2 item filters with a visual rule builder, live preview, and code editor.">
   <meta property="og:title" content="Filter Editor — Filter Forge">
   <meta property="og:description" content="Build and customize PD2 loot filters with a visual editor.">
+  <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/editor.css">
 </head>
 <body>
   <nav class="nav">
+    <a href="https://hiimpd2.com" class="nav-home" title="Hiim PD2"><img src="hiimpd2-logo.png" alt="Hiim PD2" class="pixel" width="48" height="48"></a>
     <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
     <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
@@ -28,7 +30,9 @@
       <li><a href="filters.html">Filters</a></li>
       <li><a href="guide.html">Guide</a></li>
       <li><a href="editor.html" class="active">Editor</a></li>
+      <li class="nav-theme-item"><button type="button" class="theme-toggle" aria-label="Switch to the modern style" title="Switch to the modern style"><span class="theme-toggle-hint">Switch to:</span> <span class="theme-toggle-label">Modern style</span></button></li>
     </ul>
+    <button type="button" class="theme-toggle" aria-label="Switch to the modern style" title="Switch to the modern style"><span class="theme-toggle-hint">Switch to:</span> <span class="theme-toggle-label">Modern style</span></button>
     <a href="https://github.com/Maaaaaarrk/FilterForge/issues" target="_blank" rel="noopener" class="nav-issue-btn" title="Report an issue">Report Issue</a>
     <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
   </nav>
@@ -81,7 +85,7 @@
             <div id="author-step-3" style="display:none">
               <div class="text-center" style="padding:2rem 0">
                 <p id="author-loading-msg">Downloading filter...</p>
-                <p id="author-error-msg" style="display:none;color:#ff4040">Failed to download filter. Please try again.</p>
+                <p id="author-error-msg" style="display:none;color:var(--danger-text)">Failed to download filter. Please try again.</p>
               </div>
             </div>
 

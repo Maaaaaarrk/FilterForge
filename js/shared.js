@@ -42,6 +42,27 @@
     });
   }
 
+  // Retro/Modern style toggle (same styles as hiimpd2.com)
+  var themeToggles = document.querySelectorAll('.theme-toggle');
+  function renderThemeToggles() {
+    var next = document.documentElement.dataset.theme === 'modern' ? 'retro' : 'modern';
+    themeToggles.forEach(function (btn) {
+      btn.querySelector('.theme-toggle-label').textContent = next === 'modern' ? 'Modern style' : 'Retro style';
+      btn.setAttribute('aria-label', 'Switch to the ' + next + ' style');
+      btn.title = 'Switch to the ' + next + ' style';
+    });
+  }
+  themeToggles.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var next = document.documentElement.dataset.theme === 'modern' ? 'retro' : 'modern';
+      if (next === 'modern') document.documentElement.dataset.theme = 'modern';
+      else delete document.documentElement.dataset.theme;
+      try { localStorage.setItem('filterforge.theme', next); } catch (e) {}
+      renderThemeToggles();
+    });
+  });
+  renderThemeToggles();
+
   // Copy-to-clipboard for code blocks
   document.querySelectorAll('pre code').forEach(function (codeBlock) {
     var pre = codeBlock.parentElement;

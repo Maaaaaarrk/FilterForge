@@ -10,54 +10,74 @@
 }
 
 .filter-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  margin: var(--px);
+  background: var(--panel-bg);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow);
   padding: 1.25rem 1.5rem;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: box-shadow var(--step);
 }
 
 .filter-card:hover {
-  border-color: var(--accent-primary);
-  transform: translateY(-2px);
+  box-shadow: var(--panel-shadow-hover);
 }
 
 .filter-card-name {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: var(--heading-weight);
+  line-height: 1.2;
+  text-transform: var(--text-case);
+  color: var(--heading);
+  text-shadow: var(--heading-shadow);
   margin-bottom: 0.35rem;
+  -webkit-font-smoothing: var(--font-smoothing);
 }
 
 .filter-card-author {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 0.85rem;
   margin-bottom: 1rem;
 }
 
 .filter-card-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
 }
 
 .filter-card-links a {
-  font-size: 0.85rem;
-  padding: 0.3rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text-secondary);
-  transition: color 0.2s, border-color 0.2s;
+  margin: var(--px);
+  padding: var(--space-1) 12px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: var(--ui-weight);
+  line-height: 20px;
+  text-transform: var(--text-case);
+  color: var(--text-strong);
+  background: var(--button-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--button-shadow);
+  -webkit-font-smoothing: var(--font-smoothing);
 }
 
 .filter-card-links a:hover {
-  color: var(--accent-primary);
-  border-color: var(--accent-primary);
+  color: var(--accent-strong);
   text-decoration: none;
 }
 
-.filter-card-load {
-  color: var(--accent-primary);
-  border-color: var(--accent-primary);
+.filter-card-links a:active {
+  box-shadow: var(--button-shadow-pressed);
+}
+
+.filter-card-links a.filter-card-load {
+  color: var(--accent-contrast);
+  background: var(--accent);
+  box-shadow: var(--button-primary-shadow);
+}
+
+.filter-card-links a.filter-card-load:hover {
+  background: var(--button-primary-hover);
 }
 
 .filter-card.hidden,
@@ -67,20 +87,20 @@
 
 .filters-no-results {
   text-align: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   padding: 3rem 0;
   font-size: 1.1rem;
 }
 
 .filters-loading {
   text-align: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   padding: 3rem 0;
 }
 
 .filters-error {
   text-align: center;
-  color: var(--error);
+  color: var(--danger-text);
   padding: 3rem 0;
 }
 
