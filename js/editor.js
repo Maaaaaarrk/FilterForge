@@ -177,6 +177,44 @@
     ';': '#a000c8'  // purple
   };
 
+  // Some PD2 items have a color code baked into their name in the game's string
+  // tables (e.g. "ÿc8Ber Rune", "ÿc4Skeleton Key"). In-game, %NAME% expands to that
+  // raw string, so the embedded color overrides whatever color preceded %NAME% and
+  // stays active for the text that follows it (until the next color code).
+  // Runes (RUNE>0) are all "ÿc8" (orange) and are handled separately.
+  var HARDCODED_NAME_COLOR_CODES = {
+    'wss': '1',   // ÿc1Worldstone Shard (red)
+    'lbox': '4',  // ÿc4Larzuk's Puzzlebox (gold)
+    'lpp': '4',   // ÿc4Larzuk's Puzzlepiece (gold)
+    'rkey': '4'   // ÿc4Skeleton Key (gold)
+  };
+
+  // Returns the ÿc color code character embedded in an item's in-game name, or ''.
+  function getHardcodedNameColorCode(item) {
+    if (!item) return '';
+    if (item.values && item.values.RUNE > 0) return '8';
+    return HARDCODED_NAME_COLOR_CODES[item.code] || '';
+  }
+
+  // Returns the item's name as the game sees it for %NAME% — including any
+  // embedded "ÿc" color code.
+  function getRawItemName(item) {
+    var code = getHardcodedNameColorCode(item);
+    return code ? '\u00FFc' + code + item.name : item.name;
+  }
+
+  // Default display color for an item when no filter rule recolors it.
+  function getDefaultItemColor(item) {
+    var hard = getHardcodedNameColorCode(item);
+    if (hard && D2_ESCAPE_COLORS[hard]) return D2_ESCAPE_COLORS[hard];
+    if (item.flags.indexOf('UNI') !== -1) return '#c8a040'; // gold
+    if (item.flags.indexOf('SET') !== -1) return '#00c000'; // green
+    if (item.flags.indexOf('RARE') !== -1) return '#ffff40'; // yellow
+    if (item.flags.indexOf('CRAFT') !== -1) return '#ff8000'; // orange
+    if (item.flags.indexOf('MAG') !== -1) return '#6464ff'; // blue
+    return '#ffffff'; // white (normal / misc)
+  }
+
   // Parse "ÿc#" color escapes into an array of {text, color} segments.
   // Unrecognized escape codes are dropped (matching in-game behavior of staying
   // on the current color). Returns one segment per color run.
@@ -1953,7 +1991,9 @@
     // - Both are tracked separately and resolved contextually.
     // - %CONTINUE% must be outside braces.
 
-    var storedName = item.name; // %NAME% outside {} starts as item's default name
+    // %NAME% outside {} starts as the item's in-game name, including any color code
+    // baked into it (e.g. runes are "ÿc8Ber Rune"), so the name keeps its own color.
+    var storedName = getRawItemName(item);
     var storedDesc = '';        // %NAME% inside {} starts empty
     var lastRule = null;
     var anyMatched = false;
@@ -2233,18 +2273,9 @@
       cssClass += ' selected';
     }
 
-    // Default rarity color for items before filter applies
-    var rarityColor = '#ffffff';
-    if (item.flags.indexOf('UNI') !== -1) rarityColor = '#c8a040'; // gold
-    else if (item.flags.indexOf('SET') !== -1) rarityColor = '#00c000'; // green
-    else if (item.flags.indexOf('RARE') !== -1) rarityColor = '#ffff40'; // yellow
-    else if (item.flags.indexOf('CRAFT') !== -1) rarityColor = '#ff8000'; // orange
-    else if (item.flags.indexOf('MAG') !== -1) rarityColor = '#6464ff'; // blue
-    else if (item.values && item.values.RUNE > 0) rarityColor = '#ff8000'; // orange for runes
-    else if (item.flags.indexOf('NMAG') !== -1) rarityColor = '#ffffff'; // white
-    // PD2 special item base colors
-    if (item.code === 'wss' || item.code === 'cwss') rarityColor = '#ff4040'; // red for Worldstone Shard
-    else if (item.code === 'lbox' || item.code === 'lpp') rarityColor = '#c8a040'; // gold for Puzzlebox/Puzzlepiece
+    // Default color for items before filter applies (rarity, or the color
+    // hard-coded into the item's in-game name for runes / PD2 specials)
+    var rarityColor = getDefaultItemColor(item);
 
     var displayName;
     if (result.matched && result.output) {
@@ -2336,7 +2367,7 @@
     // %NAME% is resolved by matchItem during %CONTINUE% processing
     // Only replace if there are still unresolved %NAME% tokens (non-CONTINUE rules)
     if (text.indexOf('%NAME%') !== -1) {
-      text = text.replace(/%NAME%/g, item.name);
+      text = text.replace(/%NAME%/g, getRawItemName(item));
     }
     text = text.replace(/%RUNENAME%/g, RUNE_NAMES[item.values.RUNE] || '');
     text = text.replace(/%RUNENUM%/g, item.values.RUNE || '');
@@ -2359,7 +2390,7 @@
     text = text.replace(/%SELLPRICE%/g, item.values.SELLPRICE || '0');
     text = text.replace(/%QTY%/g, item.values.QTY || '0');
     text = text.replace(/%MAPTIER%/g, item.values.MAPTIER || '0');
-    text = text.replace(/%BASENAME%/g, item.name);
+    text = text.replace(/%BASENAME%/g, getRawItemName(item));
     text = text.replace(/%LVLREQ%/g, item.values.LVLREQ || '0');
     // New BH keys — dimensions, upgrade reqs, current reqs, base damage, etc.
     text = text.replace(/%WIDTH%/g, item.values.WIDTH || '0');
@@ -2434,18 +2465,7 @@
     text = text.replace(/\{[^}]*\}/g, '');
 
     // Convert colors to spans — start with item's rarity color
-    var rarityColor = '#ffffff'; // default white
-    if (item.flags.indexOf('UNI') !== -1) rarityColor = '#c8a040';
-    else if (item.flags.indexOf('SET') !== -1) rarityColor = '#00c000';
-    else if (item.flags.indexOf('RARE') !== -1) rarityColor = '#ffff40';
-    else if (item.flags.indexOf('CRAFT') !== -1) rarityColor = '#ff8000';
-    else if (item.flags.indexOf('MAG') !== -1) rarityColor = '#6464ff';
-    else if (item.values && item.values.RUNE > 0) rarityColor = '#ff8000';
-    else if (item.flags.indexOf('NMAG') !== -1) rarityColor = '#ffffff';
-    // PD2 special item base colors
-    if (item.code === 'wss' || item.code === 'cwss') rarityColor = '#ff4040'; // red for Worldstone Shard
-    else if (item.code === 'lbox' || item.code === 'lpp') rarityColor = '#c8a040'; // gold for Puzzlebox/Puzzlepiece
-    var currentColor = rarityColor;
+    var currentColor = getDefaultItemColor(item);
     var result = '';
     // Split by color tokens — but also handle adjacent tokens carefully
     // Process character by character to avoid regex split issues
