@@ -11,7 +11,7 @@
   },
   {
     "name": "Kassahi's PD2 Filter",
-    "url": "https://api.github.com/repos/KassahiPD2/Kassahi/contents",
+    "url": "https://api.github.com/repos/Maaaaaarrk/HiimFilter-PD2-Filter/contents/filtergroups/kassahi",
     "author": "Kassahi"
   },
   {
@@ -88,10 +88,5 @@
     "name": "THE MATRIX ARCHITECT",
     "url": "https://api.github.com/repos/huns1313/THE-MATRIX-ARCHITECT/contents",
     "author": "huns1313"
-  },
-  {
-    "name": "Loot Goblin Filter",
-    "url": "https://api.github.com/repos/PreyInstinct/Loot-Goblin-Filter/contents",
-    "author": "PreyInstinct"
   }
 ]
