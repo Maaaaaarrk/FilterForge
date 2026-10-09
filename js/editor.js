@@ -6777,21 +6777,14 @@
       }
     }
 
+    // The editor is full-length and the page scrolls (not .code-editor-wrap),
+    // so scroll the window like goToLine does
     function scrollMatchIntoView(match) {
-      var before = codeEditor.value.substring(0, match.start);
-      var lineNum = 0;
-      for (var i = 0; i < before.length; i++) {
-        if (before.charCodeAt(i) === 10) lineNum++;
+      var lineIdx = 0;
+      for (var i = 0; i < match.start; i++) {
+        if (codeEditor.value.charCodeAt(i) === 10) lineIdx++;
       }
-      var lineHeight = parseFloat(getComputedStyle(codeEditor).lineHeight) || 18;
-      var wrap = document.querySelector('.code-editor-wrap');
-      if (!wrap) return;
-      var targetY = lineNum * lineHeight;
-      var viewTop = wrap.scrollTop;
-      var viewBottom = viewTop + wrap.clientHeight;
-      if (targetY < viewTop || targetY + lineHeight > viewBottom) {
-        wrap.scrollTop = Math.max(0, targetY - wrap.clientHeight / 2);
-      }
+      scrollEditorLineIntoView(lineIdx, true);
     }
 
     function selectMatch(idx) {
@@ -6800,7 +6793,7 @@
       if (idx >= matches.length) idx = 0;
       currentIdx = idx;
       var m = matches[currentIdx];
-      codeEditor.focus();
+      codeEditor.focus({ preventScroll: true });
       codeEditor.setSelectionRange(m.start, m.end);
       scrollMatchIntoView(m);
       updateCount();

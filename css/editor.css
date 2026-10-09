@@ -586,6 +586,20 @@ html[data-theme='modern'] .editor-tab.active {
   color: var(--text-muted);
 }
 
+.editor-meta {
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
+}
+
+.editor-meta-hint {
+  margin-left: auto;
+  color: var(--text-dim);
+}
+
+.editor-meta-hint + .editor-meta-btn {
+  margin-left: 0;
+}
+
 .editor-meta-btn {
   margin-left: auto;
   padding: 0.2rem 0.55rem;
