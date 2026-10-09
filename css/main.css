@@ -460,8 +460,8 @@ pre code {
 .nav-hamburger {
   display: none;
   flex: none;
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 44px;
+  min-height: 44px;
   margin: var(--px);
   padding: 0 10px;
   font-size: 1.25rem;
@@ -853,6 +853,25 @@ html[data-theme='modern'] .search-input {
 
   .nav-logo-img {
     height: 32px;
+  }
+}
+
+/* Touch screens: keep tap targets at least 44px */
+@media (pointer: coarse) {
+  .nav-issue-btn,
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .nav-links a,
+  .nav-theme-item .theme-toggle {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 }
 

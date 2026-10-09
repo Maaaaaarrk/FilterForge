@@ -104,6 +104,15 @@
   padding: 3rem 0;
 }
 
+/* Touch screens: keep tap targets at least 44px */
+@media (pointer: coarse) {
+  .filter-card-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 @media (max-width: 768px) {
   .filter-grid {
     grid-template-columns: 1fr;
