@@ -1,7 +1,8 @@
 /* ============================================
    Filter Forge — Design System & Shared Styles
-   Theme tokens match hiimpd2.com: Retro is the
-   default, Modern is html[data-theme='modern'].
+   Theme tokens match hiimpd2.com: Modern is the
+   default (html[data-theme='modern']); Retro is the
+   base styles, used when no data-theme is set.
    ============================================ */
 
 @font-face {
