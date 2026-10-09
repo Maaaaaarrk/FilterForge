@@ -188,6 +188,7 @@ html[data-theme='modern'] {
   --panel-header-bg: var(--surface-raised);
   --panel-pad: 0px;
   --well-shadow: 0 0 0 1px var(--border);
+  --nav-bar-edge: 1px;
 
   font-variant-numeric: tabular-nums;
 }
@@ -325,6 +326,10 @@ pre code {
   z-index: 1000;
 }
 
+html[data-theme='modern'] .nav {
+  box-shadow: 0 var(--nav-bar-edge) 0 0 var(--border);
+}
+
 .nav-home,
 .nav-logo {
   display: inline-flex;
@@ -396,6 +401,15 @@ pre code {
 .nav-links a:hover::before {
   opacity: 1;
   animation: pixel-blink 800ms steps(1) infinite;
+}
+
+/* Modern has no blinking pixel cursor, so drop its gutter */
+html[data-theme='modern'] .nav-links a {
+  padding-left: 12px;
+}
+
+html[data-theme='modern'] .nav-links a::before {
+  display: none;
 }
 
 .nav-links a.active {
@@ -515,6 +529,12 @@ pre code {
   background: repeating-conic-gradient(var(--p-void) 0 25%, var(--p-blood-dk) 0 50%) 0 12px / 8px 8px repeat-x,
     linear-gradient(transparent 20px, var(--p-blood-dk) 20px);
   box-shadow: 0 calc(-1 * var(--px)) 0 0 var(--ink), 0 calc(-1 * var(--px2)) 0 0 var(--p-steel-dk), 0 -12px 0 0 var(--ink);
+}
+
+html[data-theme='modern'] .footer {
+  padding-top: 1.5rem;
+  background: var(--surface);
+  box-shadow: 0 -1px 0 0 var(--border);
 }
 
 .footer p {
@@ -853,6 +873,11 @@ html[data-theme='modern'] .search-input:focus-visible {
 
   .nav-links a::before {
     left: 8px;
+  }
+
+  html[data-theme='modern'] .nav-links a,
+  html[data-theme='modern'] .nav-theme-item .theme-toggle {
+    padding-left: 12px;
   }
 
   .nav-logo {

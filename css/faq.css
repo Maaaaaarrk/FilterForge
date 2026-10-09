@@ -86,6 +86,11 @@
   overflow: hidden;
 }
 
+/* Modern: --outline is already a 1px border, so skip the inset second line */
+html[data-theme='modern'] .faq-item {
+  box-shadow: var(--outline);
+}
+
 .faq-question {
   display: flex;
   align-items: center;
