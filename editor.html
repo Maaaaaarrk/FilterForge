@@ -938,10 +938,11 @@
           <!-- Preview pane -->
           <div class="editor-pane" id="pane-preview" style="display:none">
             <div class="preview-header">
-              <p class="text-muted">Preview shows how your rules will display items on the ground. All magic, rare, unique, and set items are unidentified (!ID). Select an item and adjust the filter level to test. For a more advanced preview, try <a href="https://equa1itype4ce.github.io/filterbird/index.html?v=PD2&amp;fromweb=true" target="_blank" rel="noopener" >FilterBird &rarr;</a></p>
+              <p class="text-muted">Preview shows how your rules will display items on the ground. All magic, rare, unique, and set items are unidentified (!ID). It updates whenever you open this tab. Pin an item to the top of the list and change the filter level to test. For a more advanced preview, try <a href="https://equa1itype4ce.github.io/filterbird/index.html?v=PD2&amp;fromweb=true" target="_blank" rel="noopener" >FilterBird &rarr;</a></p>
             </div>
             <div class="preview-test-bar">
-              <select id="preview-item-type" aria-label="Preview item type">
+              <label class="preview-filtlvl-label preview-pin-label" for="preview-item-type">Pin item to top:</label>
+              <select id="preview-item-type">
                 <optgroup label="Runes">
                   <option value="rune-zod">Zod Rune (r33)</option>
                   <option value="rune-ber" selected>Ber Rune (r30)</option>
@@ -1039,14 +1040,13 @@
                   <option value="pd2-map-t3-rare">T3 Rare Map (t34)</option>
                 </optgroup>
               </select>
-              <label class="preview-filtlvl-label">FILTLVL:
+              <label class="preview-filtlvl-label">Filter Level:
                 <select id="preview-filtlvl">
                   <option value="0">0 — Off</option>
                   <option value="1" selected>1</option>
                 </select>
                 <span class="preview-filtlvl-name" id="preview-filtlvl-name"></span>
               </label>
-              <button class="btn btn-secondary" id="btn-test-rule">Test</button>
             </div>
             <div class="preview-results" id="preview-results">
               <p class="text-muted text-center">Select an item to see how your filter handles it.</p>

@@ -802,6 +802,20 @@ html[data-theme='modern'] .editor-tab.active {
   font-size: 0.85rem;
 }
 
+.preview-test-bar {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.preview-test-bar select#preview-item-type {
+  min-width: 12rem;
+}
+
+.preview-item-rule code[data-fulltext],
+.preview-chain-rule code[data-fulltext] {
+  cursor: help;
+}
+
 .preview-filtlvl-name {
   color: var(--text-muted);
   font-style: italic;

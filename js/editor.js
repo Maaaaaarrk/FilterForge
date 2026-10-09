@@ -2267,13 +2267,8 @@
   }
 
   function initPreview() {
-    var btnTest = document.getElementById('btn-test-rule');
     var itemSelect = document.getElementById('preview-item-type');
     var filtlvlSelect = document.getElementById('preview-filtlvl');
-
-    btnTest.addEventListener('click', function () {
-      testAllItems();
-    });
 
     // Re-test on item or filter level change
     itemSelect.addEventListener('change', function () {
@@ -2282,6 +2277,7 @@
 
     if (filtlvlSelect) {
       filtlvlSelect.addEventListener('change', function () {
+        currentFilterLevel = parseInt(filtlvlSelect.value, 10) || 0;
         testAllItems();
       });
     }
@@ -2321,6 +2317,35 @@
       if (!code) return;
       tooltip.classList.remove('visible');
     });
+
+    // Keyboard focus and taps (which focus the tabindex=0 code) show the
+    // full rule too, anchored under the element instead of the pointer
+    function placeTooltipUnder(code) {
+      var anchor = code.getBoundingClientRect();
+      var rect = tooltip.getBoundingClientRect();
+      var x = Math.min(anchor.left, window.innerWidth - rect.width - 8);
+      var y = anchor.bottom + 6;
+      if (y + rect.height > window.innerHeight - 8) y = anchor.top - rect.height - 6;
+      tooltip.style.left = Math.max(8, x) + 'px';
+      tooltip.style.top = Math.max(8, y) + 'px';
+    }
+    previewResults.addEventListener('focusin', function (e) {
+      var code = e.target.closest('code[data-fulltext]');
+      if (!code) return;
+      tooltip.textContent = code.getAttribute('data-fulltext');
+      tooltip.classList.add('visible');
+      placeTooltipUnder(code);
+    });
+    previewResults.addEventListener('focusout', function (e) {
+      if (e.target.closest('code[data-fulltext]')) tooltip.classList.remove('visible');
+    });
+    // Keep a focus-opened tooltip attached to its code while scrolling
+    window.addEventListener('scroll', function () {
+      var active = document.activeElement;
+      if (active && active.matches && active.matches('code[data-fulltext]') && tooltip.classList.contains('visible')) {
+        placeTooltipUnder(active);
+      }
+    }, true);
   }
 
   function testAllItems() {
@@ -2634,8 +2659,7 @@
 
     // FILTLVL — use value from preview selector (must be checked BEFORE generic value conditions)
     if (token.indexOf('FILTLVL') === 0) {
-      var flSelect = document.getElementById('preview-filtlvl');
-      var currentFL = flSelect ? parseInt(flSelect.value, 10) : 1;
+      var currentFL = currentFilterLevel;
       var flMatch = token.match(/FILTLVL([<>=~])(.+)/);
       if (flMatch) {
         var flOp = flMatch[1];
@@ -2807,7 +2831,7 @@
       // Effective computed output
       html += '<div class="preview-chain-rule chain-result">';
       html += '<span class="chain-effective">computed</span> ';
-      html += '<code data-fulltext="' + escapeHtml(result.output) + '">' + escapeHtml(truncateRule(result.output, 100)) + '</code>';
+      html += '<code tabindex="0" data-fulltext="' + escapeHtml(result.output) + '">' + escapeHtml(truncateRule(result.output, 100)) + '</code>';
       html += '</div>';
       // Each rule in the chain
       for (var ri = 0; ri < result.allRules.length; ri++) {
@@ -2817,14 +2841,14 @@
         html += '<div class="preview-chain-rule">';
         html += '<span class="chain-line">L' + r.lineNum + '</span> ';
         html += label + ' ';
-        html += '<code data-fulltext="' + escapeHtml(r.raw) + '">' + escapeHtml(truncateRule(r.raw, 70)) + '</code> ';
+        html += '<code tabindex="0" data-fulltext="' + escapeHtml(r.raw) + '">' + escapeHtml(truncateRule(r.raw, 70)) + '</code> ';
         html += '<button class="btn-goto-line" data-line="' + r.lineNum + '">&rarr;</button>';
         html += '</div>';
       }
       html += '</div>';
     } else {
       html += '<div class="preview-item-rule">Matched line ' + result.rule.lineNum;
-      html += ' — <code data-fulltext="' + escapeHtml(result.rule.raw) + '">' + escapeHtml(truncateRule(result.rule.raw, 90)) + '</code>';
+      html += ' — <code tabindex="0" data-fulltext="' + escapeHtml(result.rule.raw) + '">' + escapeHtml(truncateRule(result.rule.raw, 90)) + '</code>';
       html += ' <button class="btn-goto-line" data-line="' + result.rule.lineNum + '">Go to line &rarr;</button>';
       html += '</div>';
     }
@@ -6405,9 +6429,13 @@
     return names;
   }
 
+  // Filter level used by FILTLVL conditions in Live Preview and All Items.
+  // Shared so changing it on one tab carries over to the other.
+  var currentFilterLevel = 1;
+
   function populateFilterLevelDropdown(selectEl, nameEl, text) {
     var names = parseFilterLevelNames(text);
-    var currentVal = selectEl.value || '1';
+    var currentVal = String(currentFilterLevel);
     selectEl.innerHTML = '<option value="0">0 — Off</option>';
     // Use highest defined level (handles both sequential [] and indexed [N] syntax,
     // including filters like Kassahi that go up to [12]).
@@ -6420,6 +6448,8 @@
       var label = plain ? lvl + ' — ' + plain : String(lvl);
       selectEl.innerHTML += '<option value="' + lvl + '"' + (String(lvl) === currentVal ? ' selected' : '') + '>' + escapeHtmlAttr(label) + '</option>';
     }
+    // The level may not exist in this filter; follow what the select shows
+    currentFilterLevel = parseInt(selectEl.value, 10) || 0;
     // Show current level name with D2 color escapes rendered as colored spans.
     var cur = parseInt(selectEl.value, 10);
     if (names[cur]) {
@@ -6455,6 +6485,7 @@
     });
 
     filtlvlSelect.addEventListener('change', function () {
+      currentFilterLevel = parseInt(this.value, 10) || 0;
       var names = parseFilterLevelNames(typeof getFullFilterText === 'function' ? getFullFilterText() : codeEditor.value);
       var cur = names[parseInt(this.value, 10)];
       if (cur) {
@@ -6481,12 +6512,6 @@
           ALL_ITEMS_CACHE = buildAllItemsList();
         }
         var items = ALL_ITEMS_CACHE;
-        var filtlvl = parseInt(filtlvlSelect.value, 10);
-
-        // Sync filtlvl to the preview select so matchItem picks it up
-        var previewFL = document.getElementById('preview-filtlvl');
-        if (previewFL) previewFL.value = filtlvl;
-
         // Filter by category
         var filtered = items;
         if (currentCat !== 'all') {
