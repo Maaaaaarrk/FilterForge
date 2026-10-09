@@ -45,6 +45,174 @@
     description: ''
   };
 
+  // ==========================================
+  // Toast notifications
+  // ==========================================
+  // One live region for transient feedback (export, import, insert, undo...).
+  // Toasts auto-dismiss (paused while hovered/focused) and can carry one
+  // action button, e.g. Undo.
+  function showToast(message, opts) {
+    opts = opts || {};
+    var region = document.getElementById('toast-region');
+    if (!region) {
+      region = document.createElement('div');
+      region.id = 'toast-region';
+      region.className = 'toast-region';
+      region.setAttribute('role', 'status');
+      region.setAttribute('aria-live', 'polite');
+      document.body.appendChild(region);
+    }
+
+    var toast = document.createElement('div');
+    toast.className = 'toast' + (opts.type ? ' toast-' + opts.type : '');
+    var msg = document.createElement('span');
+    msg.className = 'toast-msg';
+    msg.textContent = message;
+    toast.appendChild(msg);
+
+    var timer = null;
+    var duration = opts.duration || (opts.action ? 8000 : 4000);
+    function dismiss() {
+      clearTimeout(timer);
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }
+    function schedule() {
+      clearTimeout(timer);
+      timer = setTimeout(dismiss, duration);
+    }
+
+    if (opts.action) {
+      var actionBtn = document.createElement('button');
+      actionBtn.type = 'button';
+      actionBtn.className = 'toast-action';
+      actionBtn.textContent = opts.action.label;
+      actionBtn.addEventListener('click', function () {
+        dismiss();
+        opts.action.onClick();
+      });
+      toast.appendChild(actionBtn);
+    }
+
+    var closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'toast-close';
+    closeBtn.setAttribute('aria-label', 'Dismiss notification');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.addEventListener('click', dismiss);
+    toast.appendChild(closeBtn);
+
+    toast.addEventListener('mouseenter', function () { clearTimeout(timer); });
+    toast.addEventListener('mouseleave', schedule);
+    toast.addEventListener('focusin', function () { clearTimeout(timer); });
+    toast.addEventListener('focusout', schedule);
+
+    // Cap the stack so a burst of actions doesn't bury the page
+    while (region.children.length >= 3) region.removeChild(region.firstChild);
+    region.appendChild(toast);
+    schedule();
+    return dismiss;
+  }
+
+  // ==========================================
+  // Motion + scrolling helpers
+  // ==========================================
+  function prefersReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }
+
+  // Smooth scroll unless the user asked for reduced motion. 'instant' also
+  // overrides the page-wide CSS scroll-behavior:smooth.
+  function scrollWindowTo(y) {
+    if (prefersReducedMotion()) {
+      try { window.scrollTo({ top: y, behavior: 'instant' }); return; } catch (e) { /* older browsers */ }
+    }
+    window.scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  }
+
+  function scrollElementIntoView(el) {
+    if (prefersReducedMotion()) {
+      try { el.scrollIntoView({ behavior: 'instant', block: 'center' }); return; } catch (e) { /* older browsers */ }
+    }
+    el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'center' });
+  }
+
+  // Height of whatever is pinned to the top of the viewport (fixed nav + the
+  // sticky Generated Rule bar), so scrolled-to lines don't land underneath it.
+  function getStickyTopOffset() {
+    var offset = 0;
+    var nav = document.querySelector('.nav');
+    if (nav) offset = nav.getBoundingClientRect().bottom + 12;
+    var bar = document.getElementById('generated-panel');
+    if (bar && getComputedStyle(bar).position === 'sticky') offset += bar.offsetHeight;
+    return Math.max(0, offset);
+  }
+
+  // ==========================================
+  // Modal dialogs: focus in, Tab trap, focus restore
+  // ==========================================
+  var FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  function createModal(overlay, onClose) {
+    var opener = null;
+
+    function visibleFocusables() {
+      return Array.prototype.filter.call(overlay.querySelectorAll(FOCUSABLE_SELECTOR), function (el) {
+        return el.getClientRects().length > 0;
+      });
+    }
+
+    function isOpen() {
+      return overlay.style.display !== 'none';
+    }
+
+    function open(initialFocus) {
+      if (!isOpen()) opener = document.activeElement;
+      overlay.style.display = 'flex';
+      focusInside(initialFocus);
+    }
+
+    function focusInside(el) {
+      var target = el || visibleFocusables()[0];
+      if (target) target.focus();
+    }
+
+    function close() {
+      if (!isOpen()) return;
+      overlay.style.display = 'none';
+      if (onClose) onClose();
+      if (opener && document.body.contains(opener) && typeof opener.focus === 'function') opener.focus();
+      opener = null;
+    }
+
+    overlay.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        close();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      var els = visibleFocusables();
+      if (!els.length) { e.preventDefault(); return; }
+      var first = els[0];
+      var last = els[els.length - 1];
+      var active = document.activeElement;
+      if (e.shiftKey && (active === first || !overlay.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !overlay.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) close();
+    });
+
+    return { open: open, close: close, isOpen: isOpen, focusInside: focusInside };
+  }
+
 
   // ==========================================
   // Item definitions for preview
@@ -656,6 +824,9 @@
     });
   });
 
+  // Whether the Generated Rule bar holds something Insert/Top/End may use
+  var generatedRuleInsertable = false;
+
   function updateGeneratedRule() {
     var conditions = [];
 
@@ -824,6 +995,7 @@
     var rule = 'ItemDisplay[' + condStr + ']: ' + output;
     generatedCode.textContent = rule;
     generatedCode.classList.remove('empty-state');
+    generatedRuleInsertable = true;
   }
 
   // ==========================================
@@ -1102,18 +1274,71 @@
   }
 
   // ==========================================
+  // Undo-friendly textarea edits
+  // ==========================================
+  // Replace target.value[start, end) with text through the browser's editing
+  // pipeline so the change lands on the native undo stack (Ctrl+Z works).
+  // Falls back to a plain value write where execCommand isn't available or
+  // the textarea can't take focus (read-only, hidden).
+  function editTextarea(target, start, end, text) {
+    var ok = false;
+    if (!target.readOnly && !target.disabled) {
+      target.focus();
+      if (document.activeElement === target) {
+        target.setSelectionRange(start, end);
+        try {
+          if (text) {
+            ok = document.execCommand('insertText', false, text);
+          } else {
+            ok = start === end || document.execCommand('delete', false);
+          }
+        } catch (e) { ok = false; }
+      }
+    }
+    if (!ok) {
+      target.value = target.value.substring(0, start) + text + target.value.substring(end);
+    }
+    var caret = start + text.length;
+    target.setSelectionRange(caret, caret);
+  }
+
+  // Set a textarea's full value, but only send the changed middle section
+  // through editTextarea — keeps undo cheap even for 800 KB filters.
+  function setTextareaValueUndoable(target, newText) {
+    var old = target.value;
+    if (old === newText) return;
+    var maxPrefix = Math.min(old.length, newText.length);
+    var p = 0;
+    while (p < maxPrefix && old.charCodeAt(p) === newText.charCodeAt(p)) p++;
+    var maxSuffix = Math.min(old.length, newText.length) - p;
+    var s = 0;
+    while (s < maxSuffix && old.charCodeAt(old.length - 1 - s) === newText.charCodeAt(newText.length - 1 - s)) s++;
+    editTextarea(target, p, old.length - s, newText.substring(p, newText.length - s));
+  }
+
+  // ==========================================
   // Tab handling for code editor (insert tab char)
   // ==========================================
+  // Tab inserts a tab character. Escape "releases" the editor so the next Tab
+  // moves focus onward instead — otherwise keyboard users are trapped.
+  var tabReleased = false;
+
   function handleTab(e) {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      var start = codeEditor.selectionStart;
-      var end = codeEditor.selectionEnd;
-      var value = codeEditor.value;
-      codeEditor.value = value.substring(0, start) + '\t' + value.substring(end);
-      codeEditor.selectionStart = codeEditor.selectionEnd = start + 1;
-      updateLineNumbers();
+    if (e.key === 'Escape') {
+      tabReleased = true;
+      return;
     }
+    if (e.key !== 'Tab') {
+      if (e.key !== 'Shift') tabReleased = false;
+      return;
+    }
+    if (tabReleased || e.ctrlKey || e.altKey || e.metaKey) {
+      tabReleased = false;
+      return; // let the browser move focus
+    }
+    e.preventDefault();
+    editTextarea(codeEditor, codeEditor.selectionStart, codeEditor.selectionEnd, '\t');
+    updateLineNumbers();
   }
 
   // ==========================================
@@ -1132,9 +1357,37 @@
     saveCommunityState();
   }
 
+  // Returns the rule text to insert, or null when the builder has nothing
+  // insertable. Inserting from a hidden tab would write into an invisible
+  // textarea, so bring the code editor forward first.
+  function prepareRuleInsert() {
+    if (!generatedRuleInsertable) return null;
+    if (currentTab !== 'code') showTab('code');
+    return generatedCode.textContent;
+  }
+
+  // Shared tail of every insert: persist, reveal the new line, announce it.
+  function afterRuleInsert(target, ruleStart) {
+    var line = 1;
+    var before = target.value.substring(0, ruleStart);
+    for (var i = 0; i < before.length; i++) {
+      if (before.charCodeAt(i) === 10) line++;
+    }
+    if (communityMode.active) {
+      afterCommunityInsert(target);
+      var blockName = target.id === 'community-bottom-block' ? 'bottom' : 'top';
+      showToast('Rule inserted at line ' + line + ' of your ' + blockName + ' block.');
+    } else {
+      updateLineNumbers();
+      saveToStorage();
+      scrollEditorLineIntoView(line - 1, true);
+      showToast('Rule inserted at line ' + line + '.');
+    }
+  }
+
   function insertRule() {
-    if (generatedCode.classList.contains('empty-state')) return;
-    var rule = generatedCode.textContent;
+    var rule = prepareRuleInsert();
+    if (rule === null) return;
     var target = getCommunityInsertTarget() || codeEditor;
     var val = target.value;
     var pos = target.selectionStart;
@@ -1145,67 +1398,131 @@
     if (lineEnd === -1) lineEnd = val.length;
     var currentLine = val.substring(lineStart, lineEnd);
 
-    // If the current line has content, insert on a new line below it
     if (currentLine.trim().length > 0) {
-      var before = val.substring(0, lineEnd);
-      var after = val.substring(lineEnd);
-      var suffix = after.length > 0 && !after.startsWith('\n') ? '\n' : '';
-      target.value = before + '\n' + rule + suffix + after;
-      var newPos = lineEnd + 1 + rule.length;
-      target.selectionStart = target.selectionEnd = newPos;
+      // Current line has content — insert on a new line below it
+      editTextarea(target, lineEnd, lineEnd, '\n' + rule);
+      afterRuleInsert(target, lineEnd + 1);
     } else {
-      // Empty line — insert directly here
-      var before = val.substring(0, lineStart);
-      var after = val.substring(lineEnd);
-      var suffix = after.length > 0 && !after.startsWith('\n') ? '\n' : '';
-      target.value = before + rule + suffix + after;
-      var newPos = lineStart + rule.length;
-      target.selectionStart = target.selectionEnd = newPos;
+      // Blank line — replace it with the rule
+      editTextarea(target, lineStart, lineEnd, rule);
+      afterRuleInsert(target, lineStart);
     }
-    target.focus();
-    if (communityMode.active) { afterCommunityInsert(target); } else { updateLineNumbers(); saveToStorage(); }
   }
 
   function insertRuleAtTop() {
-    if (generatedCode.classList.contains('empty-state')) return;
-    var rule = generatedCode.textContent;
+    var rule = prepareRuleInsert();
+    if (rule === null) return;
     var target = getCommunityInsertTarget() || codeEditor;
     var val = target.value;
     var suffix = val.length > 0 && !val.startsWith('\n') ? '\n' : '';
-    target.value = rule + suffix + val;
-    target.selectionStart = target.selectionEnd = rule.length;
-    target.focus();
-    if (communityMode.active) { afterCommunityInsert(target); } else { updateLineNumbers(); saveToStorage(); }
+    editTextarea(target, 0, 0, rule + suffix);
+    target.setSelectionRange(rule.length, rule.length);
+    afterRuleInsert(target, 0);
   }
 
   function insertRuleAtEnd() {
-    if (generatedCode.classList.contains('empty-state')) return;
-    var rule = generatedCode.textContent;
+    var rule = prepareRuleInsert();
+    if (rule === null) return;
+    // In community mode, "insert at end" goes to the bottom block
+    var target = communityMode.active ? document.getElementById('community-bottom-block') : codeEditor;
+    var val = target.value;
+    var prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
+    editTextarea(target, val.length, val.length, prefix + rule);
+    afterRuleInsert(target, val.length + prefix.length);
+  }
+
+  // ==========================================
+  // Replacing the whole filter (New, Import, Wizard, Community import)
+  // ==========================================
+  function setEditorText(text) {
+    codeEditor.value = text;
+    updateLineNumbers();
+    saveToStorage();
+  }
+
+  // Everything a full replacement can overwrite, so it can be undone
+  function snapshotEditor() {
+    var snap = { text: getFullFilterText(), community: null };
     if (communityMode.active) {
-      // In community mode, "insert at end" goes to the bottom block
-      var target = document.getElementById('community-bottom-block');
-      var val = target.value;
-      var prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
-      target.value = val + prefix + rule;
-      var newPos = val.length + prefix.length + rule.length;
-      target.selectionStart = target.selectionEnd = newPos;
-      target.focus();
-      afterCommunityInsert(target);
-    } else {
-      var val = codeEditor.value;
-      var prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
-      codeEditor.value = val + prefix + rule;
-      var newPos = val.length + prefix.length + rule.length;
-      codeEditor.selectionStart = codeEditor.selectionEnd = newPos;
-      codeEditor.focus();
-      updateLineNumbers();
-      saveToStorage();
+      snap.community = {
+        filterName: communityMode.filterName,
+        authorName: communityMode.authorName,
+        fileUrl: communityMode.fileUrl,
+        filterText: document.getElementById('community-filter-text').value,
+        topBlock: document.getElementById('community-top-block').value,
+        bottomBlock: document.getElementById('community-bottom-block').value,
+        grailText: document.getElementById('community-grail-text').value
+      };
     }
+    return snap;
+  }
+
+  function restoreSnapshot(snap) {
+    if (snap.community) {
+      var c = snap.community;
+      communityMode.topBlock = c.topBlock;
+      communityMode.bottomBlock = c.bottomBlock;
+      communityMode.grailText = c.grailText;
+      enterCommunityMode(c.filterText, c.filterName, c.authorName, c.fileUrl, true);
+      saveCommunityState();
+    } else {
+      leaveCommunityMode();
+      setEditorText(snap.text);
+    }
+    showTab('code');
+  }
+
+  // Single entry point for anything that replaces the whole filter.
+  // Confirms when there is content to lose, leaves Community Edit Mode
+  // cleanly (otherwise export/preview would keep using the community text),
+  // and offers Undo. Returns false if the user cancelled.
+  //   sourceLabel: used in the confirm, e.g. '"loot.filter"'
+  //   opts.toast: success message
+  //   opts.community: {filterName, authorName, fileUrl} to load in Community Edit Mode
+  function replaceEditorContent(text, sourceLabel, opts) {
+    opts = opts || {};
+    var hadContent = !!getFullFilterText().trim();
+    if (hadContent) {
+      var msg = 'Replace your current filter with ' + sourceLabel + '?';
+      if (communityMode.active && !opts.community) msg += '\n\nThis also leaves Community Edit Mode.';
+      msg += '\n\nYou can undo this from the notification that appears next.';
+      if (!confirm(msg)) return false;
+    }
+
+    var snap = snapshotEditor();
+    if (opts.community) {
+      enterCommunityMode(text, opts.community.filterName, opts.community.authorName, opts.community.fileUrl, false);
+    } else {
+      leaveCommunityMode();
+      setEditorText(text);
+    }
+    showTab('code');
+
+    showToast(opts.toast || 'Filter replaced.', {
+      action: hadContent ? {
+        label: 'Undo',
+        onClick: function () {
+          restoreSnapshot(snap);
+          showToast('Restored your previous filter.');
+        }
+      } : null
+    });
+    return true;
   }
 
   // ==========================================
   // Import / Export
   // ==========================================
+  // Decode a filter file: UTF-8 first, Windows-1252 for ANSI filters
+  // (some use 0xFF-based color codes that only survive as Latin-1).
+  function decodeFilterBuffer(buf) {
+    var text = new TextDecoder('utf-8').decode(buf);
+    if (text.indexOf('�') !== -1) {
+      text = new TextDecoder('windows-1252').decode(buf);
+    }
+    return text;
+  }
+
   function initImportExport() {
     var fileInput = document.getElementById('file-import');
     var btnImport = document.getElementById('btn-import');
@@ -1221,21 +1538,11 @@
       if (!file) return;
       var reader = new FileReader();
       reader.onload = function (ev) {
-        var buf = ev.target.result;
-        // Try UTF-8 first, fall back to Windows-1252 for ANSI filters
-        var text = new TextDecoder('utf-8').decode(buf);
-        if (text.indexOf('\uFFFD') !== -1) {
-          text = new TextDecoder('windows-1252').decode(buf);
-        }
-        if (communityMode.active) {
-          communityMode.active = false;
-          saveCommunityState();
-          document.getElementById('pane-community').style.display = 'none';
-          document.getElementById('pane-code').style.display = 'block';
-        }
-        codeEditor.value = text;
-        updateLineNumbers();
-        saveToStorage();
+        var text = decodeFilterBuffer(ev.target.result);
+        replaceEditorContent(text, '"' + file.name + '"', { toast: 'Imported ' + file.name + '.' });
+      };
+      reader.onerror = function () {
+        showToast('Couldn\'t read ' + file.name + '.', { type: 'error' });
       };
       reader.readAsArrayBuffer(file);
       fileInput.value = '';
@@ -1255,26 +1562,14 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      showToast('Downloaded loot.filter. Put it in your ProjectD2\\filter\\local folder, then pick it in-game.', { duration: 8000 });
     });
 
     btnNew.addEventListener('click', function () {
-      if (codeEditor.value.trim() && !confirm('Start a new filter? Unsaved changes will be lost.')) return;
-      codeEditor.value = '';
-      updateLineNumbers();
-      saveToStorage();
-      if (communityMode.active) {
-        communityMode.active = false;
-        saveCommunityState();
-        document.getElementById('pane-community').style.display = 'none';
-        document.getElementById('pane-code').style.display = 'block';
-      }
+      replaceEditorContent('', 'a new, empty filter', { toast: 'Started a new, empty filter.' });
     });
   }
 
-
-  // ==========================================
-  // Tabs
-  // ==========================================
   // ==========================================
   // Holy Grail
   // ==========================================
@@ -1550,17 +1845,7 @@
     }
 
     function switchToCodeTab() {
-      document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
-      document.querySelector('[data-tab="code"]').classList.add('active');
-      if (communityMode.active) {
-        document.getElementById('pane-community').style.display = 'block';
-        document.getElementById('pane-code').style.display = 'none';
-      } else {
-        document.getElementById('pane-code').style.display = 'block';
-      }
-      document.getElementById('pane-preview').style.display = 'none';
-      document.getElementById('pane-grail').style.display = 'none';
-      document.getElementById('pane-allitems').style.display = 'none';
+      showTab('code');
     }
 
     function afterGrailInsert() {
@@ -1673,34 +1958,62 @@
     updateGrailPreview();
   }
 
+  // ==========================================
+  // Tabs
+  // ==========================================
+  // The one place that decides which pane is visible. The Code tab shows the
+  // community pane instead of the plain editor while Community Edit Mode is on.
+  var currentTab = 'code';
+
+  function showTab(name) {
+    currentTab = name;
+    document.querySelectorAll('.editor-tab').forEach(function (t) {
+      var on = t.getAttribute('data-tab') === name;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+    });
+
+    var isCode = name === 'code';
+    document.getElementById('pane-community').style.display = isCode && communityMode.active ? 'block' : 'none';
+    document.getElementById('pane-code').style.display = isCode && !communityMode.active ? 'block' : 'none';
+    document.getElementById('pane-preview').style.display = name === 'preview' ? 'flex' : 'none';
+    document.getElementById('pane-grail').style.display = name === 'grail' ? 'block' : 'none';
+    document.getElementById('pane-allitems').style.display = name === 'allitems' ? 'block' : 'none';
+
+    // Auto-run preview test when switching to Live Preview
+    if (name === 'preview') {
+      testAllItems();
+    }
+    if (name === 'allitems' && initAllItems.render) {
+      ALL_ITEMS_CACHE = null; // Force rebuild to pick up any item data changes
+      initAllItems.render();
+    }
+    if (name === 'grail' && initGrail.refreshStatus) {
+      initGrail.refreshStatus();
+    }
+  }
+
   function initTabs() {
-    document.querySelectorAll('.editor-tab').forEach(function (tab) {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.editor-tab'));
+    tabs.forEach(function (tab, idx) {
       tab.addEventListener('click', function () {
-        var target = tab.getAttribute('data-tab');
-        document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-
-        if (communityMode.active) {
-          document.getElementById('pane-community').style.display = target === 'code' ? 'block' : 'none';
-          document.getElementById('pane-code').style.display = 'none';
-        } else {
-          document.getElementById('pane-community').style.display = 'none';
-          document.getElementById('pane-code').style.display = target === 'code' ? 'block' : 'none';
-        }
-        document.getElementById('pane-preview').style.display = target === 'preview' ? 'flex' : 'none';
-        document.getElementById('pane-grail').style.display = target === 'grail' ? 'block' : 'none';
-        document.getElementById('pane-allitems').style.display = target === 'allitems' ? 'block' : 'none';
-
-        // Auto-run preview test when switching to Live Preview
-        if (target === 'preview') {
-          testAllItems();
-        }
-        if (target === 'allitems' && initAllItems.render) {
-          ALL_ITEMS_CACHE = null; // Force rebuild to pick up any item data changes
-          initAllItems.render();
-        }
+        showTab(tab.getAttribute('data-tab'));
+      });
+      // WAI-ARIA tabs pattern: arrows/Home/End move between tabs
+      tab.addEventListener('keydown', function (e) {
+        var next = null;
+        if (e.key === 'ArrowRight') next = tabs[(idx + 1) % tabs.length];
+        else if (e.key === 'ArrowLeft') next = tabs[(idx - 1 + tabs.length) % tabs.length];
+        else if (e.key === 'Home') next = tabs[0];
+        else if (e.key === 'End') next = tabs[tabs.length - 1];
+        if (!next) return;
+        e.preventDefault();
+        showTab(next.getAttribute('data-tab'));
+        next.focus();
       });
     });
+    showTab(currentTab);
   }
 
   // ==========================================
@@ -1708,18 +2021,10 @@
   // ==========================================
   // Go to a specific line in the editor
   function goToLine(lineNum) {
-    // Switch to code tab
-    document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
-    document.querySelector('[data-tab="code"]').classList.add('active');
-    document.getElementById('pane-preview').style.display = 'none';
-    document.getElementById('pane-grail').style.display = 'none';
-    document.getElementById('pane-allitems').style.display = 'none';
+    showTab('code');
 
     if (communityMode.active) {
       // Navigate within community mode
-      document.getElementById('pane-community').style.display = 'block';
-      document.getElementById('pane-code').style.display = 'none';
-
       var topText = document.getElementById('community-top-block').value;
       var midText = document.getElementById('community-filter-text').value;
       var topLines = topText ? topText.split('\n').length : 0;
@@ -1764,11 +2069,9 @@
       container.scrollTop = Math.max(0, scrollTarget);
 
       // Also scroll the page to the textarea
-      targetTextarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      scrollElementIntoView(targetTextarea);
       return;
     }
-
-    document.getElementById('pane-code').style.display = 'block';
 
     var text = codeEditor.value;
     var lines = text.split('\n');
@@ -1782,12 +2085,20 @@
     codeEditor.setSelectionRange(pos, lineEnd);
     codeEditor.focus();
 
-    // Scroll the page to the target line (editor is full-length, page scrolls)
+    scrollEditorLineIntoView(lineNum - 1, false);
+  }
+
+  // Scroll the page (the editor is full-length; the page is what scrolls) so
+  // a 0-based line lands a third of the way down the visible area, below the
+  // fixed nav and sticky rule bar. With onlyIfHidden, skip lines already visible.
+  function scrollEditorLineIntoView(lineIdx, onlyIfHidden) {
     var lh = getLineHeight();
-    var editorTop = codeEditor.getBoundingClientRect().top + window.scrollY;
-    var lineOffset = (lineNum - 1) * lh;
-    var targetY = editorTop + lineOffset - (window.innerHeight / 3);
-    window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    var padTop = parseFloat(getComputedStyle(codeEditor).paddingTop) || 0;
+    var lineTop = codeEditor.getBoundingClientRect().top + padTop + lineIdx * lh;
+    var topLimit = getStickyTopOffset();
+    if (onlyIfHidden && lineTop >= topLimit && lineTop + lh <= window.innerHeight) return;
+    var targetY = window.scrollY + lineTop - topLimit - (window.innerHeight - topLimit) / 3;
+    scrollWindowTo(Math.max(0, targetY));
   }
 
   function initPreview() {
@@ -2514,10 +2825,26 @@
   // ==========================================
   var STORAGE_KEY = 'filterforge-editor-content';
 
+  // Tell the user once per page load when the browser refuses to save
+  // (quota exceeded, storage disabled) instead of silently losing work.
+  var storageWarned = false;
+  function warnStorageFailure() {
+    if (storageWarned) return;
+    storageWarned = true;
+    showToast('Your browser couldn\'t save the filter (storage is full or disabled). Export it to keep your changes.', { type: 'error', duration: 12000 });
+  }
+
   function saveToStorage() {
+    // Community Edit Mode keeps its own state (see saveCommunityState)
+    if (communityMode.active) {
+      saveCommunityState();
+      return;
+    }
     try {
       localStorage.setItem(STORAGE_KEY, codeEditor.value);
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+      warnStorageFailure();
+    }
   }
 
   function loadFromStorage() {
@@ -2574,6 +2901,10 @@
     }
   }
 
+  // Community state is stored once, as JSON. Older versions also wrote the
+  // merged text to STORAGE_KEY, doubling ~1 MB of filter text in a ~5 MB
+  // quota; that copy is now dropped (loading old saves still works because
+  // loadCommunityState rebuilds the editor from the JSON).
   function saveCommunityState() {
     try {
       if (communityMode.active) {
@@ -2582,11 +2913,13 @@
         communityMode.filterText = document.getElementById('community-filter-text').value;
         communityMode.grailText = document.getElementById('community-grail-text').value;
         localStorage.setItem(COMMUNITY_STORAGE_KEY, JSON.stringify(communityMode));
-        localStorage.setItem(STORAGE_KEY, getFullFilterText());
+        localStorage.removeItem(STORAGE_KEY);
       } else {
         localStorage.removeItem(COMMUNITY_STORAGE_KEY);
       }
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+      warnStorageFailure();
+    }
   }
 
   function loadCommunityState() {
@@ -2633,14 +2966,7 @@
     document.getElementById('community-mid-wrap').style.display = 'none';
     document.getElementById('btn-community-toggle').textContent = 'Show';
 
-    document.getElementById('pane-code').style.display = 'none';
-    document.getElementById('pane-community').style.display = 'block';
-    document.getElementById('pane-preview').style.display = 'none';
-    var grailPane = document.getElementById('pane-grail');
-    if (grailPane) grailPane.style.display = 'none';
-
-    document.querySelectorAll('.editor-tab').forEach(function (t) { t.classList.remove('active'); });
-    document.querySelector('[data-tab="code"]').classList.add('active');
+    showTab('code');
 
     codeEditor.value = getFullFilterText();
     updateLineNumbers();
@@ -2651,17 +2977,22 @@
     }
   }
 
+  // Turn Community Edit Mode off without touching the plain editor's text
+  // (callers decide what the editor should contain afterwards).
+  function leaveCommunityMode() {
+    if (!communityMode.active) return;
+    communityMode.active = false;
+    saveCommunityState(); // clears the saved community state
+    showTab(currentTab);
+  }
+
+  // "Switch to Full Editor": merge top + community + bottom into the editor
   function exitCommunityMode() {
     codeEditor.value = getFullFilterText();
-    communityMode.active = false;
-
-    document.getElementById('pane-community').style.display = 'none';
-    document.getElementById('pane-code').style.display = 'block';
-
+    leaveCommunityMode();
     updateLineNumbers();
     highlightCode();
     saveToStorage();
-    saveCommunityState();
   }
 
   function refreshCommunityFilter() {
@@ -2829,6 +3160,7 @@
 
       generatedCode.textContent = 'Use the Rule Builder to generate a rule';
       generatedCode.classList.add('empty-state');
+      generatedRuleInsertable = false;
     });
   }
 
@@ -2858,18 +3190,16 @@
       tooltips: []
     };
 
+    var dialog = createModal(modal);
+
     function openWizard() {
-      modal.style.display = 'flex';
       btnNext.disabled = false;
+      dialog.open(btnClose);
       goToStep(1);
     }
 
     btnOpen.addEventListener('click', openWizard);
-    btnClose.addEventListener('click', function () { modal.style.display = 'none'; });
-    modal.addEventListener('click', function (e) { if (e.target === modal) modal.style.display = 'none'; });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && modal.style.display !== 'none') modal.style.display = 'none';
-    });
+    btnClose.addEventListener('click', dialog.close);
 
     // Auto-open wizard if ?wizard=true in URL
     var urlParams = new URLSearchParams(window.location.search);
@@ -2912,8 +3242,14 @@
       if (currentStep < totalSteps) {
         goToStep(currentStep + 1);
       } else {
+        // Guard against double-clicks; always re-enable, even if the user
+        // cancels the replace confirm or generation throws
         btnNext.disabled = true;
-        buildFilter();
+        try {
+          buildFilter();
+        } finally {
+          btnNext.disabled = false;
+        }
       }
     });
 
@@ -5049,13 +5385,12 @@
       //  LOAD INTO EDITOR
       // ======================================================================
       var filterText = lines.join('\n');
-      if (codeEditor.value.trim() && !confirm('Build new filter? This will replace your current editor content.')) {
-        return;
-      }
-      codeEditor.value = filterText;
-      updateLineNumbers();
-      saveToStorage();
-      modal.style.display = 'none';
+      // replaceEditorContent confirms, leaves Community Edit Mode (whose text
+      // would otherwise shadow the wizard result in export/preview) and offers Undo
+      var loaded = replaceEditorContent(filterText, 'the filter built by the wizard', {
+        toast: 'Your custom filter was built and loaded into the editor.'
+      });
+      if (loaded) dialog.close();
     }
   }
 
@@ -6147,15 +6482,31 @@
     var fileList = document.getElementById('filter-file-list');
     var selectedName = document.getElementById('author-selected-name');
     var loadingMsg = document.getElementById('author-loading-msg');
+    var btnCancelDownload = document.getElementById('author-cancel-download');
+    var errorBox = document.getElementById('author-error');
+    var errorMsg = document.getElementById('author-error-msg');
+    var btnRetry = document.getElementById('author-retry');
+    var btnErrorBack = document.getElementById('author-error-back');
+    var btnStep4Back = document.getElementById('author-step4-back');
+    var btnImportCommunity = document.getElementById('btn-import-community');
+    var btnImportFull = document.getElementById('btn-import-full');
+
+    var currentDownload = null; // { file, author, controller } of the latest request
+    var pendingImport = null;   // downloaded filter waiting for a mode choice
+
+    var dialog = createModal(modal, function () {
+      cancelDownload();
+      pendingImport = null;
+    });
 
     function showModal() {
-      modal.style.display = 'flex';
       showStep(1);
       loadAuthorList();
+      dialog.open(authorList.querySelector('.author-item'));
     }
 
     function hideModal() {
-      modal.style.display = 'none';
+      dialog.close();
     }
 
     function showStep(n) {
@@ -6165,16 +6516,23 @@
       step4.style.display = n === 4 ? 'block' : 'none';
     }
 
+    function backToFiles() {
+      cancelDownload();
+      showStep(2);
+      dialog.focusInside(fileList.querySelector('.filter-file-item') || btnBack);
+    }
+
     btnOpen.addEventListener('click', showModal);
     btnClose.addEventListener('click', hideModal);
-    btnBack.addEventListener('click', function () { showStep(1); });
-
-    modal.addEventListener('click', function (e) {
-      if (e.target === modal) hideModal();
+    btnBack.addEventListener('click', function () {
+      showStep(1);
+      dialog.focusInside(authorList.querySelector('.author-item'));
     });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && modal.style.display !== 'none') hideModal();
+    btnCancelDownload.addEventListener('click', backToFiles);
+    btnErrorBack.addEventListener('click', backToFiles);
+    btnStep4Back.addEventListener('click', backToFiles);
+    btnRetry.addEventListener('click', function () {
+      if (currentDownload) downloadFilterFile(currentDownload.file, currentDownload.author);
     });
 
     function loadAuthorList() {
@@ -6188,14 +6546,15 @@
       authorList.innerHTML = '';
       authorFilters.forEach(function (f) {
         var fileCount = f.files.length;
-        var item = document.createElement('div');
+        var item = document.createElement('button');
+        item.type = 'button';
         item.className = 'author-item';
         item.innerHTML =
-          '<div>' +
-            '<div class="author-item-name">' + escapeHtml(f.name) + '</div>' +
-            '<div class="author-item-by">by ' + escapeHtml(f.author) + ' &middot; ' + fileCount + ' filter' + (fileCount !== 1 ? 's' : '') + '</div>' +
-          '</div>' +
-          '<span class="author-item-arrow">&#9654;</span>';
+          '<span class="author-item-text">' +
+            '<span class="author-item-name">' + escapeHtml(f.name) + '</span>' +
+            '<span class="author-item-by">by ' + escapeHtml(f.author) + ' &middot; ' + fileCount + ' filter' + (fileCount !== 1 ? 's' : '') + '</span>' +
+          '</span>' +
+          '<span class="author-item-arrow" aria-hidden="true">&#9654;</span>';
         item.addEventListener('click', function () {
           selectAuthor(f);
         });
@@ -6206,6 +6565,7 @@
     function selectAuthor(f) {
       selectedName.textContent = f.name + ' by ' + f.author;
       showStep(2);
+      dialog.focusInside(btnBack);
 
       // If the author has a definitionsUrl, try fetching live definitions first
       // to pick up newly added/renamed filters since our static data was built.
@@ -6213,7 +6573,7 @@
       // are the canonical source of truth — our static `files` array only
       // serves as a fallback when the network request fails.
       if (f.definitionsUrl) {
-        fileList.innerHTML = '<p class="text-muted text-center">Loading filter list...</p>';
+        fileList.innerHTML = '<p class="text-muted text-center" role="status">Loading filter list...</p>';
         fetch(f.definitionsUrl)
           .then(function (res) {
             if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -6260,16 +6620,17 @@
       files.forEach(function (file) {
         var sizeKB = file.size ? (file.size / 1024).toFixed(0) + ' KB' : '';
         var hasDetails = file.displayName || file.description;
-        var item = document.createElement('div');
+        var item = document.createElement('button');
+        item.type = 'button';
         item.className = 'filter-file-item' + (hasDetails ? ' filter-file-detailed' : '');
 
         if (hasDetails) {
           item.innerHTML =
-            '<div class="filter-file-info">' +
-              '<div class="filter-file-display-name">' + escapeHtml(file.displayName || file.name) + '</div>' +
-              (file.description ? '<div class="filter-file-desc">' + escapeHtml(file.description) + '</div>' : '') +
-              '<div class="filter-file-filename">' + escapeHtml(file.name) + '</div>' +
-            '</div>' +
+            '<span class="filter-file-info">' +
+              '<span class="filter-file-display-name">' + escapeHtml(file.displayName || file.name) + '</span>' +
+              (file.description ? '<span class="filter-file-desc">' + escapeHtml(file.description) + '</span>' : '') +
+              '<span class="filter-file-filename">' + escapeHtml(file.name) + '</span>' +
+            '</span>' +
             (sizeKB ? '<span class="filter-file-size">' + sizeKB + '</span>' : '');
         } else {
           item.innerHTML =
@@ -6299,65 +6660,66 @@
     // Expose for URL param handling
     initAuthorImport.openToAuthor = openToAuthor;
 
+    function cancelDownload() {
+      if (currentDownload && currentDownload.controller) currentDownload.controller.abort();
+    }
+
     function downloadFilterFile(file, author) {
+      cancelDownload();
+      var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var thisDownload = { file: file, author: author, controller: controller };
+      currentDownload = thisDownload;
+
       showStep(3);
       loadingMsg.textContent = 'Downloading ' + file.name + '...';
+      loadingMsg.hidden = false;
+      btnCancelDownload.hidden = false;
+      errorBox.hidden = true;
+      dialog.focusInside(btnCancelDownload);
 
-      // Fetch as binary to handle both UTF-8 and ANSI/Latin-1 encoded filters
-      // Some filters (like Kassahi) use 0xFF-based color codes that require Latin-1
-      fetch(file.url)
+      fetch(file.url, controller ? { signal: controller.signal } : undefined)
         .then(function (res) {
           if (!res.ok) throw new Error('HTTP ' + res.status);
           return res.arrayBuffer();
         })
         .then(function (buf) {
-          // Try UTF-8 first
-          var text = new TextDecoder('utf-8').decode(buf);
-          // If it contains replacement chars (U+FFFD), the file isn't valid UTF-8
-          // Fall back to Windows-1252 (ANSI) which preserves 0xFF etc.
-          if (text.indexOf('\uFFFD') !== -1) {
-            text = new TextDecoder('windows-1252').decode(buf);
-          }
-          // Show step 4: choice between community mode and full editor
+          if (thisDownload !== currentDownload || !dialog.isOpen()) return; // superseded or cancelled
+          pendingImport = { text: decodeFilterBuffer(buf), file: file, author: author };
+          // Step 4: choose between Community Edit Mode and the full editor
           document.getElementById('author-choice-file').textContent = file.name + ' by ' + author.author;
           showStep(4);
-
-          var btnCommunity = document.getElementById('btn-import-community');
-          var btnFull = document.getElementById('btn-import-full');
-
-          // Remove old listeners by cloning
-          var newBtnC = btnCommunity.cloneNode(true);
-          var newBtnF = btnFull.cloneNode(true);
-          btnCommunity.parentNode.replaceChild(newBtnC, btnCommunity);
-          btnFull.parentNode.replaceChild(newBtnF, btnFull);
-
-          newBtnC.addEventListener('click', function () {
-            enterCommunityMode(text, file.name, author.author, file.url, false);
-            hideModal();
-          });
-
-          newBtnF.addEventListener('click', function () {
-            if (codeEditor.value.trim() && !confirm('This will replace your current filter. Continue?')) {
-              showStep(4);
-              return;
-            }
-            if (communityMode.active) {
-              communityMode.active = false;
-              saveCommunityState();
-              document.getElementById('pane-community').style.display = 'none';
-              document.getElementById('pane-code').style.display = 'block';
-            }
-            codeEditor.value = text;
-            updateLineNumbers();
-            saveToStorage();
-            hideModal();
-          });
+          dialog.focusInside(btnImportCommunity);
         })
-        .catch(function () {
-          loadingMsg.innerHTML = 'Failed to download file.';
-          setTimeout(function () { showStep(2); }, 2000);
+        .catch(function (err) {
+          if (thisDownload !== currentDownload || (err && err.name === 'AbortError')) return;
+          // Keep the error on screen (no auto-jump) with Retry / Back
+          loadingMsg.hidden = true;
+          btnCancelDownload.hidden = true;
+          errorMsg.textContent = 'Couldn\'t download ' + file.name + (err && err.message ? ' (' + err.message + ')' : '') +
+            '. Check your connection and try again.';
+          errorBox.hidden = false;
+          dialog.focusInside(btnRetry);
         });
     }
+
+    btnImportCommunity.addEventListener('click', function () {
+      if (!pendingImport) return;
+      var p = pendingImport;
+      var loaded = replaceEditorContent(p.text, '"' + p.file.name + '" by ' + p.author.author + ' in Community Edit Mode', {
+        community: { filterName: p.file.name, authorName: p.author.author, fileUrl: p.file.url },
+        toast: 'Loaded ' + p.file.name + ' by ' + p.author.author + ' in Community Edit Mode.'
+      });
+      if (loaded) hideModal();
+    });
+
+    btnImportFull.addEventListener('click', function () {
+      if (!pendingImport) return;
+      var p = pendingImport;
+      var loaded = replaceEditorContent(p.text, '"' + p.file.name + '" by ' + p.author.author, {
+        toast: 'Loaded ' + p.file.name + ' by ' + p.author.author + ' into the editor.'
+      });
+      if (loaded) hideModal();
+    });
   }
 
   // ==========================================

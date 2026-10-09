@@ -1426,26 +1426,34 @@ html[data-theme='modern'] .editor-tab.active {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
   padding: 0.65rem 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
   cursor: pointer;
   transition: border-color var(--step), background var(--step);
 }
 
-.author-item:hover {
+.author-item:hover,
+.author-item:focus-visible {
   border-color: var(--accent);
   background: var(--accent-tint);
 }
 
 .author-item-name {
+  display: block;
   font-weight: 600;
   color: var(--text);
   font-size: 0.95rem;
 }
 
 .author-item-by {
+  display: block;
   color: var(--text-muted);
   font-size: 0.82rem;
 }
@@ -1466,15 +1474,21 @@ html[data-theme='modern'] .editor-tab.active {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
   padding: 0.6rem 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
   cursor: pointer;
   transition: border-color var(--step), background var(--step);
 }
 
-.filter-file-item:hover {
+.filter-file-item:hover,
+.filter-file-item:focus-visible {
   border-color: var(--accent);
   background: var(--accent-tint);
 }
@@ -1500,7 +1514,14 @@ html[data-theme='modern'] .editor-tab.active {
 }
 
 .filter-file-info {
+  display: block;
   width: 100%;
+}
+
+.filter-file-display-name,
+.filter-file-desc,
+.filter-file-filename {
+  display: block;
 }
 
 .filter-file-display-name {
@@ -1524,11 +1545,100 @@ html[data-theme='modern'] .editor-tab.active {
   opacity: 0.7;
 }
 
+.author-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 0;
+  text-align: center;
+}
+
 .author-error {
   color: var(--danger-text);
   font-size: 0.9rem;
-  padding: 1rem 0;
-  text-align: center;
+}
+
+.author-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+/* ============================================
+   Toast notifications
+   ============================================ */
+.toast-region {
+  position: fixed;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 10001; /* above modals so Undo stays reachable */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  max-width: min(440px, calc(100vw - 2 * var(--space-3)));
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.55rem 0.5rem 0.55rem 0.85rem;
+  background: var(--surface-raised);
+  color: var(--text);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--outline), var(--drop);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  pointer-events: auto;
+}
+
+.toast-error {
+  border-left-color: var(--danger-text);
+}
+
+.toast-msg {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-action,
+.toast-close {
+  flex: none;
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.toast-action {
+  padding: 0.25rem 0.5rem;
+  color: var(--accent);
+  font-family: var(--font-ui);
+  font-weight: var(--ui-weight);
+  text-transform: var(--text-case);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toast-action:hover {
+  color: var(--accent-strong);
+}
+
+.toast-close {
+  padding: 0.15rem 0.4rem;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.toast-close:hover {
+  color: var(--text-strong);
 }
 
 /* Responsive */

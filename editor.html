@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="css/editor.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <nav class="nav">
     <a href="https://hiimpd2.com" class="nav-home" title="Hiim PD2"><img src="hiimpd2-logo.png" alt="Hiim PD2" class="pixel" width="48" height="48"></a>
     <a href="index.html" class="nav-logo"><img src="logo-nav.png" alt="Filter Forge" class="nav-logo-img"></a>
@@ -37,7 +38,7 @@
     <button class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
   </nav>
 
-  <main class="main-content">
+  <main class="main-content" id="main">
     <div class="editor-container">
 
       <!-- Top toolbar -->
@@ -83,14 +84,22 @@
 
             <!-- Step 3: Loading -->
             <div id="author-step-3" style="display:none">
-              <div class="text-center" style="padding:2rem 0">
-                <p id="author-loading-msg">Downloading filter...</p>
-                <p id="author-error-msg" style="display:none;color:var(--danger-text)">Failed to download filter. Please try again.</p>
+              <div class="author-status">
+                <p id="author-loading-msg" role="status">Downloading filter...</p>
+                <button class="btn btn-secondary btn-small" id="author-cancel-download">Cancel</button>
+                <div class="author-error" id="author-error" role="alert" hidden>
+                  <p id="author-error-msg">Failed to download filter. Please try again.</p>
+                  <div class="author-error-actions">
+                    <button class="btn btn-primary btn-small" id="author-retry">Retry</button>
+                    <button class="btn btn-secondary btn-small" id="author-error-back">&larr; Back to files</button>
+                  </div>
+                </div>
               </div>
             </div>
 
             <!-- Step 4: Choose import mode -->
             <div id="author-step-4" style="display:none">
+              <button class="btn btn-small mb-2" id="author-step4-back">&larr; Back to files</button>
               <p style="margin-bottom:1rem"><strong id="author-choice-file">Filter</strong></p>
               <div style="display:flex;flex-direction:column;gap:0.75rem">
                 <button class="btn btn-secondary" id="btn-import-community" style="text-align:left;padding:0.75rem 1rem">
@@ -1141,7 +1150,8 @@
     <p>Filter Forge is a community resource for <a href="https://www.projectdiablo2.com/" target="_blank" rel="noopener">Project Diablo 2</a> &middot; <a href="https://github.com/Maaaaaarrk/FilterForge" target="_blank" rel="noopener">GitHub</a></p>
   </footer>
 
-  <div class="preview-tooltip" id="preview-tooltip"></div>
+  <div class="preview-tooltip" id="preview-tooltip" role="tooltip"></div>
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
   <script src="js/shared.js"></script>
   <script src="js/editor.js"></script>
 </body>
