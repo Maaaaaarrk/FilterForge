@@ -14,6 +14,7 @@
   var noResults = document.getElementById('filters-no-results');
   var emptyEl = document.getElementById('filters-empty');
   var filters = [];
+  var escapeHtml = FF.escapeHtml;
 
   function apiUrlToRepoUrl(apiUrl) {
     // https://api.github.com/repos/X/Y/contents -> https://github.com/X/Y
@@ -43,12 +44,6 @@
     });
 
     filterCards(searchInput ? searchInput.value : '');
-  }
-
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
   }
 
   function filterCards(query) {

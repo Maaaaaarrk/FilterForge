@@ -14,11 +14,7 @@
   var searchIndex = [];
   var debounceTimer = null;
 
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
+  var escapeHtml = FF.escapeHtml;
 
   function stripHtml(html) {
     var tmp = document.createElement('div');
@@ -102,31 +98,7 @@
     });
 
     // Add copy buttons to code blocks in answers
-    container.querySelectorAll('pre code').forEach(function (codeBlock) {
-      var pre = codeBlock.parentElement;
-      if (pre.querySelector('.copy-btn')) return;
-      var btn = document.createElement('button');
-      btn.className = 'copy-btn';
-      btn.textContent = 'Copy';
-      btn.setAttribute('aria-label', 'Copy code');
-      btn.addEventListener('click', function () {
-        navigator.clipboard.writeText(codeBlock.textContent).then(function () {
-          btn.textContent = 'Copied!';
-          btn.classList.add('copied');
-          setTimeout(function () {
-            btn.textContent = 'Copy';
-            btn.classList.remove('copied');
-          }, 1500);
-        }).catch(function () {
-          btn.textContent = 'Copy failed';
-          setTimeout(function () {
-            btn.textContent = 'Copy';
-            btn.classList.remove('copied');
-          }, 1500);
-        });
-      });
-      pre.appendChild(btn);
-    });
+    FF.addCopyButtons(container);
   }
 
   function doSearch(query) {

@@ -84,30 +84,44 @@
   });
   renderThemeToggles();
 
-  // Copy-to-clipboard for code blocks
-  document.querySelectorAll('pre code').forEach(function (codeBlock) {
-    var pre = codeBlock.parentElement;
-    if (pre.querySelector('.copy-btn')) return;
-    var btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.textContent = 'Copy';
-    btn.setAttribute('aria-label', 'Copy code');
-    btn.addEventListener('click', function () {
-      navigator.clipboard.writeText(codeBlock.textContent).then(function () {
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(function () {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 1500);
-      }).catch(function () {
-        btn.textContent = 'Copy failed';
-        setTimeout(function () {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 1500);
+  // Shared helpers for page scripts (loaded after this file)
+  var FF = window.FF = window.FF || {};
+
+  FF.escapeHtml = function (str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  };
+
+  // Copy-to-clipboard buttons for every <pre><code> block inside root
+  FF.addCopyButtons = function (root) {
+    (root || document).querySelectorAll('pre code').forEach(function (codeBlock) {
+      var pre = codeBlock.parentElement;
+      if (pre.querySelector('.copy-btn')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.addEventListener('click', function () {
+        navigator.clipboard.writeText(codeBlock.textContent).then(function () {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(function () {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 1500);
+        }).catch(function () {
+          btn.textContent = 'Copy failed';
+          setTimeout(function () {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 1500);
+        });
       });
+      pre.appendChild(btn);
     });
-    pre.appendChild(btn);
-  });
+  };
+
+  FF.addCopyButtons(document);
 })();
