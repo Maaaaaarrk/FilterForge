@@ -145,11 +145,34 @@
       name = renderLabel(labelText, name, ctx, item);
       if (labelText.indexOf('%CONTINUE%') === -1) break;
     }
-    var shown = !matched || name.some(function (line) {
-      return line.some(function (seg) { return seg.text.trim() !== ''; });
-    });
-    return { lines: name, shown: shown };
+    name = trimLabel(name);
+    return { lines: name, shown: !matched || name.length > 0 };
   };
+
+  // The game trim()s the finished label: whitespace (spaces and line breaks) at its very
+  // start and end is dropped; spacing inside it stays.
+  function trimLabel(lines) {
+    var flat = [];
+    lines.forEach(function (line) {
+      line.forEach(function (seg) { flat.push(seg); });
+      flat.push(null); // line break
+    });
+    var text = flat.map(function (seg) { return seg ? seg.text : '\n'; }).join('');
+    var lead = text.length - text.replace(/^\s+/, '').length;
+    var keep = text.replace(/\s+$/, '').length;
+    var out = [[]];
+    var pos = 0;
+    flat.forEach(function (seg) {
+      var len = seg ? seg.text.length : 1;
+      var lo = Math.max(lead - pos, 0);
+      var hi = Math.min(keep - pos, len);
+      pos += len;
+      if (hi <= lo) return;
+      if (!seg) out.push([]);
+      else out[out.length - 1].push({ text: seg.text.substring(lo, hi), color: seg.color });
+    });
+    return out.some(function (line) { return line.length; }) ? out : [];
+  }
 
   function itemColor(item) {
     if (item.color) return item.color;
