@@ -76,8 +76,8 @@
         <p>You can browse all available community filters on our <a href="filters.html">Filters page</a>.</p>
 
         <div class="callout">
-          To install a filter manually, place the <code>.filter</code> file in<br>
-          <code>Diablo II\ProjectD2\filters\local\</code><br>
+          To install a filter manually, place the <code>.filter</code> file in your local filters folder (by default<br>
+          <code>Diablo II\ProjectD2\filters\local\</code>).<br>
           Then select it from the "Local" section in the launcher.
         </div>
       </section>
@@ -125,8 +125,8 @@ ItemDisplay[key]:
 // Hide gold under 100
 ItemDisplay[GOLD<100]:
 
-// Show all unique items with purple text and a map icon
-ItemDisplay[UNI]: %PURPLE%%NAME%%MAP%
+// Show all unique items with purple text and a minimap icon
+ItemDisplay[UNI]: %PURPLE%%NAME%%MAP-9B%
 
 // Show all items normally (catch-all, goes last)
 ItemDisplay[]: %NAME%</code></pre>
@@ -136,12 +136,13 @@ ItemDisplay[]: %NAME%</code></pre>
       <section class="guide-step" id="editing-a-filter">
         <div class="step-number" aria-hidden="true">5</div>
         <h2>Making Your First Edit</h2>
-        <p>Let's say you want to customize an existing filter. Here's how:</p>
+        <p>The quickest way to get a filter of your own is the <a href="editor.html?wizard=true">Build My Filter</a> wizard: answer a few questions and it generates a complete filter. To tweak a filter, open it in the <a href="editor.html">Filter Editor</a>, which has a visual rule builder, live preview and one-click export.</p>
+        <p>Prefer to edit by hand? Here's how to customize an existing filter:</p>
         <ol>
-          <li>Find your filter file in <code>Diablo II\ProjectD2\filters\local\</code></li>
-          <li>Open it with a text editor (Notepad++ or VS Code recommended)</li>
+          <li>Put a copy of the filter in your local filters folder (by default <code>Diablo II\ProjectD2\filters\local\</code>) so launcher updates don't overwrite your changes</li>
+          <li>Open it in the <a href="editor.html">Filter Editor</a> or any text editor (Notepad++ or VS Code work well)</li>
           <li>Find the rule you want to change, or add a new rule <strong>near the top</strong> (higher = higher priority)</li>
-          <li>Save the file</li>
+          <li>Save the file (or export it from the editor) and select it from the "Local" section in the launcher</li>
           <li>Press <strong>Numpad 0</strong> in-game to reload</li>
         </ol>
 
@@ -150,18 +151,18 @@ ItemDisplay[]: %NAME%</code></pre>
         </div>
 
         <h3>Common Edits</h3>
-        <pre><code>// Make Shakos stand out with red text and a border icon
-ItemDisplay[uap]: %RED%SHAKO!%BORDER%
+        <pre><code>// Make Shakos (Harlequin Crest) stand out with red text and a large red minimap icon
+ItemDisplay[UNI uap]: %RED%SHAKO!%BORDER-62%
 
 // Show socket count on normal items
 ItemDisplay[NMAG SOCKETS>0]: %NAME% [%SOCKETS%]
 
-// Hide normal items below level 30
+// Hide plain normal items once your character is above level 30
 ItemDisplay[NMAG !SUP CLVL>30]:
 
-// Highlight runes above Lem (#20) with gold + sound
-ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%MAP%%SOUNDID-4718%</code></pre>
-      <p><code>%RUNENAME%</code> displays the rune's name (e.g. "Ber"), <code>%MAP%</code> adds a minimap icon, and <code>%SOUNDID-4718%</code> plays a drop sound.</p>
+// Highlight Lem (#20) and higher runes with gold + sound
+ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%MAP-0B%%SOUNDID-4718%</code></pre>
+      <p><code>CLVL</code> is your character level, so that rule starts hiding those items once you pass level 30. <code>%RUNENAME%</code> displays the rune's name (e.g. "Ber"), <code>%MAP-0B%</code> adds a minimap icon (the two characters after the dash pick its color; <code>%BORDER-XX%</code> is a larger icon), and <code>%SOUNDID-4718%</code> plays a drop sound.</p>
       </section>
 
       <!-- Step 6 -->
@@ -169,6 +170,8 @@ ItemDisplay[RUNE>19]: %GOLD%%RUNENAME% Rune%MAP%%SOUNDID-4718%</code></pre>
         <div class="step-number" aria-hidden="true">6</div>
         <h2>Next Steps</h2>
         <ul>
+          <li><a href="editor.html?wizard=true">Build My Filter</a> — Generate a complete filter for your class and playstyle</li>
+          <li><a href="editor.html">Filter Editor</a> — Edit rules visually, preview them against sample items, and export a <code>.filter</code> file</li>
           <li><a href="faq.html">FAQ</a> — Answers to common questions and troubleshooting</li>
           <li><a href="https://wiki.projectdiablo2.com/wiki/Item_Filtering" target="_blank" rel="noopener">PD2 Wiki — Syntax Reference</a> — Full documentation of every condition, output, and keyword</li>
           <li><a href="filters.html">Community Filters</a> — Browse filters to use or learn from</li>
