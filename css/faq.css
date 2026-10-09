@@ -17,6 +17,13 @@
   margin-bottom: 1.5rem;
 }
 
+/* h2 wrapper for the group toggle; the button carries the visual style */
+.faq-group-title {
+  margin: 0;
+  font-size: inherit;
+  text-shadow: none;
+}
+
 .faq-group-header {
   display: flex;
   align-items: center;
@@ -163,6 +170,12 @@ html[data-theme='modern'] .faq-item {
   background: var(--accent);
   border-radius: calc(var(--radius) / 2);
   padding: 0 2px;
+}
+
+/* Load error */
+.faq-error {
+  color: var(--danger-text);
+  padding: 3rem 0;
 }
 
 /* No results */

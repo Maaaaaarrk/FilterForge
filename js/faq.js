@@ -5,7 +5,6 @@
 (function () {
   'use strict';
 
-  var DATA_URL = 'data/faq.json';
   var container = document.getElementById('faq-container');
   var searchInput = document.getElementById('faq-search');
   var resultCount = document.getElementById('faq-result-count');
@@ -48,6 +47,8 @@
       groupEl.className = 'faq-group';
       groupEl.setAttribute('data-group', gi);
 
+      var heading = document.createElement('h2');
+      heading.className = 'faq-group-title';
       var header = document.createElement('button');
       header.type = 'button';
       header.className = 'faq-group-header';
@@ -92,7 +93,8 @@
         body.appendChild(item);
       });
 
-      groupEl.appendChild(header);
+      heading.appendChild(header);
+      groupEl.appendChild(heading);
       groupEl.appendChild(body);
       container.appendChild(groupEl);
     });
@@ -208,7 +210,7 @@
     });
   }
 
-  // Load data — use inline FAQ_DATA global (from faq-data.js) or fetch as fallback
+  // FAQ content comes from the FAQ_DATA global in data/faq-data.js
   function initFaq(data) {
       faqData = data;
       searchIndex = buildSearchIndex(data.groups);
@@ -243,20 +245,11 @@
       }
   }
 
-  // Try inline data first (works on file://), then fetch as fallback
+  // Inline data works on file:// as well as http(s)
   if (typeof FAQ_DATA !== 'undefined') {
     initFaq(FAQ_DATA);
   } else {
-    fetch(DATA_URL)
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(initFaq)
-      .catch(function (err) {
-        container.innerHTML = '<p class="text-muted text-center">Failed to load FAQ data.</p>';
-        console.error('FAQ load error:', err);
-      });
+    container.innerHTML = '<p class="faq-error text-center" role="alert">Failed to load FAQ data. Try reloading the page.</p>';
   }
 
   // Search handler with debounce
