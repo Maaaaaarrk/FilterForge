@@ -5747,7 +5747,9 @@
     return !!knownItemCodes[code.toLowerCase()];
   }
 
-  // Item code autocomplete on the builder's item code input
+  // Item code autocomplete on the builder's item code input.
+  // ARIA combobox: ArrowUp/Down move through suggestions, Enter picks,
+  // Escape closes.
   function initItemCodeAutocomplete() {
     var input = document.getElementById('item-code-input');
     var dropdown = document.getElementById('itemcode-dropdown');
@@ -5765,6 +5767,18 @@
       });
     });
 
+    var matches = [];
+    var activeIdx = -1;
+
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-expanded', 'false');
+    input.setAttribute('aria-controls', 'itemcode-dropdown');
+    dropdown.setAttribute('role', 'listbox');
+    dropdown.setAttribute('aria-label', 'Item code suggestions');
+
+    // position:fixed escapes the builder panel's overflow clipping, so it has
+    // to follow the input while the page (or any scroller) moves
     function positionDropdown() {
       var rect = input.getBoundingClientRect();
       dropdown.style.top = rect.bottom + 'px';
@@ -5772,54 +5786,115 @@
       dropdown.style.width = Math.max(rect.width, 220) + 'px';
     }
 
-    function showDropdown(matches) {
+    function isOpen() {
+      return dropdown.classList.contains('open');
+    }
+
+    function close() {
+      dropdown.classList.remove('open');
+      input.setAttribute('aria-expanded', 'false');
+      input.removeAttribute('aria-activedescendant');
+      activeIdx = -1;
+    }
+
+    function choose(item) {
+      input.value = item[0];
+      close();
+      updateGeneratedRule();
+    }
+
+    function setActive(idx) {
+      var options = dropdown.children;
+      if (activeIdx >= 0 && options[activeIdx]) {
+        options[activeIdx].classList.remove('selected');
+        options[activeIdx].setAttribute('aria-selected', 'false');
+      }
+      activeIdx = idx;
+      var el = options[idx];
+      if (!el) {
+        input.removeAttribute('aria-activedescendant');
+        return;
+      }
+      el.classList.add('selected');
+      el.setAttribute('aria-selected', 'true');
+      input.setAttribute('aria-activedescendant', el.id);
+      el.scrollIntoView({ block: 'nearest' });
+    }
+
+    function showDropdown(list) {
       dropdown.innerHTML = '';
+      matches = list.slice(0, 15);
+      activeIdx = -1;
+      input.removeAttribute('aria-activedescendant');
       if (!matches.length) {
-        dropdown.classList.remove('open');
+        close();
         return;
       }
       positionDropdown();
-      matches.slice(0, 15).forEach(function (item) {
+      matches.forEach(function (item, i) {
         var div = document.createElement('div');
         div.className = 'itemcode-dd-item';
+        div.id = 'itemcode-opt-' + i;
+        div.setAttribute('role', 'option');
+        div.setAttribute('aria-selected', 'false');
         div.innerHTML = '<span class="itemcode-dd-code">' + item[0] + '</span><span class="itemcode-dd-name">' + escapeHtml(item[1]) + '</span>';
         div.addEventListener('mousedown', function (e) {
           e.preventDefault(); // Prevent blur
-          input.value = item[0];
-          dropdown.classList.remove('open');
-          updateGeneratedRule();
+          choose(item);
         });
         dropdown.appendChild(div);
       });
       dropdown.classList.add('open');
+      input.setAttribute('aria-expanded', 'true');
     }
 
-    input.addEventListener('input', function () {
-      var val = this.value.trim().toLowerCase();
+    function search() {
+      var val = input.value.trim().toLowerCase();
       if (val.length < 1) {
-        dropdown.classList.remove('open');
+        close();
         return;
       }
-      var matches = allCodes.filter(function (item) {
+      showDropdown(allCodes.filter(function (item) {
         return item[0].toLowerCase().indexOf(val) !== -1 || item[1].toLowerCase().indexOf(val) !== -1;
-      });
-      showDropdown(matches);
-    });
+      }));
+    }
 
-    input.addEventListener('focus', function () {
-      var val = this.value.trim().toLowerCase();
-      if (val.length >= 1) {
-        var matches = allCodes.filter(function (item) {
-          return item[0].toLowerCase().indexOf(val) !== -1 || item[1].toLowerCase().indexOf(val) !== -1;
-        });
-        showDropdown(matches);
+    input.addEventListener('input', search);
+    input.addEventListener('focus', search);
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (!isOpen()) { search(); if (isOpen()) setActive(0); return; }
+        setActive((activeIdx + 1) % matches.length);
+      } else if (e.key === 'ArrowUp') {
+        if (!isOpen()) return;
+        e.preventDefault();
+        setActive(activeIdx <= 0 ? matches.length - 1 : activeIdx - 1);
+      } else if (e.key === 'Enter') {
+        if (isOpen() && activeIdx >= 0) {
+          e.preventDefault();
+          choose(matches[activeIdx]);
+        }
+      } else if (e.key === 'Escape') {
+        if (isOpen()) {
+          e.preventDefault();
+          e.stopPropagation();
+          close();
+        }
       }
     });
 
     input.addEventListener('blur', function () {
       // Small delay so mousedown on dropdown item fires first
-      setTimeout(function () { dropdown.classList.remove('open'); }, 150);
+      setTimeout(close, 150);
     });
+
+    function reposition() {
+      if (isOpen()) positionDropdown();
+    }
+    window.addEventListener('scroll', reposition, true);
+    window.addEventListener('resize', reposition);
   }
 
   function initItemCodeFinder() {
@@ -5827,6 +5902,60 @@
     var listEl = document.getElementById('itemcode-list');
     var tabs = document.querySelectorAll('.itemcode-tab');
     var currentCat = 'runes';
+
+    // Clicking a row fills the builder's Item Code condition
+    function useCode(code) {
+      var input = document.getElementById('item-code-input');
+      input.value = code;
+      updateGeneratedRule();
+      showToast('Item code ' + code + ' set in the Rule Builder\'s Item Code condition.');
+    }
+
+    function copyCode(code, btn) {
+      function flash(text) {
+        btn.textContent = text;
+        setTimeout(function () { btn.textContent = 'Copy'; }, 1000);
+      }
+      if (!navigator.clipboard) { flash('Failed'); return; }
+      navigator.clipboard.writeText(code).then(function () {
+        flash('Copied!');
+        showToast('Copied ' + code + ' to the clipboard.');
+      }).catch(function () {
+        flash('Failed');
+      });
+    }
+
+    function buildRow(item) {
+      var row = document.createElement('div');
+      row.className = 'itemcode-row';
+
+      var useBtn = document.createElement('button');
+      useBtn.type = 'button';
+      useBtn.className = 'itemcode-use';
+      useBtn.title = 'Use ' + item[0] + ' as the Item Code condition';
+      useBtn.innerHTML = '<span class="itemcode-code">' + item[0] + '</span><span class="itemcode-name">' + escapeHtml(item[1]) + '</span>';
+      useBtn.addEventListener('click', function () { useCode(item[0]); });
+
+      var copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'itemcode-copy';
+      copyBtn.textContent = 'Copy';
+      copyBtn.setAttribute('aria-label', 'Copy ' + item[0] + ' to the clipboard');
+      copyBtn.addEventListener('click', function () { copyCode(item[0], copyBtn); });
+
+      row.appendChild(useBtn);
+      row.appendChild(copyBtn);
+      return row;
+    }
+
+    function renderList(items) {
+      listEl.innerHTML = '';
+      if (!items.length) {
+        listEl.innerHTML = '<div class="itemcode-empty">No matches</div>';
+        return;
+      }
+      items.forEach(function (item) { listEl.appendChild(buildRow(item)); });
+    }
 
     function renderItems(cat, filter) {
       var items = ITEM_CODES[cat] || [];
@@ -5836,37 +5965,14 @@
           return item[0].toLowerCase().indexOf(f) !== -1 || item[1].toLowerCase().indexOf(f) !== -1;
         });
       }
-      listEl.innerHTML = '';
-      if (!items.length) {
-        listEl.innerHTML = '<div style="padding:0.5rem;color:var(--text-muted);font-size:0.8rem;">No matches</div>';
-        return;
-      }
-      items.forEach(function (item) {
-        var row = document.createElement('div');
-        row.className = 'itemcode-row';
-        row.title = 'Click to copy: ' + item[0];
-        row.innerHTML = '<span class="itemcode-code">' + item[0] + '</span><span class="itemcode-name">' + escapeHtml(item[1]) + '</span><span class="itemcode-copy">copy</span>';
-        row.addEventListener('click', function () {
-          navigator.clipboard.writeText(item[0]).then(function () {
-            var copyEl = row.querySelector('.itemcode-copy');
-            copyEl.textContent = 'copied!';
-            copyEl.style.opacity = '1';
-            setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
-          }).catch(function () {
-            var copyEl = row.querySelector('.itemcode-copy');
-            copyEl.textContent = 'copy failed';
-            copyEl.style.opacity = '1';
-            setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
-          });
-        });
-        listEl.appendChild(row);
-      });
+      renderList(items);
     }
 
     tabs.forEach(function (tab) {
       tab.addEventListener('click', function () {
         tabs.forEach(function (t) { t.classList.remove('active'); });
         tab.classList.add('active');
+        syncPressedStates(tab.parentNode);
         currentCat = tab.getAttribute('data-cat');
         renderItems(currentCat, searchInput.value);
       });
@@ -5875,46 +5981,19 @@
     searchInput.addEventListener('input', function () {
       // Search across all categories if there's a filter
       if (this.value.trim()) {
-        // Search all categories, show combined results
         var filter = this.value.trim().toLowerCase();
-        var allItems = [];
+        var seen = {};
+        var unique = [];
         Object.keys(ITEM_CODES).forEach(function (cat) {
           ITEM_CODES[cat].forEach(function (item) {
+            if (seen[item[0]]) return;
             if (item[0].toLowerCase().indexOf(filter) !== -1 || item[1].toLowerCase().indexOf(filter) !== -1) {
-              allItems.push(item);
+              seen[item[0]] = true;
+              unique.push(item);
             }
           });
         });
-        // Deduplicate by code
-        var seen = {};
-        var unique = [];
-        allItems.forEach(function (item) {
-          if (!seen[item[0]]) { seen[item[0]] = true; unique.push(item); }
-        });
-        listEl.innerHTML = '';
-        unique.forEach(function (item) {
-          var row = document.createElement('div');
-          row.className = 'itemcode-row';
-          row.title = 'Click to copy: ' + item[0];
-          row.innerHTML = '<span class="itemcode-code">' + item[0] + '</span><span class="itemcode-name">' + escapeHtml(item[1]) + '</span><span class="itemcode-copy">copy</span>';
-          row.addEventListener('click', function () {
-            navigator.clipboard.writeText(item[0]).then(function () {
-              var copyEl = row.querySelector('.itemcode-copy');
-              copyEl.textContent = 'copied!';
-              copyEl.style.opacity = '1';
-              setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
-            }).catch(function () {
-              var copyEl = row.querySelector('.itemcode-copy');
-              copyEl.textContent = 'copy failed';
-              copyEl.style.opacity = '1';
-              setTimeout(function () { copyEl.textContent = 'copy'; copyEl.style.opacity = ''; }, 1000);
-            });
-          });
-          listEl.appendChild(row);
-        });
-        if (!unique.length) {
-          listEl.innerHTML = '<div style="padding:0.5rem;color:var(--text-muted);font-size:0.8rem;">No matches</div>';
-        }
+        renderList(unique);
       } else {
         renderItems(currentCat, '');
       }
