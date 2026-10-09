@@ -1056,14 +1056,15 @@
           <!-- Pane: Holy Grail -->
           <div class="editor-pane" id="pane-grail" style="display:none">
             <div class="grail-header">
-              <h3>Holy Grail Tracker</h3>
-              <p class="text-muted">Check off items as you find them, then use Insert Grail Rules to highlight unfound items in your filter.</p>
+              <h2 class="grail-title">Holy Grail Tracker</h2>
+              <p class="text-muted">Check off items as you find them, then Apply to Filter to highlight the ones you're still missing. Apply again after finding more to update the rules.</p>
               <div class="grail-actions">
-                <button class="btn btn-primary" id="btn-grail-generate">Insert Grail Rules</button>
-                <button class="btn btn-secondary" id="btn-grail-update">Update Grail Rules</button>
+                <button class="btn btn-primary" id="btn-grail-apply">Apply to Filter</button>
+                <span class="grail-badge" id="grail-outdated" hidden>Out of date</span>
                 <button class="btn btn-secondary" id="btn-grail-reset">Reset All</button>
-                <span class="grail-progress" id="grail-progress">0 / 0 found</span>
+                <span class="grail-progress" id="grail-progress" role="status" aria-live="polite">0 / 0 found</span>
               </div>
+              <p class="grail-status" id="grail-status" role="status" aria-live="polite"></p>
               <input type="text" class="grail-search" id="grail-search" placeholder="Search uniques..." aria-label="Search uniques">
 
               <details class="grail-style-details">
