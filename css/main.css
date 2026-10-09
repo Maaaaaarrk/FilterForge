@@ -443,7 +443,7 @@ html[data-theme='modern'] .nav-links a::before {
 }
 
 .theme-toggle-hint {
-  font-size: 10px;
+  font-size: 0.75rem;
   opacity: 0.75;
 }
 
@@ -572,7 +572,7 @@ html[data-theme='modern'] .footer {
 
 .card p {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   margin-bottom: 0;
 }
 
@@ -772,7 +772,7 @@ html[data-theme='modern'] th {
 }
 
 td {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   background: var(--surface);
 }
 
