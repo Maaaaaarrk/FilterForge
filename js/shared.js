@@ -15,31 +15,52 @@
     }
   });
 
-  // Mobile hamburger toggle
+  // Mobile hamburger toggle. The button sits before the links in the DOM
+  // so keyboard focus moves straight into the open menu.
   var hamburger = document.querySelector('.nav-hamburger');
   var navLinks = document.querySelector('.nav-links');
   if (hamburger && navLinks) {
-    hamburger.setAttribute('aria-expanded', 'false');
+    var setMenuOpen = function (open) {
+      navLinks.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+    };
+    var isMenuOpen = function () {
+      return navLinks.classList.contains('open');
+    };
+
+    setMenuOpen(false);
     hamburger.addEventListener('click', function () {
-      navLinks.classList.toggle('open');
-      var expanded = navLinks.classList.contains('open');
-      hamburger.setAttribute('aria-expanded', String(expanded));
+      setMenuOpen(!isMenuOpen());
     });
     // Close on link click
     navLinks.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        navLinks.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-      });
+      link.addEventListener('click', function () { setMenuOpen(false); });
     });
     // Close on Escape key
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && navLinks.classList.contains('open')) {
-        navLinks.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
+      if (e.key === 'Escape' && isMenuOpen()) {
+        setMenuOpen(false);
         hamburger.focus();
       }
     });
+    // Close on a click outside the menu
+    document.addEventListener('click', function (e) {
+      if (isMenuOpen() && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    });
+    // Close when keyboard focus leaves the menu
+    navLinks.addEventListener('focusout', function (e) {
+      var next = e.relatedTarget;
+      if (isMenuOpen() && next && !navLinks.contains(next) && next !== hamburger) {
+        setMenuOpen(false);
+      }
+    });
+    // Close when the viewport grows past the mobile breakpoint
+    var desktopQuery = window.matchMedia('(min-width: 961px)');
+    var onBreakpoint = function (e) { if (e.matches) setMenuOpen(false); };
+    if (desktopQuery.addEventListener) desktopQuery.addEventListener('change', onBreakpoint);
+    else if (desktopQuery.addListener) desktopQuery.addListener(onBreakpoint);
   }
 
   // Retro/Modern style toggle (same styles as hiimpd2.com)

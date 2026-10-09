@@ -225,6 +225,30 @@ img.pixel {
   box-shadow: var(--focus-ring);
 }
 
+/* Skip link: off-screen until keyboard focus */
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 1100;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-ui);
+  font-weight: var(--ui-weight);
+  text-transform: var(--text-case);
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border-radius: var(--radius);
+  transform: translateY(calc(-100% - var(--space-4)));
+  -webkit-font-smoothing: var(--font-smoothing);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: none;
+  color: var(--accent-contrast);
+  text-decoration: none;
+}
+
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
