@@ -733,17 +733,17 @@
                   <div class="color-grid" role="group" aria-labelledby="lbl-color" data-field="color">
                     <button class="color-chip" data-value="" title="Default" aria-label="Default" style="background:#ccc;"></button>
                     <button class="color-chip" data-value="%WHITE%" title="White" aria-label="White" style="background:#fff;"></button>
-                    <button class="color-chip" data-value="%GRAY%" title="Gray" aria-label="Gray" style="background:#808080;"></button>
-                    <button class="color-chip" data-value="%RED%" title="Red" aria-label="Red" style="background:#ff4040;"></button>
-                    <button class="color-chip" data-value="%GREEN%" title="Green" aria-label="Green" style="background:#00c000;"></button>
+                    <button class="color-chip" data-value="%GRAY%" title="Gray" aria-label="Gray" style="background:var(--game-gray);"></button>
+                    <button class="color-chip" data-value="%RED%" title="Red" aria-label="Red" style="background:var(--game-red);"></button>
+                    <button class="color-chip" data-value="%GREEN%" title="Green" aria-label="Green" style="background:var(--game-green);"></button>
                     <button class="color-chip" data-value="%DARK_GREEN%" title="Dark Green" aria-label="Dark Green" style="background:#008000;"></button>
-                    <button class="color-chip" data-value="%BLUE%" title="Blue" aria-label="Blue" style="background:#6464ff;"></button>
-                    <button class="color-chip" data-value="%GOLD%" title="Gold" aria-label="Gold" style="background:#c8a040;"></button>
-                    <button class="color-chip" data-value="%YELLOW%" title="Yellow" aria-label="Yellow" style="background:#ffff40;"></button>
-                    <button class="color-chip" data-value="%ORANGE%" title="Orange" aria-label="Orange" style="background:#ff8000;"></button>
+                    <button class="color-chip" data-value="%BLUE%" title="Blue" aria-label="Blue" style="background:var(--game-blue);"></button>
+                    <button class="color-chip" data-value="%GOLD%" title="Gold" aria-label="Gold" style="background:var(--game-gold);"></button>
+                    <button class="color-chip" data-value="%YELLOW%" title="Yellow" aria-label="Yellow" style="background:var(--game-yellow);"></button>
+                    <button class="color-chip" data-value="%ORANGE%" title="Orange" aria-label="Orange" style="background:var(--game-orange);"></button>
                     <button class="color-chip" data-value="%PURPLE%" title="Purple" aria-label="Purple" style="background:#a000c8;"></button>
                     <button class="color-chip" data-value="%TAN%" title="Tan" aria-label="Tan" style="background:#b0a080;"></button>
-                    <button class="color-chip" data-value="%BLACK%" title="Black" aria-label="Black" style="background:#000; border:1px solid #555;"></button>
+                    <button class="color-chip" data-value="%BLACK%" title="Black" aria-label="Black" style="background:var(--game-black); border:1px solid var(--border-strong);"></button>
                     <button class="color-chip" data-value="%CORAL%" title="Coral (HD)" aria-label="Coral" style="background:#ff7f50;"></button>
                     <button class="color-chip" data-value="%SAGE%" title="Sage (HD)" aria-label="Sage" style="background:#80b080;"></button>
                     <button class="color-chip" data-value="%TEAL%" title="Teal (HD)" aria-label="Teal" style="background:#008080;"></button>
@@ -816,11 +816,11 @@
 
         <!-- Center: Code Editor -->
         <div class="editor-main">
-          <div class="editor-tabs">
-            <button class="editor-tab active" data-tab="code">Code Editor</button>
-            <button class="editor-tab" data-tab="preview">Live Preview</button>
-            <button class="editor-tab" data-tab="grail">Holy Grail</button>
-            <button class="editor-tab" data-tab="allitems">All Items</button>
+          <div class="editor-tabs" role="tablist" aria-label="Editor views">
+            <button class="editor-tab active" data-tab="code" role="tab" id="tab-code" aria-selected="true" aria-controls="pane-code pane-community">Code Editor</button>
+            <button class="editor-tab" data-tab="preview" role="tab" id="tab-preview" aria-selected="false" aria-controls="pane-preview" tabindex="-1">Live Preview</button>
+            <button class="editor-tab" data-tab="grail" role="tab" id="tab-grail" aria-selected="false" aria-controls="pane-grail" tabindex="-1">Holy Grail</button>
+            <button class="editor-tab" data-tab="allitems" role="tab" id="tab-allitems" aria-selected="false" aria-controls="pane-allitems" tabindex="-1">All Items</button>
           </div>
 
           <!-- Generated Rule (from Rule Builder) -->
@@ -842,7 +842,7 @@
           </div>
 
           <!-- Code editor -->
-          <div class="editor-pane" id="pane-code">
+          <div class="editor-pane" id="pane-code" role="tabpanel" aria-labelledby="tab-code">
             <div class="editor-meta">
               <span class="line-count" id="line-count">Lines: 0</span>
               <span class="char-count" id="char-count">Chars: 0</span>
@@ -875,7 +875,7 @@
           </div>
 
           <!-- Community Edit Mode pane -->
-          <div class="editor-pane" id="pane-community" style="display:none">
+          <div class="editor-pane" id="pane-community" role="tabpanel" aria-labelledby="tab-code" style="display:none">
             <div class="community-mode-banner">
               <div class="community-mode-info">
                 <span class="community-mode-label">Community Edit Mode</span>
@@ -931,7 +931,7 @@
           </div>
 
           <!-- Preview pane -->
-          <div class="editor-pane" id="pane-preview" style="display:none">
+          <div class="editor-pane" id="pane-preview" role="tabpanel" aria-labelledby="tab-preview" style="display:none">
             <div class="preview-header">
               <p class="text-muted">Preview shows how your rules will display items on the ground. All magic, rare, unique, and set items are unidentified (!ID). It updates whenever you open this tab. Pin an item to the top of the list and change the filter level to test. For a more advanced preview, try <a href="https://equa1itype4ce.github.io/filterbird/index.html?v=PD2&amp;fromweb=true" target="_blank" rel="noopener" >FilterBird &rarr;</a></p>
             </div>
@@ -1049,7 +1049,7 @@
           </div>
 
           <!-- Pane: Holy Grail -->
-          <div class="editor-pane" id="pane-grail" style="display:none">
+          <div class="editor-pane" id="pane-grail" role="tabpanel" aria-labelledby="tab-grail" style="display:none">
             <div class="grail-header">
               <h2 class="grail-title">Holy Grail Tracker</h2>
               <p class="text-muted">Check off items as you find them, then Apply to Filter to highlight the ones you're still missing. Apply again after finding more to update the rules.</p>
@@ -1113,7 +1113,7 @@
             <div class="grail-list" id="grail-list"></div>
           </div>
           <!-- All Items (Bird's Eye View) pane -->
-          <div class="editor-pane" id="pane-allitems" style="display:none">
+          <div class="editor-pane" id="pane-allitems" role="tabpanel" aria-labelledby="tab-allitems" style="display:none">
             <div class="allitems-header">
               <p class="text-muted">Bird's eye view of all items. See how your filter rules affect every item. Hidden items are greyed out. NMAG bases do not include staffmod variants. MAG/RARE items use ilvl 85 (charms use ilvl 99).</p>
             </div>

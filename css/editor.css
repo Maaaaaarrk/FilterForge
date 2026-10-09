@@ -145,6 +145,23 @@ html[data-theme='modern'] .btn-accent::before {
   display: none;
 }
 
+/* Modern: accent is the outlined secondary call to action, so it doesn't
+   compete with the filled primary button next to it */
+html[data-theme='modern'] .btn-accent {
+  color: var(--accent);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+html[data-theme='modern'] .btn-accent:hover {
+  color: var(--accent-strong);
+  background: var(--accent-tint);
+}
+
+html[data-theme='modern'] .btn-accent:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--accent), var(--focus-ring);
+}
+
 .btn-icon {
   background: none;
   border: none;
@@ -577,8 +594,8 @@ html[data-theme='modern'] .btn-accent::before {
 }
 
 .editor-tab:focus-visible {
-  outline: var(--px) solid var(--p-white);
-  outline-offset: calc(-1 * var(--px));
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 html[data-theme='modern'] .editor-tab {
@@ -589,6 +606,10 @@ html[data-theme='modern'] .editor-tab {
 
 html[data-theme='modern'] .editor-tab.active {
   background: var(--accent);
+}
+
+html[data-theme='modern'] .editor-tab:focus-visible {
+  box-shadow: var(--focus-ring);
 }
 
 /* Preview pane needs flex column for scrollable results */
