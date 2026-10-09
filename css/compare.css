@@ -1,0 +1,275 @@
+/* ============================================
+   Filter Forge — Compare Page Styles
+   ============================================ */
+
+/* Diablo font for the on-ground labels */
+@font-face {
+  font-family: 'Exocet';
+  src: url('../data/exocetblizzardot-medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The table is wide: let the page use the full width */
+.compare-container {
+  max-width: none;
+}
+
+.compare-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: 1rem;
+}
+
+.compare-hidden {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.compare-hidden[hidden] {
+  display: none;
+}
+
+.compare-hidden-title {
+  color: var(--text-muted);
+}
+
+.compare-hidden-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.compare-chip {
+  min-height: 32px;
+  margin: var(--px);
+  padding: 0 10px;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--text);
+  background: var(--button-bg);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--button-shadow);
+  cursor: pointer;
+}
+
+.compare-chip:hover {
+  color: var(--accent-strong);
+}
+
+.compare-chip:focus-visible,
+.compare-col-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.compare-status {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.compare-status[hidden] {
+  display: none;
+}
+
+/* Scroll box: sticky item column and header row */
+.compare-scroll {
+  overflow: auto;
+  max-height: calc(100vh - 140px);
+  background: var(--surface-sunken);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--outline, 0 0 0 1px var(--border));
+}
+
+.compare-scroll:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.compare-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 100%;
+}
+
+.compare-table th,
+.compare-table td {
+  padding: 0.35rem 0.5rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-raised);
+}
+
+.compare-corner,
+.compare-legend {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 12rem;
+  max-width: 16rem;
+  text-align: left;
+  background: var(--surface);
+}
+
+.compare-table thead .compare-corner {
+  z-index: 3;
+  color: var(--text-muted);
+  font-family: var(--font-ui);
+}
+
+.compare-legend {
+  font-weight: normal;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.compare-cat th {
+  position: sticky;
+  left: 0;
+  padding-top: 0.9rem;
+  text-align: left;
+  font-family: var(--font-heading);
+  font-weight: var(--heading-weight);
+  text-transform: var(--text-case);
+  color: var(--heading);
+  background: var(--surface-sunken);
+}
+
+/* Column headers */
+.compare-col-head {
+  min-width: 13rem;
+  vertical-align: top;
+  text-align: left;
+}
+
+.compare-col-top {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.compare-col-name {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-weight: var(--heading-weight);
+  text-transform: var(--text-case);
+  color: var(--heading);
+}
+
+.compare-col-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.compare-col-btn:hover {
+  color: var(--accent-strong);
+  background: var(--surface-hover);
+}
+
+.compare-select {
+  --control-ring: var(--border-control);
+  display: block;
+  width: calc(100% - var(--px2));
+  margin: var(--px) var(--px) 0.35rem;
+  padding: 0.3rem 22px 0.3rem 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text);
+  appearance: none;
+  background: var(--select-arrow) right 6px center / 10px 8px no-repeat, var(--surface-sunken);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: 0 calc(-1 * var(--px)) 0 0 var(--control-ring), 0 var(--px) 0 0 var(--control-ring),
+    calc(-1 * var(--px)) 0 0 0 var(--control-ring), var(--px) 0 0 0 var(--control-ring), inset var(--px) var(--px) 0 0 var(--ink);
+  cursor: pointer;
+  outline: none;
+}
+
+.compare-select:focus {
+  --control-ring: var(--accent);
+}
+
+.compare-col-state {
+  min-height: 1em;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* Cells and on-ground labels */
+.compare-cell {
+  text-align: center;
+}
+
+.game-label {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-family: 'Exocet', var(--font-body);
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  white-space: pre;
+  background: rgb(0 0 0 / 0.8);
+}
+
+.compare-hidden-label,
+.compare-note {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.compare-footnote {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .compare-corner,
+  .compare-legend {
+    min-width: 8rem;
+  }
+
+  .compare-col-head {
+    min-width: 11rem;
+  }
+}

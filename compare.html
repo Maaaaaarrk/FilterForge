@@ -12,20 +12,20 @@
   </script>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAQ — Filter Forge</title>
-  <meta name="description" content="Frequently asked questions about Project Diablo 2 item filters.">
-  <meta property="og:title" content="FAQ — Filter Forge">
-  <meta property="og:description" content="Frequently asked questions about Filter Forge and PD2 loot filters.">
+  <title>Compare Filters — Filter Forge</title>
+  <meta name="description" content="Compare how community Project Diablo 2 loot filters show the same drops, side by side.">
+  <meta property="og:title" content="Compare Filters — Filter Forge">
+  <meta property="og:description" content="See how each community PD2 loot filter shows the same drops, side by side.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://maaaaaarrk.github.io/FilterForge/faq.html">
+  <meta property="og:url" content="https://maaaaaarrk.github.io/FilterForge/compare.html">
   <meta property="og:image" content="https://maaaaaarrk.github.io/FilterForge/splash.png">
   <meta property="og:image:width" content="800">
   <meta property="og:image:height" content="450">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://maaaaaarrk.github.io/FilterForge/faq.html">
+  <link rel="canonical" href="https://maaaaaarrk.github.io/FilterForge/compare.html">
   <script src="js/theme.js"></script>
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/faq.css">
+  <link rel="stylesheet" href="css/compare.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -35,9 +35,9 @@
     <button type="button" class="nav-hamburger" aria-label="Toggle navigation" aria-controls="nav-links" aria-expanded="false">&#9776;</button>
     <ul class="nav-links" id="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="faq.html" class="active">FAQ</a></li>
+      <li><a href="faq.html">FAQ</a></li>
       <li><a href="filters.html">Filters</a></li>
-      <li><a href="compare.html">Compare</a></li>
+      <li><a href="compare.html" class="active">Compare</a></li>
       <li><a href="guide.html">Guide</a></li>
       <li><a href="editor.html">Editor</a></li>
       <li class="nav-theme-item"><button type="button" class="theme-toggle" aria-label="Switch to the retro style" title="Switch to the retro style"><span class="theme-toggle-hint">Switch to:</span> <span class="theme-toggle-label">Retro style</span></button></li>
@@ -47,19 +47,27 @@
   </nav>
 
   <main class="main-content" id="main">
-    <div class="container">
+    <div class="container compare-container">
       <div class="page-title">
-        <h1>Frequently Asked Questions</h1>
+        <h1>Compare Filters</h1>
+        <p class="text-muted">The same drops as each community filter shows them. Pick a filter and level per column, hide columns with &times;, and share the link for a head to head.</p>
       </div>
 
-      <div class="search-wrap">
-        <input type="text" class="search-input" id="faq-search" placeholder="Search questions, answers, and tags..." autocomplete="off" aria-label="Search FAQ" aria-controls="faq-result-count faq-container">
+      <div class="compare-toolbar">
+        <button type="button" class="btn-cta btn-cta-primary" id="compare-copy">Copy link</button>
+        <button type="button" class="btn-cta" id="compare-reset">Reset</button>
       </div>
-      <div class="faq-result-count" id="faq-result-count" aria-live="polite"></div>
 
-      <div id="faq-container"></div>
-      <noscript><p class="text-muted text-center">JavaScript is required to view the FAQ.</p></noscript>
-      <div class="faq-no-results hidden" id="faq-no-results" aria-live="polite">No questions match your search.</div>
+      <div class="compare-hidden" id="compare-hidden" hidden>
+        <span class="compare-hidden-title">Hidden:</span>
+        <ul class="compare-hidden-list" id="compare-hidden-list"></ul>
+      </div>
+
+      <p class="compare-status" id="compare-status" role="status">Loading filters...</p>
+      <div class="compare-scroll" tabindex="0" aria-label="Filter comparison table">
+        <table class="compare-table" id="compare-table"></table>
+      </div>
+      <p class="compare-footnote text-muted">Labels are evaluated in your browser from each filter's latest file on GitHub, at character level 86 in Hell. Unique and set samples follow <a href="https://github.com/Maaaaaarrk/HiimFilter-PD2-Filter/blob/main/builderfilter/data/unique-set-tiers.json" target="_blank" rel="noopener">HiimFilter's star tiers</a>. Sounds, map icons and tooltips aren't shown.</p>
     </div>
   </main>
 
@@ -69,7 +77,8 @@
   </footer>
 
   <script src="js/shared.js"></script>
-  <script src="data/faq-data.js"></script>
-  <script src="js/faq.js"></script>
+  <script src="js/filter-engine.js"></script>
+  <script src="js/sample-items.js"></script>
+  <script src="js/compare.js"></script>
 </body>
 </html>
