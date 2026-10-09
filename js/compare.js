@@ -12,8 +12,8 @@
   var Engine = window.FF.FilterEngine;
   var Samples = window.FF.SampleItems;
 
-  // Default filter and level per group (by author). Levels are picked to be roughly
-  // comparable: a mid-strict endgame level for each filter's own scale.
+  // Default filter and level per group (by author), picked one by one to be roughly
+  // comparable to Hiim level 6 (stricter, rejuvs but no HP/MP) on each filter's own scale.
   var DEFAULTS = {
     'HiimFilter': { file: 'Hiim.filter', level: 6 },
     'Hiim - Hyper': { file: 'Hiim_Hyper.filter', level: 6 },
@@ -22,17 +22,17 @@
     'Kassahi': { file: 'Kassahi.filter', level: 6 },
     'Philanthropy777': { file: 'Kassahi_Phil777.filter', level: 6 },
     'Wolfie': { file: 'combined.filter', level: 4 },
-    'Kryszard': { file: 'item.filter', level: 4 },
-    'eqN': { file: 'eqN-All-In-One.filter', level: 5 },
-    'Erazure': { file: 'Erazure-Main.filter', level: 8 },
-    'ADevDH': { file: 'dark.filter', level: 5 },
-    'Dauracul': { file: 'dauracul.filter', level: 2 },
-    'Sven': { file: 'Revised.filter', level: 7 },
-    'PiLLLa': { file: 'S13_Starter.filter', level: 6 },
-    'Roofoo': { file: 'Roofoo.filter', level: 4 },
+    'Kryszard': { file: 'item.filter', level: 5 },
+    'eqN': { file: 'eqN-All-In-One.filter', level: 6 },
+    'Erazure': { file: 'Erazure-Main.filter', level: 6 },
+    'ADevDH': { file: 'dark.filter', level: 4 },
+    'Dauracul': { file: 'dauracul.filter', level: 3 },
+    'Sven': { file: 'Revised.filter', level: 6 },
+    'PiLLLa': { file: 'S13_Starter.filter', level: 7 },
+    'Roofoo': { file: 'Roofoo.filter', level: 5 },
     'Phyx10n': { file: 'main.filter', level: 3 },
-    'Vylens': { file: 'Vylens.filter', level: 4 },
-    'huns1313': { file: 'MATRIX.filter', level: 3 }
+    'Vylens': { file: 'Vylens.filter', level: 5 },
+    'huns1313': { file: 'MATRIX.filter', level: 1 }
   };
   // Hiim and the Kassahi family first, then everyone else in data order.
   var FIRST = ['HiimFilter', 'Hiim - Hyper', 'Hiim - TalRasha', 'Hiim - Vanilla+', 'Kassahi', 'Philanthropy777'];
