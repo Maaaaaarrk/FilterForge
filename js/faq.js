@@ -264,7 +264,8 @@
           var tBtn = target.querySelector('.faq-question');
           if (tBtn) tBtn.setAttribute('aria-expanded', 'true');
           setTimeout(function () {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
           }, 100);
         }
       }

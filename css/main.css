@@ -351,8 +351,8 @@ pre code {
 .nav-home:focus-visible,
 .nav-logo:focus-visible {
   box-shadow: none;
-  outline: var(--px) solid var(--accent);
-  outline-offset: var(--px);
+  outline: max(2px, var(--px)) solid var(--accent);
+  outline-offset: max(2px, var(--px));
 }
 
 .nav-links {
@@ -812,6 +812,10 @@ html[data-theme='modern'] .search-input {
   --control-ring: var(--accent);
 }
 
+html[data-theme='modern'] .search-input:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
 /* Utility */
 .hidden { display: none !important; }
 .text-muted { color: var(--text-muted); }
@@ -926,6 +930,10 @@ html[data-theme='modern'] .search-input {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *, *::before, *::after {
     animation: none !important;
     transition: none !important;
