@@ -12,6 +12,7 @@
   var errorEl = document.getElementById('filters-error');
   var searchInput = document.getElementById('filter-search');
   var noResults = document.getElementById('filters-no-results');
+  var emptyEl = document.getElementById('filters-empty');
   var filters = [];
 
   function apiUrlToRepoUrl(apiUrl) {
@@ -24,6 +25,7 @@
     filters = data;
     loading.classList.add('hidden');
     grid.innerHTML = '';
+    if (emptyEl) emptyEl.classList.toggle('hidden', data.length > 0);
 
     data.forEach(function (f, i) {
       var repoUrl = apiUrlToRepoUrl(f.url);

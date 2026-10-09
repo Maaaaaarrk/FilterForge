@@ -739,6 +739,7 @@ html[data-theme='modern'] .search-input {
 }
 
 /* Utility */
+.hidden { display: none !important; }
 .text-muted { color: var(--text-muted); }
 .text-center { text-align: center; }
 .mt-1 { margin-top: 0.5rem; }
