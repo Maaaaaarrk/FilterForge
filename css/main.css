@@ -541,6 +541,12 @@ html[data-theme='modern'] .footer {
   margin: 0;
 }
 
+.footer .footer-note {
+  margin-top: var(--space-1);
+  font-size: 0.875rem;
+  color: var(--text-dim);
+}
+
 .footer a {
   color: var(--accent);
 }
