@@ -474,6 +474,11 @@
             }
           }
 
+          // Armor slot and weapon type are mutually exclusive (an item can't be
+          // both), so picking one clears the other — as their labels promise
+          if (field === 'equipment' && builderState.equipment) clearChipGroup('weapons');
+          if (field === 'weapons' && builderState.weapons) clearChipGroup('equipment');
+
           // Handle action show/hide toggle for output options
           if (field === 'action') {
             var opts = document.getElementById('output-options');
@@ -509,6 +514,29 @@
           }
           updateGeneratedRule();
         });
+      });
+    });
+  }
+
+  function clearChipGroup(field) {
+    var group = document.querySelector('.chip-group[data-field="' + field + '"]');
+    if (!group) return;
+    group.querySelectorAll('.chip.active').forEach(function (c) { c.classList.remove('active'); });
+    builderState[field] = group.getAttribute('data-multi') === 'true' ? [] : '';
+  }
+
+  // Toggle buttons expose their on/off state to assistive tech via
+  // aria-pressed, kept in sync with the visual .active/.selected class.
+  var PRESSED_STATES = [
+    ['.chip', 'active'], ['.color-chip', 'active'], ['.wizard-opt', 'selected'],
+    ['.itemcode-tab', 'active'], ['.allitems-cat', 'active']
+  ];
+
+  function syncPressedStates(root) {
+    root = root || document;
+    PRESSED_STATES.forEach(function (pair) {
+      root.querySelectorAll(pair[0]).forEach(function (el) {
+        el.setAttribute('aria-pressed', el.classList.contains(pair[1]) ? 'true' : 'false');
       });
     });
   }
@@ -563,15 +591,23 @@
       var row = document.createElement('div');
       row.className = 'value-row';
       row.innerHTML =
-        '<select class="value-code">' +
+        '<select class="value-code" aria-label="Value code">' +
         document.querySelector('.value-code').innerHTML +
         '</select>' +
-        '<select class="value-op">' +
+        '<select class="value-op" aria-label="Comparison operator">' +
         '<option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option><option value="~">~ (between)</option>' +
         '</select>' +
-        '<input type="text" class="value-val" placeholder="value" size="6">' +
-        '<button class="btn-icon btn-remove-value" title="Remove">&times;</button>';
+        '<input type="text" class="value-val" placeholder="e.g. 4" size="6" aria-label="Condition value" title="A number, or min-max (e.g. 3-5) with ~">' +
+        '<button class="btn-icon btn-remove-value" title="Remove condition" aria-label="Remove condition">&times;</button>';
+      row.querySelector('.value-code').value = '';
       return row;
+    }
+
+    // "~" takes a range, everything else a single number
+    function updatePlaceholders() {
+      container.querySelectorAll('.value-row').forEach(function (row) {
+        row.querySelector('.value-val').placeholder = row.querySelector('.value-op').value === '~' ? 'min-max' : 'e.g. 4';
+      });
     }
 
     // Wire up existing row
@@ -588,7 +624,7 @@
       updateGeneratedRule();
     });
 
-    container.addEventListener('change', function () { updateGeneratedRule(); });
+    container.addEventListener('change', function () { updatePlaceholders(); updateGeneratedRule(); });
     container.addEventListener('input', function () { updateGeneratedRule(); });
 
     addBtn.addEventListener('click', function () {
@@ -701,7 +737,7 @@
         '<select class="skill-name" aria-label="Skill name" disabled><option value="">-- Skill --</option></select>' +
         '<select class="skill-op" aria-label="Skill operator"><option value="=">=</option><option value=">">&gt; (at least)</option><option value="<">&lt;</option></select>' +
         '<select class="skill-level" aria-label="Skill level"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>' +
-        '<button class="btn-icon btn-remove-skill" title="Remove">&times;</button>';
+        '<button class="btn-icon btn-remove-skill" title="Remove skill condition" aria-label="Remove skill condition">&times;</button>';
       return row;
     }
 
@@ -884,8 +920,14 @@
     }
 
     // Item code (with optional all-tiers expansion)
-    var itemCode = document.getElementById('item-code-input').value.trim();
+    var itemCodeInput = document.getElementById('item-code-input');
+    var itemCode = itemCodeInput.value.trim();
     var allTiers = document.getElementById('item-code-alltiers').checked;
+    var unknownCode = !!itemCode && !isKnownItemCode(itemCode);
+    itemCodeInput.setAttribute('aria-invalid', unknownCode ? 'true' : 'false');
+    document.getElementById('item-code-msg').textContent = unknownCode
+      ? '"' + itemCode + '" isn\'t in the item code list. Check the spelling or pick a suggestion.'
+      : '';
     if (itemCode && allTiers) {
       var tierCodes = ITEM_TIER_MAP[itemCode];
       if (tierCodes && tierCodes.length > 1) {
@@ -899,14 +941,23 @@
 
     // Value conditions
     var vcContainer = document.getElementById('value-conditions');
+    var valueIssues = [];
     vcContainer.querySelectorAll('.value-row').forEach(function (row) {
       var code = row.querySelector('.value-code').value;
       var op = row.querySelector('.value-op').value;
-      var val = row.querySelector('.value-val').value.trim();
+      var valInput = row.querySelector('.value-val');
+      var val = valInput.value.trim();
+      var issue = '';
+      if (code && !val) issue = code + ' needs a value.';
+      else if (!code && val) issue = 'Pick a code for the value "' + val + '".';
+      else if (code && op === '~' && !/^\d+\s*-\s*\d+$/.test(val)) issue = code + '~ needs a range like 3-5.';
+      if (issue) valueIssues.push(issue);
+      valInput.setAttribute('aria-invalid', issue ? 'true' : 'false');
       if (code && val) {
         conditions.push(code + op + val);
       }
     });
+    document.getElementById('value-cond-msg').textContent = valueIssues.join(' ');
 
     // Skill conditions
     var skContainer = document.getElementById('skill-conditions');
@@ -992,10 +1043,36 @@
       }
     }
 
+    // Map Icon Color only means something once an icon is picked
+    document.getElementById('map-icon-color').disabled = !builderState.mapIcon;
+
     var rule = 'ItemDisplay[' + condStr + ']: ' + output;
-    generatedCode.textContent = rule;
-    generatedCode.classList.remove('empty-state');
-    generatedRuleInsertable = true;
+    var hasConditions = conditions.length > 0;
+    var outputChanged = builderState.action === 'hide' || output !== '%NAME%';
+    var ruleMsg = document.getElementById('generated-rule-msg');
+
+    if (!hasConditions && !outputChanged) {
+      // Nothing chosen yet — don't offer the catch-all "ItemDisplay[]: %NAME%"
+      generatedCode.textContent = EMPTY_RULE_TEXT;
+      generatedCode.classList.add('empty-state');
+      ruleMsg.textContent = '';
+    } else {
+      generatedCode.textContent = rule;
+      generatedCode.classList.remove('empty-state');
+      ruleMsg.textContent = hasConditions ? '' :
+        'Add at least one condition. With no conditions this rule would match every item, so inserting is disabled.';
+    }
+    setRuleInsertable(hasConditions);
+    syncPressedStates(document.getElementById('editor-sidebar'));
+  }
+
+  var EMPTY_RULE_TEXT = 'Use the Rule Builder to generate a rule';
+
+  function setRuleInsertable(on) {
+    generatedRuleInsertable = on;
+    ['btn-insert-rule', 'btn-insert-top', 'btn-insert-end'].forEach(function (id) {
+      document.getElementById(id).disabled = !on;
+    });
   }
 
   // ==========================================
@@ -3158,9 +3235,8 @@
       var addSkillBtn = document.getElementById('btn-add-skill');
       if (addSkillBtn) addSkillBtn.style.display = '';
 
-      generatedCode.textContent = 'Use the Rule Builder to generate a rule';
-      generatedCode.classList.add('empty-state');
-      generatedRuleInsertable = false;
+      // Re-derive the (now empty) rule, button states and messages
+      updateGeneratedRule();
     });
   }
 
@@ -3230,6 +3306,7 @@
             opt.classList.add('selected');
             choices[key] = val;
           }
+          syncPressedStates(group);
         });
       });
     });
@@ -5657,6 +5734,19 @@
     ]
   };
 
+  // Every known item code (lowercase) — for validating typed codes
+  var knownItemCodes = null;
+  function isKnownItemCode(code) {
+    if (!knownItemCodes) {
+      knownItemCodes = {};
+      Object.keys(ITEM_CODES).forEach(function (cat) {
+        ITEM_CODES[cat].forEach(function (item) { knownItemCodes[item[0].toLowerCase()] = true; });
+      });
+      Object.keys(ITEM_TIER_MAP).forEach(function (c) { knownItemCodes[c.toLowerCase()] = true; });
+    }
+    return !!knownItemCodes[code.toLowerCase()];
+  }
+
   // Item code autocomplete on the builder's item code input
   function initItemCodeAutocomplete() {
     var input = document.getElementById('item-code-input');
@@ -6922,6 +7012,7 @@
     initCommunityMode();
     initAllItems();
     initEditorFind();
+    syncPressedStates();
 
     // Auto-open author import if ?author= in URL
     var urlParams2 = new URLSearchParams(window.location.search);

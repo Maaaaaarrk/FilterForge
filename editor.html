@@ -435,7 +435,7 @@
         <!-- Left: Rule Builder panel -->
         <aside class="editor-sidebar" id="editor-sidebar" aria-label="Rule Builder">
           <div class="sidebar-section">
-            <h3>Rule Builder</h3>
+            <h2 class="sidebar-title">Rule Builder</h2>
             <p class="text-muted builder-hint" style="margin-bottom:0.75rem;">Build a rule visually, then insert it into the editor.</p>
 
             <!-- Conditions -->
@@ -446,8 +446,8 @@
               </div>
               <div class="builder-panel" id="conditions-panel">
 
-                <label class="builder-label">Quality</label>
-                <div class="chip-group" data-field="quality" data-multi="false">
+                <span class="builder-label" id="lbl-quality">Quality</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-quality" data-field="quality" data-multi="false">
                   <button class="chip" data-value="NMAG">Normal</button>
                   <button class="chip" data-value="MAG">Magic</button>
                   <button class="chip" data-value="RARE">Rare</button>
@@ -456,16 +456,16 @@
                   <button class="chip" data-value="CRAFT">Crafted</button>
                 </div>
 
-                <label class="builder-label">Tier</label>
-                <div class="chip-group" data-field="tier" data-multi="true">
+                <span class="builder-label" id="lbl-tier">Tier</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-tier" data-field="tier" data-multi="true">
                   <button class="chip" data-value="NORM">Normal</button>
                   <button class="chip" data-value="EXC">Exceptional</button>
                   <button class="chip" data-value="ELT">Elite</button>
                 </div>
 
                 <hr class="builder-divider">
-                <label class="builder-label">Properties</label>
-                <div class="chip-group" data-field="properties" data-multi="true">
+                <span class="builder-label" id="lbl-properties">Properties</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-properties" data-field="properties" data-multi="true">
                   <button class="chip" data-value="ETH">Ethereal</button>
                   <button class="chip" data-value="SUP">Superior</button>
                   <button class="chip" data-value="INF">Inferior</button>
@@ -475,14 +475,14 @@
                 </div>
 
                 <hr class="builder-divider">
-                <label class="builder-label">Item Category</label>
-                <div class="chip-group" data-field="itemcat" data-multi="true">
+                <span class="builder-label" id="lbl-itemcat">Item Category</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-itemcat" data-field="itemcat" data-multi="true">
                   <button class="chip" data-value="ARMOR">Armor</button>
                   <button class="chip" data-value="WEAPON">Weapon</button>
                 </div>
 
-                <label class="builder-label">Armor Slot<span class="text-muted"> (clears weapon type)</span></label>
-                <div class="chip-group" data-field="equipment" data-multi="false">
+                <span class="builder-label" id="lbl-equipment">Armor Slot<span class="text-muted"> (clears weapon type)</span></span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-equipment" data-field="equipment" data-multi="false">
                   <button class="chip" data-value="HELM">Helm</button>
                   <button class="chip" data-value="CHEST">Chest</button>
                   <button class="chip" data-value="SHIELD">Shield</button>
@@ -492,8 +492,8 @@
                   <button class="chip" data-value="CIRC">Circlet</button>
                 </div>
 
-                <label class="builder-label">Weapon Type<span class="text-muted"> (clears armor slot)</span></label>
-                <div class="chip-group" data-field="weapons" data-multi="false">
+                <span class="builder-label" id="lbl-weapons">Weapon Type<span class="text-muted"> (clears armor slot)</span></span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-weapons" data-field="weapons" data-multi="false">
                   <button class="chip" data-value="AXE">Axe</button>
                   <button class="chip" data-value="MACE">Mace</button>
                   <button class="chip" data-value="SWORD">Sword</button>
@@ -511,16 +511,16 @@
                   <button class="chip" data-value="2H">2-Handed</button>
                 </div>
 
-                <label class="builder-label">Misc</label>
-                <div class="chip-group" data-field="misc" data-multi="false">
+                <span class="builder-label" id="lbl-misc">Misc</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-misc" data-field="misc" data-multi="false">
                   <button class="chip" data-value="JEWELRY">Jewelry</button>
                   <button class="chip" data-value="CHARM">Charm</button>
                   <button class="chip" data-value="QUIVER">Quiver</button>
                   <button class="chip" data-value="MISC">Misc</button>
                 </div>
 
-                <label class="builder-label">Class Items</label>
-                <div class="chip-group" data-field="classitems" data-multi="false">
+                <span class="builder-label" id="lbl-classitems">Class Items</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-classitems" data-field="classitems" data-multi="false">
                   <button class="chip" data-value="ZON">Amazon</button>
                   <button class="chip" data-value="SOR">Sorceress</button>
                   <button class="chip" data-value="NEC">Necro</button>
@@ -532,8 +532,8 @@
                 </div>
 
                 <hr class="builder-divider">
-                <label class="builder-label">Location</label>
-                <div class="chip-group" data-field="location" data-multi="true">
+                <span class="builder-label" id="lbl-location">Location</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-location" data-field="location" data-multi="true">
                   <button class="chip" data-value="GROUND">Ground</button>
                   <button class="chip" data-value="EQUIPPED">Equipped</button>
                   <button class="chip" data-value="INVENTORY">Inventory</button>
@@ -544,8 +544,8 @@
                 </div>
 
                 <hr class="builder-divider">
-                <label class="builder-label">Value Conditions</label>
-                <div class="value-conditions" id="value-conditions">
+                <span class="builder-label" id="lbl-valueconds">Value Conditions</span>
+                <div class="value-conditions" id="value-conditions" role="group" aria-labelledby="lbl-valueconds">
                   <div class="value-row">
                     <select class="value-code" aria-label="Value code">
                       <option value="">-- Code --</option>
@@ -624,18 +624,19 @@
                       <option value="=">=</option>
                       <option value="~">~ (between)</option>
                     </select>
-                    <input type="text" class="value-val" placeholder="value (min-max for ~)" size="6" aria-label="Condition value">
-                    <button class="btn-icon btn-remove-value" title="Remove" aria-label="Remove condition">&times;</button>
+                    <input type="text" class="value-val" placeholder="e.g. 4" size="6" aria-label="Condition value" title="A number, or min-max (e.g. 3-5) with ~">
+                    <button class="btn-icon btn-remove-value" title="Remove condition" aria-label="Remove condition">&times;</button>
                   </div>
                 </div>
+                <p class="builder-field-msg" id="value-cond-msg" role="status" aria-live="polite"></p>
                 <button class="btn btn-small btn-add-value" id="btn-add-value">+ Add Condition</button>
 
                 <hr class="builder-divider">
-                <label class="builder-label">Skill Conditions (max 3)</label>
+                <span class="builder-label" id="lbl-skillconds">Skill Conditions (max 3)</span>
                 <label class="builder-checkbox" for="skill-multi-mode">
                   <input type="checkbox" id="skill-multi-mode"> Use MULTI codes (total skill value: skill + tab + class + all skills)
                 </label>
-                <div class="skill-conditions" id="skill-conditions">
+                <div class="skill-conditions" id="skill-conditions" role="group" aria-labelledby="lbl-skillconds">
                   <div class="skill-row">
                     <select class="skill-class" aria-label="Skill class">
                       <option value="">-- Class --</option>
@@ -660,14 +661,14 @@
                       <option value="2">2</option>
                       <option value="3">3</option>
                     </select>
-                    <button class="btn-icon btn-remove-skill" title="Remove" aria-label="Remove skill">&times;</button>
+                    <button class="btn-icon btn-remove-skill" title="Remove skill condition" aria-label="Remove skill condition">&times;</button>
                   </div>
                 </div>
                 <button class="btn btn-small btn-add-skill" id="btn-add-skill">+ Add Skill</button>
 
                 <hr class="builder-divider">
-                <label class="builder-label">Negate (NOT)</label>
-                <div class="chip-group" data-field="negate" data-multi="true">
+                <span class="builder-label" id="lbl-negate">Negate (NOT)</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-negate" data-field="negate" data-multi="true">
                   <button class="chip" data-value="!ETH">!ETH</button>
                   <button class="chip" data-value="!SUP">!SUP</button>
                   <button class="chip" data-value="!INF">!INF</button>
@@ -677,9 +678,10 @@
 
                 <label class="builder-label" for="item-code-input">Item Code</label>
                 <div class="itemcode-input-wrap">
-                  <input type="text" class="builder-input" id="item-code-input" placeholder="Type name or code..." maxlength="20" autocomplete="off">
+                  <input type="text" class="builder-input" id="item-code-input" placeholder="Type name or code..." maxlength="20" autocomplete="off" aria-describedby="item-code-msg">
                   <div class="itemcode-dropdown" id="itemcode-dropdown"></div>
                 </div>
+                <p class="builder-field-msg" id="item-code-msg" role="status" aria-live="polite"></p>
                 <label class="builder-checkbox" for="item-code-alltiers">
                   <input type="checkbox" id="item-code-alltiers"> Include all tiers (norm/exc/elite)
                 </label>
@@ -717,22 +719,22 @@
               </div>
               <div class="builder-panel" id="output-panel">
 
-                <label class="builder-label">Action</label>
-                <div class="chip-group" data-field="action" data-multi="false">
+                <span class="builder-label" id="lbl-action">Action</span>
+                <div class="chip-group" role="group" aria-labelledby="lbl-action" data-field="action" data-multi="false">
                   <button class="chip active" data-value="show">Show</button>
                   <button class="chip" data-value="hide">Hide</button>
                 </div>
 
                 <div id="output-options">
-                  <label class="builder-label">Name Display</label>
-                  <div class="chip-group" data-field="nameDisplay" data-multi="false">
+                  <span class="builder-label" id="lbl-nameDisplay">Name Display</span>
+                  <div class="chip-group" role="group" aria-labelledby="lbl-nameDisplay" data-field="nameDisplay" data-multi="false">
                     <button class="chip active" data-value="%NAME%">Default Name</button>
                     <button class="chip" data-value="custom">Custom Text</button>
                   </div>
                   <input type="text" class="builder-input" id="custom-name-input" placeholder="Custom item text" style="display:none" aria-label="Custom item text">
 
-                  <label class="builder-label">Color</label>
-                  <div class="color-grid" data-field="color">
+                  <span class="builder-label" id="lbl-color">Color</span>
+                  <div class="color-grid" role="group" aria-labelledby="lbl-color" data-field="color">
                     <button class="color-chip" data-value="" title="Default" aria-label="Default" style="background:#ccc;"></button>
                     <button class="color-chip" data-value="%WHITE%" title="White" aria-label="White" style="background:#fff;"></button>
                     <button class="color-chip" data-value="%GRAY%" title="Gray" aria-label="Gray" style="background:#808080;"></button>
@@ -759,8 +761,8 @@
                   <input type="text" class="builder-input" id="append-text" placeholder="e.g. [%SOCKETS%] or !">
                   <a href="https://www.asciiart.eu/ascii-dividers/gallery" target="_blank" rel="noopener" class="builder-hint-link" style="margin-top:0.2rem;">ASCII art ideas for decorations &rarr;</a>
 
-                  <label class="builder-label">Map Icon</label>
-                  <div class="chip-group" data-field="mapIcon" data-multi="false">
+                  <span class="builder-label" id="lbl-mapIcon">Map Icon</span>
+                  <div class="chip-group" role="group" aria-labelledby="lbl-mapIcon" data-field="mapIcon" data-multi="false">
                     <button class="chip" data-value="">None</button>
                     <button class="chip" data-value="%BORDER%">Border (lg)</button>
                     <button class="chip" data-value="%MAP%">Map (md)</button>
@@ -795,14 +797,14 @@
                     <option value="4729">4729</option>
                   </select>
 
-                  <label class="builder-label">Notification</label>
-                  <div class="chip-group" data-field="notify" data-multi="false">
+                  <span class="builder-label" id="lbl-notify">Notification</span>
+                  <div class="chip-group" role="group" aria-labelledby="lbl-notify" data-field="notify" data-multi="false">
                     <button class="chip active" data-value="" title="Use PD2's built-in notification behavior">Default</button>
                     <button class="chip" data-value="%NOTIFY-DEAD%" title="Suppress built-in notifications for this rule">Disable</button>
                   </div>
 
-                  <label class="builder-label">Continue</label>
-                  <div class="chip-group" data-field="continueKw" data-multi="false">
+                  <span class="builder-label" id="lbl-continueKw">Continue</span>
+                  <div class="chip-group" role="group" aria-labelledby="lbl-continueKw" data-field="continueKw" data-multi="false">
                     <button class="chip active" data-value="">No</button>
                     <button class="chip" data-value="%CONTINUE%">%CONTINUE%</button>
                   </div>
@@ -831,14 +833,15 @@
               <span class="generated-rule-label">Generated Rule</span>
               <div class="builder-actions">
                 <div class="insert-group">
-                  <button class="btn btn-primary" id="btn-insert-rule" title="Insert at cursor position">Insert</button>
-                  <button class="btn btn-secondary btn-small" id="btn-insert-top" title="Insert at line 1 — overrides all rules below">Top</button>
-                  <button class="btn btn-secondary btn-small" id="btn-insert-end" title="Insert at the end of the filter">End</button>
+                  <button class="btn btn-primary" id="btn-insert-rule" title="Insert at cursor position" disabled>Insert</button>
+                  <button class="btn btn-secondary btn-small" id="btn-insert-top" title="Insert at line 1 — overrides all rules below" disabled>Top</button>
+                  <button class="btn btn-secondary btn-small" id="btn-insert-end" title="Insert at the end of the filter" disabled>End</button>
                 </div>
                 <button class="btn btn-secondary" id="btn-clear-builder">Clear</button>
               </div>
             </div>
             <pre class="generated-rule"><code id="generated-code" class="empty-state">Use the Rule Builder to generate a rule</code></pre>
+            <p class="builder-field-msg" id="generated-rule-msg" role="status" aria-live="polite"></p>
             <p class="generated-rule-warning">Note: Inserting at Top will override all other matching rules below it.</p>
           </div>
 
@@ -897,7 +900,7 @@
             </div>
             <div class="community-block community-block-locked" id="community-grail-section" style="display:none">
               <div class="community-block-header">
-                <label class="community-block-label">Holy Grail <span class="text-muted">(read-only, managed from Grail tab)</span></label>
+                <label class="community-block-label" for="community-grail-text">Holy Grail <span class="text-muted">(read-only, managed from Grail tab)</span></label>
                 <button class="btn btn-secondary btn-small" id="btn-community-grail-toggle" title="Show/hide grail rules">Show</button>
               </div>
               <div class="community-preview-collapsed" id="community-grail-collapsed">
@@ -910,11 +913,11 @@
             </div>
             <div class="community-block community-block-locked">
               <div class="community-block-header">
-                <label class="community-block-label">Community Filter <span class="text-muted">(read-only)</span></label>
+                <label class="community-block-label" for="community-filter-text">Community Filter <span class="text-muted">(read-only)</span></label>
                 <button class="btn btn-secondary btn-small" id="btn-community-toggle" title="Show/hide community filter text">Show</button>
               </div>
               <div class="community-preview-collapsed" id="community-collapsed-info">
-                <span class="text-muted" id="community-line-count">0 lines</span>
+                <span class="text-muted" id="community-line-count" role="status" aria-live="polite">0 lines</span>
               </div>
               <div class="community-wrap community-wrap-readonly" id="community-mid-wrap" style="display:none">
                 <div class="community-hl" id="community-mid-hl" aria-hidden="true"></div>

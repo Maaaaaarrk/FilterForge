@@ -176,7 +176,8 @@ html[data-theme='modern'] .btn-accent::before {
   padding-right: 0.5rem;
 }
 
-.sidebar-section h3 {
+/* h2 for the outline (it sits directly under the page h1), sized like a panel title */
+.sidebar-title {
   font-size: 1rem;
   margin-bottom: 0;
 }
@@ -417,8 +418,30 @@ html[data-theme='modern'] .btn-accent::before {
 }
 
 .builder-input::placeholder {
-  color: var(--text-muted);
-  opacity: 0.6;
+  color: var(--text-dim);
+  opacity: 1;
+}
+
+.builder-input:disabled {
+  color: var(--text-dim);
+  cursor: not-allowed;
+}
+
+/* Inline validation / guidance under a builder field */
+.builder-field-msg {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--warning-text);
+}
+
+.builder-field-msg:empty {
+  display: none;
+}
+
+.value-val[aria-invalid="true"],
+.builder-input[aria-invalid="true"] {
+  --control-ring: var(--warning-text);
 }
 
 /* Generated rule */
