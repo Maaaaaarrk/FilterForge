@@ -60,6 +60,13 @@
     return e;
   }
 
+  // Downloads can take a while with this many filters; cells show this until theirs is in.
+  function spinner() {
+    var s = el('span', 'ff-spinner');
+    s.setAttribute('aria-hidden', 'true');
+    return s;
+  }
+
   function loadFilter(file) {
     if (!filterCache[file.url]) {
       filterCache[file.url] = fetch(file.url)
@@ -196,7 +203,7 @@
       return;
     }
     if (!col.filter) {
-      cell.appendChild(el('span', 'compare-note', '…'));
+      cell.appendChild(spinner());
       return;
     }
     var res = col.filter.label(item, col.level);
@@ -354,7 +361,14 @@
   function refreshColumn(col) {
     if (col.levelSelect) levelOptions(col.levelSelect, col);
     if (col.stateEl) {
-      col.stateEl.textContent = col.error ? 'Could not load this filter.' : (col.filter ? '' : 'Loading…');
+      col.stateEl.textContent = '';
+      if (col.error) {
+        col.stateEl.textContent = 'Could not load this filter.';
+      } else if (!col.filter) {
+        col.stateEl.appendChild(spinner());
+        col.stateEl.appendChild(document.createTextNode(' Loading…'));
+      }
+      if (col.th) col.th.setAttribute('aria-busy', String(!col.filter && !col.error));
     }
     (col.cells || []).forEach(function (c) { renderLabel(c.td, col, c.item); });
   }
