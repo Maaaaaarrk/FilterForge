@@ -461,11 +461,21 @@ html[data-theme='modern'] .btn-accent:focus-visible {
   --control-ring: var(--warning-text);
 }
 
-/* Generated rule */
+/* Generated rule — sticky under the fixed nav so it stays visible (with
+   its Insert buttons) while scrolling through the builder's Output fields */
 .generated-rule-bar {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--nav-bar-edge));
+  z-index: 5;
   padding: 0.5rem 0.75rem;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+}
+
+/* Long rules scroll inside the bar instead of growing it over the code */
+.generated-rule-bar .generated-rule {
+  max-height: 6.5em;
+  overflow-y: auto;
 }
 
 .generated-rule-header {
@@ -551,6 +561,8 @@ html[data-theme='modern'] .btn-accent:focus-visible {
   border-radius: var(--panel-radius);
   box-shadow: var(--panel-shadow);
   overflow: hidden;
+  /* clip (not hidden) so the sticky Generated Rule bar can stick to the page */
+  overflow: clip;
 }
 
 /* Tabs */
@@ -1898,6 +1910,44 @@ html[data-theme='modern'] .wizard-opt.selected {
   .code-editor-wrap {
     min-height: 300px;
   }
+
+  /* The builder now sits above the editor, so a top-sticky bar inside the
+     editor would never be on screen while editing builder fields: pin it to
+     the bottom of the viewport instead (only once there's a rule to show) */
+  .generated-rule-bar:not(.is-empty) {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
+    border-bottom: 0;
+    box-shadow: 0 calc(-1 * var(--px)) 0 0 var(--border-strong), var(--drop);
+  }
+
+  .generated-rule-bar.is-empty {
+    position: static;
+  }
+
+  .generated-rule-bar:not(.is-empty) .generated-rule {
+    max-height: 3.2em;
+  }
+
+  .generated-rule-bar:not(.is-empty) .generated-rule-warning {
+    display: none;
+  }
+
+  /* Room so the pinned bar never covers the end of the page */
+  .editor-container {
+    padding-bottom: 10rem;
+  }
+
+  /* Toasts go to the top so they don't stack on the pinned bar */
+  .toast-region {
+    top: calc(var(--nav-height) + var(--nav-bar-edge) + var(--space-2));
+    bottom: auto;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1921,6 +1971,7 @@ html[data-theme='modern'] .wizard-opt.selected {
 
   .preview-test-bar {
     flex-direction: column;
+    align-items: stretch;
   }
 }
 
@@ -2303,4 +2354,51 @@ html[data-theme='modern'] :is(.value-code, .value-op, .value-val, .skill-row sel
 .builder-select, .editor-find-input, .preview-test-bar select, .preview-filtlvl-label select, .grail-search,
 .grail-style-row select, .grail-style-row input, .allitems-filtlvl select) {
   box-shadow: 0 0 0 1px var(--control-ring);
+}
+
+@media (max-width: 768px) {
+  /* 16px+ text in form controls stops iOS Safari zooming in on focus. The
+     code views share one size so the highlight overlay stays aligned. */
+  .value-code, .value-op, .skill-row select, .builder-select,
+  .preview-test-bar select, .preview-filtlvl-label select,
+  .grail-style-row select, .allitems-filtlvl select,
+  .code-editor, .code-highlight, .line-numbers, .community-ta, .community-hl {
+    font-size: 16px;
+  }
+
+  .value-val, .builder-input, .editor-find-input, .grail-search, .grail-style-row input {
+    font-size: max(16px, calc(1.15rem * var(--num-scale)));
+  }
+}
+
+/* Touch: 44px minimum targets, and hover-only affordances get visible
+   equivalents (tooltips also open on tap/focus, Copy is always shown) */
+@media (pointer: coarse) {
+  .chip, .itemcode-tab, .allitems-cat, .editor-find-toggle, .btn-small,
+  .btn-goto-line, .itemcode-use, .itemcode-copy, .wizard-summary-edit,
+  .toast-action, .builder-group-header {
+    min-height: 44px;
+  }
+
+  .btn-icon, .editor-find-btn, .toast-close {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .color-chip {
+    width: 44px;
+    height: 44px;
+  }
+
+  .grail-item {
+    min-height: 44px;
+  }
+
+  .grail-checkbox {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
 }

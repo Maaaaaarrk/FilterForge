@@ -147,6 +147,12 @@
     return Math.max(0, offset);
   }
 
+  // On narrow screens the Generated Rule bar is pinned to the bottom instead
+  function getStickyBottomOffset() {
+    var bar = document.getElementById('generated-panel');
+    return bar && getComputedStyle(bar).position === 'fixed' ? bar.offsetHeight : 0;
+  }
+
   // ==========================================
   // Modal dialogs: focus in, Tab trap, focus restore
   // ==========================================
@@ -551,8 +557,11 @@
       header.setAttribute('role', 'button');
       header.setAttribute('tabindex', '0');
 
-      // Open conditions and output by default
-      if (targetId === 'conditions-panel' || targetId === 'output-panel') {
+      // Open conditions and output by default — except on narrow screens,
+      // where the builder stacks above the editor and two long open panels
+      // would push the editor several screens down
+      var narrow = window.matchMedia && window.matchMedia('(max-width: 1024px)').matches;
+      if (!narrow && (targetId === 'conditions-panel' || targetId === 'output-panel')) {
         panel.classList.add('open');
         header.querySelector('.chevron').style.transform = 'rotate(90deg)';
         header.setAttribute('aria-expanded', 'true');
@@ -571,6 +580,9 @@
       }
 
       header.addEventListener('click', togglePanel);
+      header._openPanel = function () {
+        if (!panel.classList.contains('open')) togglePanel();
+      };
       header.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -1050,6 +1062,9 @@
     var hasConditions = conditions.length > 0;
     var outputChanged = builderState.action === 'hide' || output !== '%NAME%';
     var ruleMsg = document.getElementById('generated-rule-msg');
+
+    // Lets narrow screens tuck the empty bar away instead of pinning it
+    document.getElementById('generated-panel').classList.toggle('is-empty', !hasConditions && !outputChanged);
 
     if (!hasConditions && !outputChanged) {
       // Nothing chosen yet — don't offer the catch-all "ItemDisplay[]: %NAME%"
@@ -2261,7 +2276,8 @@
     var padTop = parseFloat(getComputedStyle(codeEditor).paddingTop) || 0;
     var lineTop = codeEditor.getBoundingClientRect().top + padTop + lineIdx * lh;
     var topLimit = getStickyTopOffset();
-    if (onlyIfHidden && lineTop >= topLimit && lineTop + lh <= window.innerHeight) return;
+    var bottomLimit = window.innerHeight - getStickyBottomOffset();
+    if (onlyIfHidden && lineTop >= topLimit && lineTop + lh <= bottomLimit) return;
     var targetY = window.scrollY + lineTop - topLimit - (window.innerHeight - topLimit) / 3;
     scrollWindowTo(Math.max(0, targetY));
   }
@@ -6044,6 +6060,9 @@
 
     // Clicking a row fills the builder's Item Code condition
     function useCode(code) {
+      // The Item Code field lives in Conditions, which may be collapsed
+      var condHeader = document.querySelector('[data-toggle="conditions-panel"]');
+      if (condHeader && condHeader._openPanel) condHeader._openPanel();
       var input = document.getElementById('item-code-input');
       input.value = code;
       updateGeneratedRule();
@@ -7255,6 +7274,9 @@
         saveToStorage();
       }, 500);
     });
+    // Editor font size changes at the mobile breakpoint; re-measure lines
+    window.addEventListener('resize', function () { lineHeightPx = 0; });
+
     var editorWrap = document.querySelector('.code-editor-wrap');
     editorWrap.addEventListener('scroll', syncScroll);
     codeEditor.addEventListener('keydown', handleTab);
