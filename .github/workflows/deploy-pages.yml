@@ -20,8 +20,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v4
+      # Publish only the site files: pages, styles, scripts, data, fonts and
+      # images. Repo tooling (.claude, .github, tools/, *.md) stays out.
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp *.html favicon.ico .nojekyll _site/
+          for img in *.png *.jpg *.jpeg *.gif *.svg *.webp; do
+            if [ -e "$img" ]; then cp "$img" _site/; fi
+          done
+          cp -r css js data fonts _site/
+          if [ -d images ]; then cp -r images _site/; fi
+      - name: Check local asset references
+        working-directory: _site
+        run: |
+          missing=0
+          # Relative src/href values only: strip query/hash, skip URLs with a scheme
+          for ref in $(grep -ohE '(src|href)="[^"#?]*' *.html | sed -E 's/^(src|href)="//' | grep -v -e ':' -e '^$' | sort -u); do
+            if [ ! -e "$ref" ]; then echo "Missing from site: $ref"; missing=1; fi
+          done
+          exit $missing
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
       - id: deployment
         uses: actions/deploy-pages@v4
