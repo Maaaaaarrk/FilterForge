@@ -588,7 +588,57 @@ pre code {
 .hero .tagline {
   color: var(--text-muted);
   font-size: 1.15rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin: var(--px);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: var(--ui-weight);
+  line-height: 24px;
+  text-transform: var(--text-case);
+  color: var(--text-strong);
+  background: var(--button-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--button-shadow);
+  -webkit-font-smoothing: var(--font-smoothing);
+}
+
+.btn-cta:hover {
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+.btn-cta:active {
+  box-shadow: var(--button-shadow-pressed);
+}
+
+.btn-cta.btn-cta-primary {
+  color: var(--accent-contrast);
+  background: var(--accent);
+  box-shadow: var(--button-primary-shadow);
+}
+
+.btn-cta.btn-cta-primary:hover {
+  color: var(--accent-contrast);
+  background: var(--button-primary-hover);
+}
+
+.btn-cta:focus-visible {
+  box-shadow: var(--focus-ring);
 }
 
 /* Callout Boxes */
