@@ -3365,8 +3365,10 @@
     var stepLabel = document.getElementById('wizard-step-label');
     var summaryEl = document.getElementById('wizard-summary');
 
-    var totalSteps = 10;
+    var progressEl = document.getElementById('wizard-progress');
+    var totalSteps = 9;
     var currentStep = 1;
+    var returnToSummary = false; // set by the summary's Edit links
     var choices = {
       'class': [],
       notifications: '',
@@ -3382,8 +3384,9 @@
 
     function openWizard() {
       btnNext.disabled = false;
+      returnToSummary = false;
       dialog.open(btnClose);
-      goToStep(1);
+      goToStep(1, true);
     }
 
     btnOpen.addEventListener('click', openWizard);
@@ -3424,12 +3427,16 @@
     });
 
     btnPrev.addEventListener('click', function () {
-      if (currentStep > 1) goToStep(currentStep - 1);
+      returnToSummary = false;
+      if (currentStep > 1) goToStep(currentStep - 1, true);
     });
 
     btnNext.addEventListener('click', function () {
-      if (currentStep < totalSteps) {
-        goToStep(currentStep + 1);
+      if (returnToSummary && currentStep < totalSteps) {
+        returnToSummary = false;
+        goToStep(totalSteps, true);
+      } else if (currentStep < totalSteps) {
+        goToStep(currentStep + 1, true);
       } else {
         // Guard against double-clicks; always re-enable, even if the user
         // cancels the replace confirm or generation throws
@@ -3442,18 +3449,28 @@
       }
     });
 
-    function goToStep(n) {
+    // focusHeading: move focus to the new step's question so keyboard and
+    // screen reader users land on it (the old step's buttons just vanished)
+    function goToStep(n, focusHeading) {
       currentStep = n;
+      var stepEl = null;
       for (var i = 1; i <= totalSteps; i++) {
         var el = document.getElementById('wiz-step-' + i);
         if (el) el.style.display = i === n ? 'block' : 'none';
+        if (i === n) stepEl = el;
       }
-      progressBar.style.width = Math.round((n / totalSteps) * 100) + '%';
+      progressBar.style.transform = 'scaleX(' + (n / totalSteps) + ')';
+      progressEl.setAttribute('aria-valuenow', String(n));
+      progressEl.setAttribute('aria-valuetext', 'Step ' + n + ' of ' + totalSteps);
       stepLabel.textContent = 'Step ' + n + ' of ' + totalSteps;
       btnPrev.style.visibility = n === 1 ? 'hidden' : 'visible';
-      btnNext.textContent = n === totalSteps ? 'Build Filter' : 'Next \u2192';
+      btnNext.textContent = n === totalSteps ? 'Build Filter' : (returnToSummary ? 'Back to Summary \u2192' : 'Next \u2192');
 
       if (n === totalSteps) renderSummary();
+      if (focusHeading && stepEl) {
+        var heading = stepEl.querySelector('h3');
+        if (heading) heading.focus();
+      }
     }
 
     function label(key, val) {
@@ -3478,20 +3495,30 @@
     }
 
     function renderSummary() {
+      // step: where the row's Edit link jumps to
       var rows = [
-        { l: 'Class', v: choices['class'].length ? choices['class'].map(function (x) { return label('', x); }).join(', ') : 'None' },
-        { l: 'Notifications', v: label('', choices.notifications) || 'None' },
-        { l: 'Color Theme', v: label('', choices.colorprofile) || 'Default' },
-        { l: 'Decoration', v: label('', choices.decoration) || 'Arrows' },
-        { l: 'Extra Info', v: choices.extras.length ? choices.extras.map(function (x) { return label('', x); }).join(', ') : 'None' },
-        { l: 'Runeword Bases', v: choices.rwbases ? label('', choices.rwbases + '-rw') : 'None' },
-        { l: 'Hide Consumables', v: choices.consumables.length ? choices.consumables.map(function (x) { return label('', x); }).join(', ') : 'None' },
-        { l: 'Tooltips', v: choices.tooltips.length ? choices.tooltips.map(function (x) { return label('', x); }).join(', ') : 'None' }
+        { l: 'Class', step: 1, v: choices['class'].length ? choices['class'].map(function (x) { return label('', x); }).join(', ') : 'None' },
+        { l: 'Notifications', step: 2, v: label('', choices.notifications) || 'None' },
+        { l: 'Color Theme', step: 3, v: label('', choices.colorprofile) || 'Default' },
+        { l: 'Decoration', step: 4, v: label('', choices.decoration) || 'Arrows' },
+        { l: 'Extra Info', step: 5, v: choices.extras.length ? choices.extras.map(function (x) { return label('', x); }).join(', ') : 'None' },
+        { l: 'Runeword Bases', step: 6, v: choices.rwbases ? label('', choices.rwbases + '-rw') : 'None' },
+        { l: 'Hide Consumables', step: 7, v: choices.consumables.length ? choices.consumables.map(function (x) { return label('', x); }).join(', ') : 'None' },
+        { l: 'Tooltips', step: 8, v: choices.tooltips.length ? choices.tooltips.map(function (x) { return label('', x); }).join(', ') : 'None' }
       ];
       summaryEl.innerHTML = rows.map(function (r) {
-        return '<div class="wizard-summary-row"><span class="wizard-summary-label">' + r.l + '</span><span class="wizard-summary-value">' + r.v + '</span></div>';
+        return '<div class="wizard-summary-row"><span class="wizard-summary-label">' + r.l + '</span>' +
+          '<span class="wizard-summary-value">' + escapeHtml(r.v) + '</span>' +
+          '<button type="button" class="wizard-summary-edit" data-step="' + r.step + '" aria-label="Edit ' + r.l + '">Edit</button></div>';
       }).join('');
     }
+
+    summaryEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('.wizard-summary-edit');
+      if (!btn) return;
+      returnToSummary = true;
+      goToStep(parseInt(btn.getAttribute('data-step'), 10), true);
+    });
 
     // ==============================
     // Filter Generation Engine

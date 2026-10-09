@@ -1367,11 +1367,15 @@ html[data-theme='modern'] .editor-tab.active {
   overflow: hidden;
 }
 
+/* Full-width bar scaled from the left: transform animates on the
+   compositor, unlike width */
 .wizard-progress-bar {
   height: 100%;
   background: var(--accent);
   border-radius: var(--radius);
-  transition: width var(--step);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--step);
 }
 
 .wizard-step-label {
@@ -1386,6 +1390,37 @@ html[data-theme='modern'] .editor-tab.active {
   margin-bottom: 0.35rem;
 }
 
+.wizard-step h3:focus {
+  outline: none;
+}
+
+.wizard-step h3:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.wizard-info {
+  margin-top: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  box-shadow: var(--outline), inset 0 0 0 var(--px) var(--border);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+html[data-theme='modern'] .wizard-info {
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.wizard-info summary {
+  color: var(--text-muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wizard-info[open] summary {
+  margin-bottom: 0.4rem;
+}
+
 .wizard-options {
   display: flex;
   flex-direction: column;
@@ -1394,12 +1429,13 @@ html[data-theme='modern'] .editor-tab.active {
 }
 
 .wizard-opt {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
   text-align: left;
   margin: 0 var(--px);
-  padding: 0.7rem 1rem;
+  padding: 0.7rem 2.75rem 0.7rem 1rem;
   background: var(--surface);
   border: 0;
   border-radius: var(--radius);
@@ -1418,7 +1454,53 @@ html[data-theme='modern'] .editor-tab.active {
 
 .wizard-opt.selected {
   background: var(--accent-tint);
-  box-shadow: var(--outline), inset 0 0 0 var(--px) var(--accent);
+  box-shadow: var(--outline), inset 0 0 0 var(--px2) var(--accent);
+}
+
+/* Selection marker, so "selected" never looks like "hovered": multi-select
+   groups show an empty box on every option (pick several), and every
+   selected option gets a filled check badge */
+.wizard-options[data-multi="true"] .wizard-opt::after,
+.wizard-opt.selected::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: -0.575rem;
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 0 2px var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.wizard-opt.selected::after {
+  content: '\2713';
+  background: var(--accent);
+  box-shadow: none;
+  color: var(--accent-contrast);
+}
+
+.wizard-options[data-multi="false"] .wizard-opt.selected::after {
+  border-radius: 50%;
+}
+
+html[data-theme='modern'] .wizard-opt {
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+html[data-theme='modern'] .wizard-opt:hover {
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+html[data-theme='modern'] .wizard-opt.selected {
+  box-shadow: 0 0 0 2px var(--accent);
 }
 
 .wizard-opt strong {
@@ -1441,11 +1523,13 @@ html[data-theme='modern'] .editor-tab.active {
   letter-spacing: 0.02em;
 }
 
+/* Footer outside the scrolling .modal-body, so Next is always on screen */
 .wizard-nav {
+  flex: none;
   display: flex;
   justify-content: space-between;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface);
   border-top: 1px solid var(--border);
 }
 
@@ -1458,9 +1542,29 @@ html[data-theme='modern'] .editor-tab.active {
 
 .wizard-summary-row {
   display: flex;
-  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
   padding: 0.3rem 0;
   font-size: 0.88rem;
+}
+
+.wizard-summary-edit {
+  flex: none;
+  padding: 0.1rem 0.4rem;
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.wizard-summary-edit:hover,
+.wizard-summary-edit:focus-visible {
+  color: var(--accent-strong);
 }
 
 .wizard-summary-row + .wizard-summary-row {
@@ -1468,12 +1572,16 @@ html[data-theme='modern'] .editor-tab.active {
 }
 
 .wizard-summary-label {
+  flex: none;
+  min-width: 8.5rem;
   color: var(--text-muted);
 }
 
 .wizard-summary-value {
+  flex: 1;
   color: var(--accent);
   font-weight: 600;
+  text-align: right;
 }
 
 /* ============================================

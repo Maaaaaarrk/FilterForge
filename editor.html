@@ -82,7 +82,7 @@
               </div>
             </div>
 
-            <!-- Step 3: Loading -->
+            <!-- Step 2: Loading -->
             <div id="author-step-3" style="display:none">
               <div class="author-status">
                 <p id="author-loading-msg" role="status">Downloading filter...</p>
@@ -97,7 +97,7 @@
               </div>
             </div>
 
-            <!-- Step 4: Choose import mode -->
+            <!-- Step 3: Choose import mode -->
             <div id="author-step-4" style="display:none">
               <button class="btn btn-small mb-2" id="author-step4-back">&larr; Back to files</button>
               <p style="margin-bottom:1rem"><strong id="author-choice-file">Filter</strong></p>
@@ -125,14 +125,14 @@
           </div>
           <div class="modal-body">
             <!-- Progress bar -->
-            <div class="wizard-progress">
-              <div class="wizard-progress-bar" id="wizard-progress-bar" style="width:0%"></div>
+            <div class="wizard-progress" id="wizard-progress" role="progressbar" aria-label="Wizard progress" aria-valuemin="1" aria-valuemax="9" aria-valuenow="1" aria-valuetext="Step 1 of 9">
+              <div class="wizard-progress-bar" id="wizard-progress-bar"></div>
             </div>
-            <div class="wizard-step-label" id="wizard-step-label">Step 1 of 10</div>
+            <div class="wizard-step-label" id="wizard-step-label" aria-hidden="true">Step 1 of 9</div>
 
             <!-- Step 1: Class -->
             <div class="wizard-step" id="wiz-step-1">
-              <h3>What class are you playing?</h3>
+              <h3 tabindex="-1">What class are you playing?</h3>
               <p class="text-muted">This adds class-specific items, weapons, and set pieces to your filter at higher strictness levels. <strong>You don't have to pick one</strong> — press Next to continue if you don't need class-specific enrichment. <strong>Select all that apply.</strong></p>
               <div class="wizard-options" data-wiz="class" data-multi="true">
                 <button class="wizard-opt" data-value="amazon">Amazon</button>
@@ -143,24 +143,20 @@
                 <button class="wizard-opt" data-value="druid">Druid</button>
                 <button class="wizard-opt" data-value="assassin">Assassin</button>
               </div>
-            </div>
-
-            <!-- Step 2: Filter Strictness -->
-            <div class="wizard-step" id="wiz-step-2" style="display:none">
-              <h3>About Filter Levels</h3>
-              <p class="text-muted">Your filter includes <strong>4 strictness levels</strong> you can switch between in-game using the filter level hotkey. No selection needed here — just press Next to continue.</p>
-              <div class="mt-2 mb-2" style="line-height:1.7">
+              <details class="wizard-info">
+                <summary>About filter levels</summary>
+                <p class="text-muted">Your filter includes <strong>4 strictness levels</strong> you can switch between in-game using the filter level hotkey.</p>
                 <p><strong>Level 1 — Relaxed:</strong> Shows almost everything. Good for new characters and early leveling.</p>
                 <p><strong>Level 2 — Normal:</strong> Hides low gold, junk white/magic items, scrolls, and keys. The default for most gameplay.</p>
                 <p><strong>Level 3 — Strict:</strong> Hides exceptional whites, low-tier uniques/sets, and most rares. For experienced players farming specific content.</p>
                 <p><strong>Level 4 — Very Strict:</strong> Only shows high-value items. Hides nearly all non-elite gear. For endgame map farming.</p>
                 <p class="text-muted mt-1"><em>Note: All runes are always shown regardless of filter level.</em></p>
-              </div>
+              </details>
             </div>
 
-            <!-- Step 3: Notifications -->
-            <div class="wizard-step" id="wiz-step-3" style="display:none">
-              <h3>How do you want to be notified about drops?</h3>
+            <!-- Step 2: Notifications -->
+            <div class="wizard-step" id="wiz-step-2" style="display:none">
+              <h3 tabindex="-1">How do you want to be notified about drops?</h3>
               <p class="text-muted">Choose a notification level. Higher levels add more visual indicators for valuable items.</p>
               <div class="wizard-options" data-wiz="notifications" data-multi="false">
                 <button class="wizard-opt" data-value="none">
@@ -186,25 +182,25 @@
               </div>
             </div>
 
-            <!-- Step 4: Color Profile -->
-            <div class="wizard-step" id="wiz-step-4" style="display:none">
-              <h3>Choose a color theme</h3>
+            <!-- Step 3: Color Profile -->
+            <div class="wizard-step" id="wiz-step-3" style="display:none">
+              <h3 tabindex="-1">Choose a color theme</h3>
               <p class="text-muted">Sets the color palette used for runes, item highlights, and decorations.</p>
               <div class="wizard-options" data-wiz="colorprofile" data-multi="false">
                 <button class="wizard-opt" data-value="default">
                   <strong>Default (Gold &amp; Orange)</strong>
                   <span>Classic PD2 style — most community filters use this</span>
-                  <span class="wiz-color-example"><span style="color:#ff8000">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:#ff8000">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:#008000">Lem</span></span>
+                  <span class="wiz-color-example"><span style="color:var(--game-orange)">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:var(--game-orange)">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:#008000">Lem</span></span>
                 </button>
                 <button class="wizard-opt" data-value="fire">
                   <strong>Fire</strong>
                   <span>Hot tones — red highs, orange mids</span>
-                  <span class="wiz-color-example"><span style="color:#ff4040">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:#ff8000">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:#ff8000">Lem</span></span>
+                  <span class="wiz-color-example"><span style="color:var(--game-red)">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:var(--game-orange)">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:var(--game-orange)">Lem</span></span>
                 </button>
                 <button class="wizard-opt" data-value="water">
                   <strong>Water</strong>
                   <span>Cool tones — purple highs, blue mids</span>
-                  <span class="wiz-color-example"><span style="color:#a000c8">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:#6464ff">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:#008080">Lem</span></span>
+                  <span class="wiz-color-example"><span style="color:#a000c8">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:var(--game-blue)">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:#008080">Lem</span></span>
                 </button>
                 <button class="wizard-opt" data-value="earth">
                   <strong>Earth</strong>
@@ -214,19 +210,19 @@
                 <button class="wizard-opt" data-value="rainbow">
                   <strong>Rainbow</strong>
                   <span>Each decoration character gets a different color</span>
-                  <span class="wiz-color-example"><span style="color:#ff4040">&gt;</span><span style="color:#ff8000">&gt;</span><span style="color:#ffff40">&gt;</span> <span style="color:#ff8000">Ber Rune</span> <span style="color:#6464ff">&lt;</span><span style="color:#a000c8">&lt;</span><span style="color:#ff4040">&lt;</span></span>
+                  <span class="wiz-color-example"><span style="color:var(--game-red)">&gt;</span><span style="color:var(--game-orange)">&gt;</span><span style="color:var(--game-yellow)">&gt;</span> <span style="color:var(--game-orange)">Ber Rune</span> <span style="color:var(--game-blue)">&lt;</span><span style="color:#a000c8">&lt;</span><span style="color:var(--game-red)">&lt;</span></span>
                 </button>
                 <button class="wizard-opt" data-value="clean">
                   <strong>Clean (No Extra Colors)</strong>
                   <span>Minimal color overrides — similar to default with uniform rune colors</span>
-                  <span class="wiz-color-example"><span style="color:#ff8000">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:#ff8000">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:#ff8000">Lem</span></span>
+                  <span class="wiz-color-example"><span style="color:var(--game-orange)">&gt;&gt;&gt; Ber Rune &lt;&lt;&lt;</span> &nbsp; <span style="color:var(--game-orange)">&gt;&gt; Ist Rune &lt;&lt;</span> &nbsp; <span style="color:var(--game-orange)">Lem</span></span>
                 </button>
               </div>
             </div>
 
-            <!-- Step 5: Decoration Style -->
-            <div class="wizard-step" id="wiz-step-5" style="display:none">
-              <h3>Decoration style for valuable items</h3>
+            <!-- Step 4: Decoration Style -->
+            <div class="wizard-step" id="wiz-step-4" style="display:none">
+              <h3 tabindex="-1">Decoration style for valuable items</h3>
               <p class="text-muted">How should high-value items be decorated on the ground?</p>
               <div class="wizard-options" data-wiz="decoration" data-multi="false">
                 <button class="wizard-opt" data-value="arrows">
@@ -272,9 +268,9 @@
               </div>
             </div>
 
-            <!-- Step 6: Display extras -->
-            <div class="wizard-step" id="wiz-step-6" style="display:none">
-              <h3>What extra info should items show?</h3>
+            <!-- Step 5: Display extras -->
+            <div class="wizard-step" id="wiz-step-5" style="display:none">
+              <h3 tabindex="-1">What extra info should items show?</h3>
               <p class="text-muted">Additional details appended to item names or shown in descriptions. <strong>Select all that apply.</strong></p>
               <div class="wizard-options" data-wiz="extras" data-multi="true">
                 <button class="wizard-opt" data-value="sockets">
@@ -328,9 +324,9 @@
               </div>
             </div>
 
-            <!-- Step 7: Runeword bases -->
-            <div class="wizard-step" id="wiz-step-7" style="display:none">
-              <h3>Highlight runeword bases?</h3>
+            <!-- Step 6: Runeword bases -->
+            <div class="wizard-step" id="wiz-step-6" style="display:none">
+              <h3 tabindex="-1">Highlight runeword bases?</h3>
               <p class="text-muted">Runeword bases are non-magic items with the right socket count for popular runewords.</p>
               <div class="wizard-options" data-wiz="rwbases" data-multi="false">
                 <button class="wizard-opt" data-value="all">
@@ -348,9 +344,9 @@
               </div>
             </div>
 
-            <!-- Step 8: Gold & Potions -->
-            <div class="wizard-step" id="wiz-step-8" style="display:none">
-              <h3>What about gold, potions, and consumables?</h3>
+            <!-- Step 7: Gold & Potions -->
+            <div class="wizard-step" id="wiz-step-7" style="display:none">
+              <h3 tabindex="-1">What about gold, potions, and consumables?</h3>
               <p class="text-muted">These settings control clutter from common drops. <strong>Select all that apply.</strong></p>
               <div class="wizard-options" data-wiz="consumables" data-multi="true">
                 <button class="wizard-opt" data-value="hidegold">
@@ -380,9 +376,9 @@
               </div>
             </div>
 
-            <!-- Step 9: Tooltips & Recipes -->
-            <div class="wizard-step" id="wiz-step-9" style="display:none">
-              <h3>Item tooltips and recipes?</h3>
+            <!-- Step 8: Tooltips & Recipes -->
+            <div class="wizard-step" id="wiz-step-8" style="display:none">
+              <h3 tabindex="-1">Item tooltips and recipes?</h3>
               <p class="text-muted">Add useful info to item descriptions when you hover over them. <strong>Select all that apply.</strong></p>
               <div class="wizard-options" data-wiz="tooltips" data-multi="true">
                 <button class="wizard-opt" data-value="socketrecipe">
@@ -412,19 +408,18 @@
               </div>
             </div>
 
-            <!-- Step 10: Confirm -->
-            <div class="wizard-step" id="wiz-step-10" style="display:none">
-              <h3>Ready to build your filter!</h3>
+            <!-- Step 9: Confirm -->
+            <div class="wizard-step" id="wiz-step-9" style="display:none">
+              <h3 tabindex="-1">Ready to build your filter!</h3>
               <p class="text-muted">Here's a summary of your choices:</p>
               <div class="wizard-summary" id="wizard-summary"></div>
               <p class="text-muted mt-2">Click <strong>Build Filter</strong> to generate your custom filter and load it into the editor.</p>
             </div>
-
-            <!-- Navigation -->
-            <div class="wizard-nav">
-              <button class="btn btn-secondary" id="wiz-prev" style="visibility:hidden">&larr; Back</button>
-              <button class="btn btn-primary" id="wiz-next">Next &rarr;</button>
-            </div>
+          </div>
+          <!-- Navigation: outside the scrolling body so Next is always reachable -->
+          <div class="wizard-nav">
+            <button class="btn btn-secondary" id="wiz-prev" style="visibility:hidden">&larr; Back</button>
+            <button class="btn btn-primary" id="wiz-next">Next &rarr;</button>
           </div>
         </div>
       </div>
