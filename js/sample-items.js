@@ -14,7 +14,6 @@
   var TIERS_URL = 'https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/builderfilter/data/unique-set-tiers.json';
   var UNIQUE_SCALE = ['4', '3', '2', '1', '0', 'no-star'];   // best -> worst
   var SET_SCALE = ['4', '3', '2', '1', '0'];
-  var STAR = { '4': '4-star', '3': '3-star', '2': '2-star', '1': '1-star', '0': '0-star', 'no-star': 'no-star' };
 
   function rune(num, name) {
     return {
@@ -129,17 +128,14 @@
       var e = tier !== 'no-star' ? pick(data.uniques, same)
         : pick(data.uniques, function (x) { return same(x) && baseClass(x.code) === 'NORM'; }) ||
           pick(data.uniques, function (x) { return same(x) && baseClass(x.code) === 'EXC'; });
-      if (e) out.push(sample(e, ['UNI'], 'Unid unique ' + e.name + ' - ' + STAR[tier]));
+      if (e) out.push(sample(e, ['UNI'], 'Unid unique ' + e.name));
     });
     var eth = pick(data.uniques, function (e) { return ub[e.code].eth === '4' && ub[e.code].noneth !== '4'; });
-    if (eth) {
-      var n = ub[eth.code].noneth;
-      out.push(sample(eth, ['UNI', 'ETH'], 'Unid ETH ' + eth.name + ' - 4-star ETH, ' + (STAR[n] || 'unstarred') + ' non-ETH'));
-    }
+    if (eth) out.push(sample(eth, ['UNI', 'ETH'], 'Unid ETH unique ' + eth.name));
     out.push({ code: 'rin', name: 'Ring', flags: ['UNI', 'JEWELRY'], legend: 'Unid unique ring' });
     SET_SCALE.forEach(function (tier) {
       var e = pick(data.sets, function (x) { return sb[x.code] === tier; });
-      if (e) out.push(sample(e, ['SET'], 'Unid set ' + e.name + ' - ' + STAR[tier] + ' set'));
+      if (e) out.push(sample(e, ['SET'], 'Unid set ' + e.name));
     });
     return out;
   }
