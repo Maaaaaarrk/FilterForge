@@ -24,12 +24,12 @@
 
   var RUNES_CURRENCY = [
     rune(1, 'El'), rune(8, 'Ral'), rune(24, 'Ist'), rune(26, 'Vex'), rune(30, 'Ber'),
-    { code: 'gpvs', name: 'Perfect Amethyst', flags: ['NMAG'], num: { QTY: 1 }, legend: 'Perfect gem (stack)' },
+    { code: 'gpvs', name: 'Perfect Amethyst', flags: ['NMAG'], num: { QTY: 1, GEM: 5, GEMLEVEL: 5, GEMTYPE: 1 }, legend: 'Perfect gem (stack)' },
     { code: 'wss', name: 'Worldstone Shard', flags: ['NMAG'], legend: 'Worldstone Shard' },
     { code: 'lbox', name: "Larzuk's Puzzlebox", flags: ['NMAG'], legend: "Larzuk's Puzzlebox" },
     { code: 'pk1', name: 'Key of Terror', flags: ['NMAG'], legend: 'Uber key' },
     { code: 'tes', name: 'Twisted Essence of Suffering', flags: ['NMAG'], legend: 'Essence' },
-    { code: 'skzs', name: 'Perfect Skull', flags: ['NMAG'], num: { QTY: 1 }, legend: 'Perfect skull (stack)' }
+    { code: 'skzs', name: 'Perfect Skull', flags: ['NMAG'], num: { QTY: 1, GEM: 5, GEMLEVEL: 5, GEMTYPE: 7 }, legend: 'Perfect skull (stack)' }
   ];
 
   var BASES = [
