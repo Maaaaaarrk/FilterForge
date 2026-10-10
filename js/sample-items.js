@@ -259,7 +259,10 @@
   // The item with its base's loot-filter flags (ARMOR / WEAPON, type and group codes, class
   // item codes, 1H / 2H, NORM / EXC / ELT) added from the game's item tables.
   function withBaseFlags(item) {
-    var extra = (BASE_FLAGS[item.code] || []).filter(function (f) { return item.flags.indexOf(f) === -1; });
+    var add = (BASE_FLAGS[item.code] || []).slice();
+    // normal-quality items and runes are always identified in game (rules test !ID)
+    if (item.flags.indexOf('NMAG') !== -1 || item.rune) add.push('ID');
+    var extra = add.filter(function (f) { return item.flags.indexOf(f) === -1; });
     if (!extra.length) return item;
     var copy = {};
     Object.keys(item).forEach(function (k) { copy[k] = item[k]; });

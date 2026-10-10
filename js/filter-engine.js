@@ -131,12 +131,15 @@
     return this._out[raw];
   };
 
-  // Returns {lines: [[{text, color}]], shown}.
+  // Returns {lines: [[{text, color}]], shown}, lines top to bottom as drawn in game.
+  // Lines are built in string order; the game draws them bottom-up (each new line pushes
+  // the earlier text up), so the result is reversed at the end.
   Filter.prototype.label = function (item, filtlvl) {
     var ctx = new Context(item, filtlvl);
     var base = COLORS[itemColor(item)];
-    var name = [[{ text: item.name, color: base }]];
-    if (item.baseLine) name.push([{ text: item.baseLine, color: base }]);
+    // runewords: the base name sits under the runeword name
+    var name = item.baseLine ? [[{ text: item.baseLine, color: base }], [{ text: item.name, color: base }]]
+      : [[{ text: item.name, color: base }]];
     var matched = false;
     for (var i = 0; i < this.rules.length; i++) {
       var rule = this.rules[i];
@@ -146,9 +149,45 @@
       name = renderLabel(labelText, name, ctx, item);
       if (labelText.indexOf('%CONTINUE%') === -1) break;
     }
-    name = trimLabel(name);
-    return { lines: name, shown: !matched || name.length > 0 };
+    name = trimLabel(resolveConditionals(name));
+    return { lines: name.slice().reverse(), shown: !matched || name.length > 0 };
   };
+
+  // %CL% / %CS% markers ride along the %CONTINUE% chain (a later rule can fill the text
+  // around them) and are resolved on the finished label: %CL% becomes a line break only with
+  // visible text on both sides of it on its line (never a blank line or two breaks in a
+  // row); %CS% becomes a space only between two visible characters.
+  var CL = '\u0001';
+  var CS = '\u0002';
+
+  function visible(segs) {
+    return segs.filter(function (s) { return s.text !== CL && s.text !== CS; })
+      .map(function (s) { return s.text; }).join('');
+  }
+
+  function resolveConditionals(lines) {
+    var out = [];
+    lines.forEach(function (line) {
+      var cur = [[]];
+      line.forEach(function (seg, k) {
+        var rest = visible(line.slice(k + 1));
+        var last = cur[cur.length - 1];
+        if (seg.text === CL) {
+          if (visible(last).trim() && rest.trim()) {
+            while (last.length && last[last.length - 1].text === ' ') last.pop(); // %CS% before the break
+            cur.push([]);
+          }
+        } else if (seg.text === CS) {
+          var before = visible(last);
+          if (before && !/\s$/.test(before) && rest && !/^\s/.test(rest)) last.push({ text: ' ', color: seg.color });
+        } else {
+          last.push(seg);
+        }
+      });
+      out.push.apply(out, cur);
+    });
+    return out;
+  }
 
   // The game trim()s the finished label: whitespace (spaces and line breaks) at its very
   // start and end is dropped; spacing inside it stays.
@@ -500,15 +539,19 @@
         }
       } else if (COLORS[tok]) {
         color = COLORS[tok];
-      } else if (tok === 'NL' || tok === 'CL') {
+      } else if (tok === 'NL') {
         lines.push([]);
+      } else if (tok === 'CL') {
+        push(CL); // conditional newline, resolved on the finished label
+      } else if (tok === 'CS') {
+        push(CS); // conditional space, resolved on the finished label
       } else if (tok === 'RUNENUM') {
         push(item.rune ? String(item.rune) : '');
       } else if (tok === 'RUNENAME') {
         push(item.runeName || '');
       } else if (tok === 'BASENAME') {
         push(item.base || item.name);
-      } else if (VALUE_TOKENS[tok] || tok.indexOf('STAT') === 0 || tok.indexOf('CHARSTAT') === 0) {
+      } else if (VALUE_TOKENS[tok] || /^(STAT|CHARSTAT|SK|TABSK|CLSK)\d+$/.test(tok)) {
         push(fmt(ctx.value(tok)));
       }
       // anything else (CONTINUE, TIER, SOUNDID, MAP, DOT, PX, BORDER, NOTIFY, unknown) draws nothing
