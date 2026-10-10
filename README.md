@@ -37,7 +37,7 @@ Full-featured editor for creating and modifying `.filter` files:
 Browse all community-maintained filters available in the PD2 launcher, with how many filter files each author offers, links to their GitHub repositories, and one-click loading into the editor.
 
 ### Compare Filters
-A birds-eye view of the same drops (runes and currency, unidentified uniques and sets per star tier, top bases, rare body armor and circlets, full rejuvs) as every community filter shows them, one column per author. Each column has its own filter file and filter level; columns can be hidden or duplicated to put two levels or files of one filter side by side. Labels are evaluated in the browser by `js/filter-engine.js`. The URL keeps the layout as a short diff from the defaults (`?except=`, `?set=`, or `?only=`), so a head to head can be shared.
+A birds-eye view of the same drops (runes and currency, a range of unidentified uniques and sets, top bases, rare body armor and circlets, full rejuvs) as every community filter shows them, one column per author. Each column has its own filter file and filter level; columns can be hidden or duplicated to put two levels or files of one filter side by side. Labels are evaluated in the browser by `js/filter-engine.js`. The URL keeps the layout as a short diff from the defaults (`?except=`, `?set=`, or `?only=`), so a head to head can be shared.
 
 ### Getting Started Guide
 Step-by-step tutorial covering filter installation, in-game setup, basic syntax, and first edits.
