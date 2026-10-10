@@ -36,6 +36,36 @@
   margin-bottom: 1rem;
 }
 
+.compare-zoom {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.compare-zoom-btn {
+  min-width: 44px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.compare-zoom-level {
+  min-width: 5.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Click and drag pans the table */
+.compare-scroll {
+  cursor: grab;
+}
+
+.compare-scroll.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.compare-scroll :is(button, select) {
+  cursor: pointer;
+}
+
 .compare-hidden {
   display: flex;
   flex-wrap: wrap;

@@ -432,6 +432,76 @@
     syncUrl();
   });
 
+  // ---- pan and zoom ---------------------------------------------------------------
+
+  var scroller = document.getElementById('compare-scroll');
+  var zoomLabel = document.getElementById('compare-zoom-reset');
+  var ZOOM_MIN = 0.4;
+  var ZOOM_MAX = 1.6;
+  var zoom = 1;
+
+  // Zoom the table, keeping the point at (x, y) inside the scroll box in place.
+  function setZoom(next, x, y) {
+    next = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(next * 100) / 100));
+    if (next === zoom) return;
+    if (x === undefined) { x = scroller.clientWidth / 2; y = scroller.clientHeight / 2; }
+    var ratio = next / zoom;
+    var left = (scroller.scrollLeft + x) * ratio - x;
+    var top = (scroller.scrollTop + y) * ratio - y;
+    zoom = next;
+    table.style.zoom = String(zoom);
+    scroller.scrollLeft = left;
+    scroller.scrollTop = top;
+    zoomLabel.textContent = Math.round(zoom * 100) + '%';
+  }
+
+  document.getElementById('compare-zoom-in').addEventListener('click', function () { setZoom(zoom + 0.1); });
+  document.getElementById('compare-zoom-out').addEventListener('click', function () { setZoom(zoom - 0.1); });
+  zoomLabel.addEventListener('click', function () { setZoom(1); });
+
+  scroller.addEventListener('wheel', function (e) {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    var box = scroller.getBoundingClientRect();
+    setZoom(zoom * (e.deltaY < 0 ? 1.1 : 1 / 1.1), e.clientX - box.left, e.clientY - box.top);
+  }, { passive: false });
+
+  scroller.addEventListener('keydown', function (e) {
+    if (e.target !== scroller) return;
+    if (e.key === '+' || e.key === '=') { setZoom(zoom + 0.1); e.preventDefault(); }
+    else if (e.key === '-') { setZoom(zoom - 0.1); e.preventDefault(); }
+    else if (e.key === '0') { setZoom(1); e.preventDefault(); }
+  });
+
+  // Click and drag to pan (mouse and pen; touch already pans natively). Controls in
+  // the headers keep working.
+  var drag = null;
+  scroller.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'touch' || e.button !== 0) return;
+    if (e.target.closest('button, select, a, input, label')) return;
+    drag = { x: e.clientX, y: e.clientY, left: scroller.scrollLeft, top: scroller.scrollTop, moved: false, id: e.pointerId };
+  });
+  scroller.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var dx = e.clientX - drag.x;
+    var dy = e.clientY - drag.y;
+    if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 4) return;
+    if (!drag.moved) {
+      drag.moved = true;
+      try { scroller.setPointerCapture(drag.id); } catch (err) { /* pointer already gone */ }
+      scroller.classList.add('is-dragging');
+    }
+    scroller.scrollLeft = drag.left - dx;
+    scroller.scrollTop = drag.top - dy;
+  });
+  function endDrag() {
+    if (!drag) return;
+    scroller.classList.remove('is-dragging');
+    drag = null;
+  }
+  scroller.addEventListener('pointerup', endDrag);
+  scroller.addEventListener('pointercancel', endDrag);
+
   Promise.all([
     fetch('data/author-filters.json').then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
