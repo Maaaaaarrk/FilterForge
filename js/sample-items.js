@@ -88,12 +88,16 @@
     return out;
   }
 
-  // NORM / EXC / ELT from the code prefix; class-specific bases number differently.
+  // Base item tier (NORM / EXC / ELT) per weapon and armor code, generated from the game's
+  // Armor.txt / Weapons.txt (normcode / ubercode / ultracode).
+  var BASE_TIERS = {};
+  '2ax 2hs aar am1 am2 am3 am4 am5 axe axf ba1 ba2 ba3 ba4 ba5 bal bar bax bhm bkf bld brn brs bsd bsh bst bsw btl btx buc bwn cap cbw ces chn ci0 ci1 clb clm clw crn crs cst d33 dgr dir dr1 dr2 dr3 dr4 dr5 fhl fla flb flc fld ful g33 gax ghm gis gix glv gma gpl gpm gps gsc gsd gth gts gwn hal hax hbl hbt hbw hdm hfh hgl hla hlm hst hxb jav kit kri ktr lax lbb lbl lbt lbw lea leg lgl lrg lsd lst ltp lwb lxb mac mau mbl mbt mgl mpi msf msk mst mxb ne1 ne2 ne3 ne4 ne5 ob1 ob2 ob3 ob4 ob5 opl opm ops pa1 pa2 pa3 pa4 pa5 pax pik pil plt qf1 qf2 qui rng rxb sbb sbr sbw scl scm scp scy skp skr sml spc spk spl spr spt ssd ssp sst stu swb tax tbl tbt tgl tkf tow tri tsp vbl vbt vgl vou wax whm wnd wrb wsc wsd wsp wst ywn'.split(' ').forEach(function (c) { BASE_TIERS[c] = 'NORM'; });
+  '8bs 8cb 8cs 8hb 8hx 8l8 8lb 8ls 8lw 8lx 8mx 8rx 8s8 8sb 8ss 8sw 8ws 92a 92h 9ar 9ax 9b7 9b8 9b9 9ba 9bk 9bl 9br 9bs 9bt 9bw 9cl 9cm 9cr 9cs 9dg 9di 9fb 9fc 9fl 9ga 9gd 9gi 9gl 9gm 9gs 9gw 9h9 9ha 9ja 9kr 9la 9ls 9lw 9m9 9ma 9mp 9mt 9p9 9pa 9pi 9qr 9qs 9s8 9s9 9sb 9sc 9sm 9sp 9sr 9ss 9st 9ta 9tk 9tr 9ts 9tw 9vo 9wa 9wb 9wc 9wd 9wh 9wn 9ws 9xf 9yw am6 am7 am8 am9 ama ba6 ba7 ba8 ba9 baa ci2 dr6 dr7 dr8 dr9 dra ne6 ne7 ne8 ne9 nea ob6 ob7 ob8 ob9 oba pa6 pa7 pa8 pa9 paa xap xar xcl xea xh9 xhb xhg xhl xhm xhn xit xkp xla xlb xld xlg xlm xlt xmb xmg xml xng xow xpk xpl xrg xrn xrs xsh xsk xtb xtg xth xtp xts xtu xuc xui xul xvb xvg zhb zlb zmb ztb zvb'.split(' ').forEach(function (c) { BASE_TIERS[c] = 'EXC'; });
+  '6bs 6cb 6cs 6hb 6hx 6l7 6lb 6ls 6lw 6lx 6mx 6rx 6s7 6sb 6ss 6sw 6ws 72a 72h 7ar 7ax 7b7 7b8 7ba 7bk 7bl 7br 7bs 7bt 7bw 7cl 7cm 7cr 7cr2 7cs 7dg 7di 7fb 7fc 7fl 7ga 7gd 7gi 7gl 7gm 7gs 7gw 7h7 7ha 7ja 7kr 7la 7ls 7lw 7m7 7ma 7mp 7mt 7o7 7p7 7pa 7pi 7qr 7qs 7s7 7s8 7sb 7sc 7sm 7sp 7sr 7ss 7st 7ta 7tk 7tr 7ts 7tw 7vo 7wa 7wb 7wc 7wd 7wh 7wn 7ws 7xf 7yw amb amc amd ame amf bab bac bad bae baf ci3 drb drc drd dre drf neb ned nee nef neg obb obc obd obe obf pab pac pad pae paf rar rbe uap uar ucl uea uh9 uhb uhc uhg uhl uhm uhn uit ukp ula ulb ulc uld ulg ulm ult umb umc umg uml ung uow upk upl urg urn urs ush usk utb utc utg uth utp uts utu uuc uui uul uvb uvc uvg'.split(' ').forEach(function (c) { BASE_TIERS[c] = 'ELT'; });
+
+  // NORM / EXC / ELT for a weapon or armor code; null for anything else (jewelry, quivers, ...).
   function baseClass(code) {
-    if (code.length !== 3 || /^(am|ba|dr|ne|pa|ci|ob)/.test(code)) return null;
-    if ('67u'.indexOf(code.charAt(0)) !== -1) return 'ELT';
-    if ('89x'.indexOf(code.charAt(0)) !== -1) return 'EXC';
-    return 'NORM';
+    return BASE_TIERS[code] || null;
   }
 
   // Quivers and jewelry make poor examples (they all look alike unidentified).
