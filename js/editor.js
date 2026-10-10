@@ -370,13 +370,6 @@
     return HARDCODED_NAME_COLOR_CODES[item.code] || '';
   }
 
-  // Returns the item's name as the game sees it for %NAME% — including any
-  // embedded "ÿc" color code.
-  function getRawItemName(item) {
-    var code = getHardcodedNameColorCode(item);
-    return code ? '\u00FFc' + code + item.name : item.name;
-  }
-
   // Default display color for an item when no filter rule recolors it.
   function getDefaultItemColor(item) {
     var hard = getHardcodedNameColorCode(item);
@@ -2371,8 +2364,7 @@
     if (previewFLSelect && previewFLName) {
       populateFilterLevelDropdown(previewFLSelect, previewFLName, text);
     }
-    var lines = text.split('\n');
-    var rules = parseRules(lines);
+    var filter = previewFilter(text);
     var selectedKey = document.getElementById('preview-item-type').value;
 
     // Test the selected item + a few related ones
@@ -2385,394 +2377,77 @@
     var html = '';
     itemKeys.forEach(function (key) {
       var item = PREVIEW_ITEMS[key];
-      var result = matchItem(item, rules);
+      var result = matchPreview(item, filter);
       html += renderPreviewItem(item, result, key === selectedKey);
     });
 
-    if (!rules.length) {
+    if (!filter.rules.length) {
       html = '<p class="text-muted text-center">No rules found in the editor. Write some rules or use the wizard to get started.</p>';
     }
 
     previewResults.innerHTML = html;
   }
 
-  function parseRules(lines) {
-    // First pass: collect Alias[] definitions
-    var aliases = {};
-    for (var a = 0; a < lines.length; a++) {
-      var al = lines[a].trim();
-      var aliasMatch = al.match(/^Alias\s*\[([^\]]+)\]\s*:\s*(.*)/);
-      if (aliasMatch) {
-        // Don't trim the value — spaces in alias values are intentional formatting
-        aliases[aliasMatch[1].trim()] = aliasMatch[2];
-      }
+  // ==========================================
+  // Preview engine: js/filter-engine.js, shared with the Compare page. It follows BH's
+  // parser (AND / OR left to right, nested groups, $f() formulas, aliases by whole word)
+  // and draws labels the way the game does (bottom-up lines, %CL% / %CS%).
+  // ==========================================
+  var previewEngineCache = { text: null, filter: null };
+  function previewFilter(text) {
+    if (previewEngineCache.text !== text) {
+      previewEngineCache = { text: text, filter: window.FF.FilterEngine.parse(text) };
     }
-
-    // Sort alias keys longest-first to prevent "SET" matching inside "SET_TIER3_ITEM"
-    var sortedKeys = Object.keys(aliases).sort(function (a, b) { return b.length - a.length; });
-
-    // PD2 aliases are raw find-and-replace at load time. For our preview:
-    // - In OUTPUT strings: only expand %KEY% wrapped tokens (safe, no false matches)
-    // - In CONDITION strings: expand bare KEY as full find-and-replace (like PD2 does)
-    function expandOutput(str) {
-      if (!sortedKeys.length) return str;
-      var changed = true;
-      var iterations = 0;
-      while (changed && iterations < 10) {
-        changed = false;
-        iterations++;
-        for (var k = 0; k < sortedKeys.length; k++) {
-          var key = sortedKeys[k];
-          var wrapped = '%' + key + '%';
-          if (str.indexOf(wrapped) !== -1) {
-            str = str.split(wrapped).join(aliases[key]);
-            changed = true;
-          }
-        }
-      }
-      return str;
-    }
-
-    function expandConditions(str) {
-      if (!sortedKeys.length) return str;
-      var changed = true;
-      var iterations = 0;
-      while (changed && iterations < 10) {
-        changed = false;
-        iterations++;
-        for (var k = 0; k < sortedKeys.length; k++) {
-          var key = sortedKeys[k];
-          if (str.indexOf(key) !== -1) {
-            str = str.split(key).join(aliases[key]);
-            changed = true;
-          }
-        }
-      }
-      return str;
-    }
-
-    // Second pass: collect ItemDisplay rules with aliases expanded
-    var rules = [];
-    for (var i = 0; i < lines.length; i++) {
-      var line = lines[i].trim();
-      // Remove inline comments (but not inside the rule)
-      var commentIdx = line.indexOf('//');
-      if (commentIdx === 0) continue; // full comment line
-      if (commentIdx > 0) {
-        // Only strip if // is after the colon output
-        var colonIdx = line.indexOf(':');
-        if (colonIdx >= 0 && commentIdx > colonIdx) {
-          line = line.substring(0, commentIdx).trim();
-        }
-      }
-
-      var match = line.match(/^ItemDisplay\s*\[([^\]]*)\]\s*:\s*(.*)/);
-      if (match) {
-        var cond = expandConditions(match[1].trim());
-        var out = expandOutput(match[2].trim());
-        rules.push({
-          conditions: cond,
-          output: out,
-          lineNum: i + 1,
-          raw: lines[i].trim()
-        });
-      }
-    }
-    return rules;
+    return previewEngineCache.filter;
   }
 
-  // Returns true if `str` would render to an empty/invisible name in-game.
-  // Strips only formatting/notification tokens (colors, borders, sounds, %CONTINUE%, etc.)
-  // — content-producing tokens like %NAME%, %BASENAME%, %ILVL%, %SOCK% are preserved
-  // because they expand to visible text. Without this distinction, an output like
-  // "%WHITE%%BASENAME%" would be wrongly classified as hidden.
-  function isHiddenName(str) {
-    if (!str) return true;
-    var s = str
-      .replace(/%(?:WHITE|RED|GREEN|DARK_GREEN|BLUE|GOLD|YELLOW|ORANGE|PURPLE|GRAY|BLACK|TAN|CORAL|SAGE|TEAL|LIGHT_GRAY)%/g, '')
-      .replace(/%(?:BORDER|MAP|DOT|PX)(?:-[0-9A-Fa-f]{1,2})?%/g, '')
-      .replace(/%SOUNDID-\d+%/g, '')
-      .replace(/%SOUND_\d+%/g, '')
-      .replace(/%NOTIFY[^%]*%/g, '')
-      .replace(/%CONTINUE%/g, '')
-      .replace(/%TIER-\d+%/g, '')
-      .replace(/%(?:CL|CS|NL)%/g, '');
-    return !s.trim();
+  // Fields only some item kinds have; a 0 here means the item doesn't have the field.
+  var TYPE_ONLY_FIELDS = ['RUNE', 'GOLD', 'GEM', 'GEMTYPE', 'GEMLEVEL', 'MAPTIER'];
+
+  // Editor sample items ({code, name, flags, values}) in the shared engine's shape.
+  function engineItem(item) {
+    var v = item.values || {};
+    var num = {};
+    Object.keys(v).forEach(function (k) { num[k] = v[k]; });
+    if (v.SOCKETS !== undefined) num.SOCK = v.SOCKETS;
+    TYPE_ONLY_FIELDS.forEach(function (k) { if (!v[k]) delete num[k]; });
+    var flags = item.flags.filter(function (f) { return f !== 'GROUND'; });
+    // normal-quality items and runes are always identified in game (rules test !ID)
+    if ((flags.indexOf('NMAG') !== -1 || v.RUNE) && flags.indexOf('ID') === -1) flags.push('ID');
+    return {
+      code: item.code, name: item.name, flags: flags, num: num,
+      rune: v.RUNE || 0, runeName: v.RUNE ? RUNE_NAMES[v.RUNE] : undefined,
+      color: v.RUNE ? 'ORANGE' : undefined
+    };
   }
 
-  function matchItem(item, rules) {
-    // PD2 %CONTINUE% semantics (from wiki):
-    // - %CONTINUE% stores the current rule's output into %NAME% and continues checking.
-    // - %NAME% outside {} = the stored NAME portion (text outside braces)
-    // - %NAME% inside {} = the stored DESCRIPTION portion (text inside braces)
-    // - Both are tracked separately and resolved contextually.
-    // - %CONTINUE% must be outside braces.
-
-    // %NAME% outside {} starts as the item's in-game name, including any color code
-    // baked into it (e.g. runes are "ÿc8Ber Rune"), so the name keeps its own color.
-    var storedName = getRawItemName(item);
-    var storedDesc = '';        // %NAME% inside {} starts empty
-    var lastRule = null;
-    var anyMatched = false;
-    var allMatchedRules = [];
-
-    for (var i = 0; i < rules.length; i++) {
-      var rule = rules[i];
-      if (evaluateConditions(rule.conditions, item)) {
-        var output = rule.output;
-        var hasContinue = output.indexOf('%CONTINUE%') !== -1;
-
-        // Remove %CONTINUE% token
-        output = output.replace(/%CONTINUE%/g, '');
-
-        // Split into name part and description part
-        var namePart = output;
-        var descPart = '';
-        var braceMatch = output.match(/^([^{]*)\{(.*)\}(.*)$/);
-        if (braceMatch) {
-          namePart = braceMatch[1] + braceMatch[3]; // text outside braces
-          descPart = braceMatch[2]; // text inside braces
-        }
-
-        // Resolve %NAME% in each part contextually
-        namePart = namePart.replace(/%NAME%/g, storedName);
-        descPart = descPart.replace(/%NAME%/g, storedDesc || storedName);
-
-        allMatchedRules.push(rule);
-
-        if (hasContinue) {
-          // Store for next rule
-          storedName = namePart;
-          storedDesc = descPart;
-          lastRule = rule;
-          anyMatched = true;
-          continue;
-        }
-
-        // Final match — reconstruct full output for display
-        var finalOutput = namePart;
-        if (descPart) {
-          finalOutput = namePart + '{' + descPart + '}';
-        }
-        return {
-          matched: true,
-          rule: rule,
-          hidden: finalOutput === '' || isHiddenName(namePart),
-          output: finalOutput,
-          continued: anyMatched,
-          allRules: allMatchedRules
-        };
-      }
-    }
-
-    // Only %CONTINUE% rules matched, no terminal rule
-    if (anyMatched) {
-      var finalOut = storedName;
-      if (storedDesc) finalOut = storedName + '{' + storedDesc + '}';
-      return { matched: true, rule: lastRule, hidden: isHiddenName(storedName), output: finalOut, continued: true, allRules: allMatchedRules };
-    }
-    return { matched: false, hidden: false, output: '', rule: null, allRules: [] };
+  function lineText(line) {
+    return line.map(function (seg) { return seg.text; }).join('');
   }
 
-  function evaluateConditions(condStr, item) {
-    if (!condStr.trim()) return true; // empty = match all
-
-    // Simple evaluator: split by spaces, each token is AND
-    // Handle basic flags, item codes, and value conditions
-    var tokens = tokenize(condStr);
-    return evaluateTokens(tokens, item);
+  // Result in the shape the preview renderers use: matched / hidden, the drawn label lines,
+  // and the matching rules (line number + raw text) for the "Go to line" buttons.
+  function matchPreview(item, filter) {
+    var trace = [];
+    var res = filter.label(engineItem(item), currentFilterLevel, trace);
+    var rules = trace.map(function (t) { return { lineNum: t.lineNum, raw: t.raw }; });
+    return {
+      matched: trace.length > 0,
+      hidden: !res.shown,
+      lines: res.lines,
+      output: res.lines.map(lineText).join(' | '),
+      rule: rules.length ? rules[rules.length - 1] : null,
+      allRules: rules,
+      continued: trace.length > 1
+    };
   }
 
-  function tokenize(condStr) {
-    // Split on whitespace, but keep parenthesized groups together
-    var tokens = [];
-    var current = '';
-    var depth = 0;
-    for (var i = 0; i < condStr.length; i++) {
-      var ch = condStr[i];
-      if (ch === '(') {
-        depth++;
-        current += ch;
-      } else if (ch === ')') {
-        depth--;
-        current += ch;
-      } else if (ch === ' ' && depth === 0) {
-        if (current) tokens.push(current);
-        current = '';
-      } else {
-        current += ch;
-      }
-    }
-    if (current) tokens.push(current);
-    return tokens;
-  }
-
-  function evaluateTokens(tokens, item) {
-    // Handle OR groups in parentheses
-    // Simple AND evaluation for now
-    var i = 0;
-    while (i < tokens.length) {
-      var token = tokens[i];
-
-      // Skip explicit AND keyword (implicit in PD2 — conditions are AND by default)
-      if (token === 'AND') { i++; continue; }
-
-      // Check for OR group: (A OR B OR C)
-      if (token.charAt(0) === '(' && token.charAt(token.length - 1) === ')') {
-        var inner = token.substring(1, token.length - 1);
-        var orParts = inner.split(/\s+OR\s+/);
-        var anyMatch = false;
-        for (var j = 0; j < orParts.length; j++) {
-          if (evaluateToken(orParts[j].trim(), item)) {
-            anyMatch = true;
-            break;
-          }
-        }
-        if (!anyMatch) return false;
-      }
-      // Check for OR keyword (look ahead)
-      else if (i + 2 < tokens.length && tokens[i + 1] === 'OR') {
-        // Collect all OR terms
-        var orTerms = [token];
-        while (i + 2 < tokens.length && tokens[i + 1] === 'OR') {
-          orTerms.push(tokens[i + 2]);
-          i += 2;
-        }
-        var orMatch = false;
-        for (var k = 0; k < orTerms.length; k++) {
-          if (evaluateToken(orTerms[k], item)) {
-            orMatch = true;
-            break;
-          }
-        }
-        if (!orMatch) return false;
-      }
-      else {
-        if (!evaluateToken(token, item)) return false;
-      }
-      i++;
-    }
-    return true;
-  }
-
-  function evaluateToken(token, item) {
-    if (!token) return true;
-
-    // NOT
-    if (token.charAt(0) === '!') {
-      return !evaluateToken(token.substring(1), item);
-    }
-
-    // Parenthesized group
-    if (token.charAt(0) === '(' && token.charAt(token.length - 1) === ')') {
-      var inner = token.substring(1, token.length - 1);
-      var orParts = inner.split(/\s+OR\s+/);
-      for (var j = 0; j < orParts.length; j++) {
-        if (evaluateToken(orParts[j].trim(), item)) return true;
-      }
-      return false;
-    }
-
-    // FILTLVL — use value from preview selector (must be checked BEFORE generic value conditions)
-    if (token.indexOf('FILTLVL') === 0) {
-      var currentFL = currentFilterLevel;
-      var flMatch = token.match(/FILTLVL([<>=~])(.+)/);
-      if (flMatch) {
-        var flOp = flMatch[1];
-        var flValStr = flMatch[2];
-        if (flOp === '~') {
-          var flParts = flValStr.split('-');
-          return currentFL >= parseInt(flParts[0], 10) && currentFL <= parseInt(flParts[1], 10);
-        }
-        var flVal = parseInt(flValStr, 10);
-        if (flOp === '>') return currentFL > flVal;
-        if (flOp === '<') return currentFL < flVal;
-        if (flOp === '=') return currentFL === flVal;
-      }
-      return true;
-    }
-
-    // DIFF — treat as Hell (2) in preview
-    if (token.indexOf('DIFF') === 0) {
-      var diffMatch = token.match(/DIFF([<>=])(\d+)/);
-      if (diffMatch) {
-        var diffOp = diffMatch[1];
-        var diffVal = parseInt(diffMatch[2], 10);
-        if (diffOp === '>') return 2 > diffVal;
-        if (diffOp === '<') return 2 < diffVal;
-        if (diffOp === '=') return 2 === diffVal;
-      }
-      return true;
-    }
-
-    // CLVL — treat as 85 in preview
-    if (token.indexOf('CLVL') === 0) {
-      var clMatch = token.match(/CLVL([<>=])(\d+)/);
-      if (clMatch) {
-        var clOp = clMatch[1];
-        var clVal = parseInt(clMatch[2], 10);
-        if (clOp === '>') return 85 > clVal;
-        if (clOp === '<') return 85 < clVal;
-        if (clOp === '=') return 85 === clVal;
-      }
-      return true;
-    }
-
-    // Inline formula condition: $f(...) — cannot evaluate in preview, assume true
-    if (token.indexOf('$f(') !== -1) return true;
-
-    // Formula reference condition: FORMULAA>5, FORMULA_B=1, etc. — cannot evaluate in preview
-    if (/^FORMULA[A-Z_0-9]+/.test(token)) return true;
-
-    // Value condition: CODE<val, CODE>val, CODE=val, CODE~min-max
-    var valueMatch = token.match(/^([A-Z0-9]+)([<>=~])(.+)$/);
-    if (valueMatch) {
-      var code = valueMatch[1];
-      var op = valueMatch[2];
-      var valStr = valueMatch[3];
-      if (code === 'SOCK') code = 'SOCKETS';
-      var itemVal = (item.values && item.values[code] !== undefined) ? item.values[code] : 0;
-
-      // GOLD conditions only match gold piles (items with code 'gold')
-      if (code === 'GOLD' && item.code !== 'gold') return false;
-      // RUNE conditions only match actual runes (items with RUNE value > 0)
-      if (code === 'RUNE' && (!item.values || !item.values.RUNE)) return false;
-      // GEM/GEMLEVEL conditions only match gems
-      if ((code === 'GEM' || code === 'GEMLEVEL') && (!item.values || !item.values.GEM)) return false;
-      // MAPTIER only match maps
-      if (code === 'MAPTIER' && (!item.values || !item.values.MAPTIER)) return false;
-
-      if (op === '~') {
-        var parts = valStr.split('-');
-        var min = parseInt(parts[0], 10);
-        var max = parseInt(parts[1], 10);
-        return itemVal >= min && itemVal <= max;
-      }
-
-      var val = parseInt(valStr, 10);
-      if (op === '>') return itemVal > val;
-      if (op === '<') return itemVal < val;
-      if (op === '=') return itemVal === val;
-      return false;
-    }
-
-    // Boolean flag
-    if (item.flags && item.flags.indexOf(token) !== -1) return true;
-
-    // Preview rune samples use stackable codes (r30s), but site examples often use r30.
-    // Treat both forms as equivalent so exact rune-code rules preview correctly.
-    var tokenCode = token.toLowerCase();
-    var itemCode = item.code.toLowerCase();
-    if (tokenCode === itemCode) return true;
-    if (item.values && item.values.RUNE > 0) {
-      var shortRuneCode = itemCode.replace(/s$/, '');
-      if (tokenCode === shortRuneCode || tokenCode === shortRuneCode + 's') return true;
-    }
-
-    // GOLD special
-    if (token === 'GOLD' && item.values && item.values.GOLD > 0) return true;
-
-    return false;
+  function labelHtml(lines) {
+    return lines.map(function (line) {
+      return line.map(function (seg) {
+        return '<span style="color:' + seg.color + '">' + escapeHtml(seg.text) + '</span>';
+      }).join('');
+    }).join('<br>');
   }
 
   function renderPreviewItem(item, result, isSelected) {
@@ -2794,8 +2469,8 @@
     var rarityColor = getDefaultItemColor(item);
 
     var displayName;
-    if (result.matched && result.output) {
-      displayName = renderOutput(result.output, item);
+    if (result.matched && result.lines.length) {
+      displayName = labelHtml(result.lines);
     } else {
       displayName = '<span style="color:' + rarityColor + '">' + escapeHtml(item.name) + '</span>';
     }
@@ -2876,147 +2551,6 @@
   function truncateRule(str, max) {
     if (str.length <= max) return str;
     return str.substring(0, max) + '...';
-  }
-
-  function renderOutput(output, item) {
-    var text = output;
-    // %NAME% is resolved by matchItem during %CONTINUE% processing
-    // Only replace if there are still unresolved %NAME% tokens (non-CONTINUE rules)
-    if (text.indexOf('%NAME%') !== -1) {
-      text = text.replace(/%NAME%/g, getRawItemName(item));
-    }
-    text = text.replace(/%RUNENAME%/g, RUNE_NAMES[item.values.RUNE] || '');
-    text = text.replace(/%RUNENUM%/g, item.values.RUNE || '');
-    var GEM_TYPE_NAMES = ['', 'Amethyst', 'Diamond', 'Emerald', 'Ruby', 'Sapphire', 'Topaz', 'Skull'];
-    text = text.replace(/%GEMTYPE%/g, GEM_TYPE_NAMES[item.values.GEMTYPE] || '');
-    text = text.replace(/%GEMLEVEL%/g, item.values.GEMLEVEL || '0');
-    text = text.replace(/%ILVL%/g, item.values.ILVL || '');
-    text = text.replace(/%ALVL%/g, item.values.ALVL || '');
-    text = text.replace(/%CRAFTALVL%/g, item.values.CRAFTALVL || '');
-    text = text.replace(/%REROLLALVL%/g, item.values.REROLLALVL || '');
-    text = text.replace(/%SOCKETS%/g, item.values.SOCKETS || '0');
-    text = text.replace(/%SOCK%/g, item.values.SOCKETS || '0');
-    text = text.replace(/%MAXSOCKETS%/g, item.values.MAXSOCKETS || '0');
-    text = text.replace(/%DEF%/g, item.values.DEF || '0');
-    text = text.replace(/%ED%/g, item.values.ED || '0');
-    text = text.replace(/%EDEF%/g, item.values.EDEF || item.values.ED || '0');
-    text = text.replace(/%EDAM%/g, item.values.EDAM || item.values.ED || '0');
-    text = text.replace(/%RES%/g, item.values.RES || '0');
-    text = text.replace(/%PRICE%/g, item.values.PRICE || '0');
-    text = text.replace(/%SELLPRICE%/g, item.values.SELLPRICE || '0');
-    text = text.replace(/%QTY%/g, item.values.QTY || '0');
-    text = text.replace(/%MAPTIER%/g, item.values.MAPTIER || '0');
-    text = text.replace(/%BASENAME%/g, getRawItemName(item));
-    text = text.replace(/%LVLREQ%/g, item.values.LVLREQ || '0');
-    // New BH keys — dimensions, upgrade reqs, current reqs, base damage, etc.
-    text = text.replace(/%WIDTH%/g, item.values.WIDTH || '0');
-    text = text.replace(/%HEIGHT%/g, item.values.HEIGHT || '0');
-    text = text.replace(/%AREA%/g, item.values.AREA || '0');
-    text = text.replace(/%UPDEX%/g, item.values.UPDEX || '0');
-    text = text.replace(/%UPSTR%/g, item.values.UPSTR || '0');
-    text = text.replace(/%UPLVL%/g, item.values.UPLVL || '0');
-    text = text.replace(/%MAXRES%/g, item.values.MAXRES || '0');
-    text = text.replace(/%ALLATTRIB%/g, item.values.ALLATTRIB || '0');
-    text = text.replace(/%BASEBLOCK%/g, item.values.BASEBLOCK || '0');
-    text = text.replace(/%REQLVL%/g, item.values.REQLVL || '0');
-    text = text.replace(/%REQSTR%/g, item.values.REQSTR || '0');
-    text = text.replace(/%REQDEX%/g, item.values.REQDEX || '0');
-    text = text.replace(/%BASEMINONEH%/g, item.values.BASEMINONEH || '0');
-    text = text.replace(/%BASEMAXONEH%/g, item.values.BASEMAXONEH || '0');
-    text = text.replace(/%BASEMINTWOH%/g, item.values.BASEMINTWOH || '0');
-    text = text.replace(/%BASEMAXTWOH%/g, item.values.BASEMAXTWOH || '0');
-    text = text.replace(/%BASEMINSMITE%/g, item.values.BASEMINSMITE || '0');
-    text = text.replace(/%BASEMAXSMITE%/g, item.values.BASEMAXSMITE || '0');
-    text = text.replace(/%BASEMINTHROW%/g, item.values.BASEMINTHROW || '0');
-    text = text.replace(/%BASEMAXTHROW%/g, item.values.BASEMAXTHROW || '0');
-    text = text.replace(/%BASEMINKICK%/g, item.values.BASEMINKICK || '0');
-    text = text.replace(/%BASEMAXKICK%/g, item.values.BASEMAXKICK || '0');
-    // Formula references — show 0 in preview (real values computed by BH client)
-    text = text.replace(/%FORMULA[A-Z_0-9]+%/g, '0');
-    // Inline $f(...) formulas — show 0 in preview (real values computed by BH client)
-    text = text.replace(/\$f\((?:[^()]*|\([^()]*\))*\)/g, '0');
-    // Generic STAT### tokens — show 0 for unknown
-    text = text.replace(/%STAT\d+%/g, '0');
-    text = text.replace(/%CLSK\d+%/g, '0');
-    text = text.replace(/%TABSK\d+%/g, '0');
-    text = text.replace(/%SK\d+%/g, '0');
-
-    // Remove notification and special tokens for display
-    text = text.replace(/%(?:BORDER|MAP|DOT|PX)(?:-[0-9A-Fa-f]{1,2})?%/g, '');
-    text = text.replace(/%SOUNDID-\d+%/g, '');
-    text = text.replace(/%SOUND_\d+%/g, '');
-    text = text.replace(/%NOTIFY[^%]*%/g, '');
-    text = text.replace(/%CONTINUE%/g, '');
-    text = text.replace(/%TIER-\d+%/g, '');
-    text = text.replace(/%NL%/g, ' | ');
-    text = text.replace(/%CL%/g, ' | ');
-    text = text.replace(/%CS%/g, ' ');
-    text = text.replace(/%CODE%/g, item.code || '');
-    text = text.replace(/%RANGE%/g, '0');
-    text = text.replace(/%WPNSPD%/g, '0');
-    text = text.replace(/%MULTI[^%]*%/g, '0');
-    // Unknown %TOKEN% patterns are handled by the char-by-char color parser (skipped silently)
-
-    // Convert ÿcX color codes (Kassahi/ANSI format) to %COLOR% format
-    var yColorMap = {
-      '\xFF\x63\x30':'%WHITE%', '\xFF\x63\x31':'%RED%', '\xFF\x63\x32':'%GREEN%',
-      '\xFF\x63\x33':'%BLUE%', '\xFF\x63\x34':'%GOLD%', '\xFF\x63\x35':'%GRAY%',
-      '\xFF\x63\x36':'%BLACK%', '\xFF\x63\x37':'%TAN%', '\xFF\x63\x38':'%ORANGE%',
-      '\xFF\x63\x39':'%YELLOW%', '\xFF\x63\x3A':'%DARK_GREEN%', '\xFF\x63\x3B':'%PURPLE%',
-      '\xFF\x63\x2E':'%TEAL%', '\xFF\x63\x2C':'%SAGE%', '\xFF\x63\x2D':'%CORAL%',
-      '\xFF\x63\x2F':'%LIGHT_GRAY%'
-    };
-    // Also handle the decoded ÿ character (U+00FF) when loaded as Latin-1
-    text = text.replace(/\u00FFc(.)/g, function (m, code) {
-      var lookup = {
-        '0':'%WHITE%','1':'%RED%','2':'%GREEN%','3':'%BLUE%','4':'%GOLD%',
-        '5':'%GRAY%','6':'%BLACK%','7':'%TAN%','8':'%ORANGE%','9':'%YELLOW%',
-        ':':'%DARK_GREEN%',';':'%PURPLE%','.':'%TEAL%',',':'%SAGE%',
-        '-':'%CORAL%','/':'%LIGHT_GRAY%','<':'%LIGHT_GRAY%'
-      };
-      return lookup[code] || '';
-    });
-
-    // Remove descriptions {} for inline display
-    text = text.replace(/\{[^}]*\}/g, '');
-
-    // Convert colors to spans — start with item's rarity color
-    var currentColor = getDefaultItemColor(item);
-    var result = '';
-    // Split by color tokens — but also handle adjacent tokens carefully
-    // Process character by character to avoid regex split issues
-    var ci = 0;
-    while (ci < text.length) {
-      // Check if current position starts a %COLOR% token
-      if (text.charAt(ci) === '%') {
-        var endPct = text.indexOf('%', ci + 1);
-        if (endPct !== -1) {
-          var token = text.substring(ci, endPct + 1);
-          if (D2_COLORS[token]) {
-            currentColor = D2_COLORS[token];
-            ci = endPct + 1;
-            continue;
-          }
-          // Unknown %TOKEN% — skip it
-          if (/^%[A-Z_0-9]+%$/.test(token)) {
-            ci = endPct + 1;
-            continue;
-          }
-        }
-        // Orphan % — skip it
-        ci++;
-        continue;
-      }
-      // Collect text until next % or end
-      var textStart = ci;
-      while (ci < text.length && text.charAt(ci) !== '%') ci++;
-      var chunk = text.substring(textStart, ci);
-      if (chunk) {
-        result += '<span style="color:' + currentColor + '">' + escapeHtml(chunk) + '</span>';
-      }
-    }
-
-    return result || escapeHtml(item.name);
   }
 
   function escapeHtml(str) {
@@ -6569,8 +6103,7 @@
 
         // Populate the filter level dropdown with names from the filter
         populateFilterLevelDropdown(filtlvlSelect, filtlvlName, text);
-        var lines = text.split('\n');
-        var rules = parseRules(lines);
+        var filter = previewFilter(text);
 
         var html = '';
         var shownCount = 0;
@@ -6585,7 +6118,7 @@
             values: item.values
           };
 
-          var result = matchItem(previewItem, rules);
+          var result = matchPreview(previewItem, filter);
           var status = 'default';
           if (!result.matched) status = 'default';
           else if (result.hidden) status = 'hide';

@@ -28,7 +28,7 @@ A 7-step wizard that generates a complete custom filter based on your choices:
 Full-featured editor for creating and modifying `.filter` files:
 - **Visual Rule Builder** — click-to-build filter rules with conditions, colors, map icons, sounds
 - **Code Editor** — with line numbers, tab support, and auto-save to localStorage
-- **Live Preview** — test rules against 19 predefined items to see matches and colors
+- **Live Preview** — test rules against 76 predefined items to see the label as it shows in game (colors, line order) and the chain of matching rules; uses the same engine as the Compare page (`js/filter-engine.js`)
 - **Import from Author** — download filters directly from community authors (18 authors, 108 filter files)
 - **Import/Export** — import `.filter` files from disk or export your work
 - **Templates** — starter, endgame, rune, crafting, and mapping templates

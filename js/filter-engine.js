@@ -43,9 +43,15 @@
     QTY: 1, ILVL: 1, ALVL: 1, EDAM: 1, EDEF: 1, RES: 1, DEF: 1, LIFE: 1, MANA: 1, SOCK: 1,
     LVLREQ: 1, CRAFTALVL: 1, REROLLALVL: 1, PLR: 1, REPLIFE: 1, WPNSPD: 1, UPLVL: 1, UPSTR: 1,
     UPDEX: 1, FCR: 1, IAS: 1, FHR: 1, FRW: 1, STR: 1, DEX: 1, MINDMG: 1, MAXDMG: 1, ED: 1,
-    PRICE: 1, SELLPRICE: 1, SOCKETS: 1, RANGE: 1, MFIND: 1, GFIND: 1, RUNE: 1
+    PRICE: 1, SELLPRICE: 1, SOCKETS: 1, RANGE: 1, MFIND: 1, GFIND: 1, RUNE: 1,
+    MAXSOCKETS: 1, MAPTIER: 1, GEMLEVEL: 1, WIDTH: 1, HEIGHT: 1, AREA: 1, MAXRES: 1, ALLATTRIB: 1,
+    BASEBLOCK: 1, REQLVL: 1, REQSTR: 1, REQDEX: 1, BASEMINONEH: 1, BASEMAXONEH: 1, BASEMINTWOH: 1,
+    BASEMAXTWOH: 1, BASEMINSMITE: 1, BASEMAXSMITE: 1, BASEMINTHROW: 1, BASEMAXTHROW: 1,
+    BASEMINKICK: 1, BASEMAXKICK: 1, QLVL: 1, GOLD: 1
   };
-  var DEFAULTS = { CLVL: 86, DIFF: 2, MAPID: 2, QTY: 1, ILVL: 85, ALVL: 85, LVLREQ: 60, CHARSTAT12: 90 };
+  var GEM_TYPES = ['', 'Amethyst', 'Diamond', 'Emerald', 'Ruby', 'Sapphire', 'Topaz', 'Skull'];
+  // QTY is only set on stackable samples (runes, gem / skull stacks); other items have none.
+  var DEFAULTS = { CLVL: 86, DIFF: 2, MAPID: 2, ILVL: 85, ALVL: 85, LVLREQ: 60, CHARSTAT12: 90 };
 
   var TOKEN_RE = /%([A-Za-z0-9_]+)(?:-([0-9A-Fa-f]+))?%/g;
   // Alias names may start with a digit (4_STAR_UNIQUE) but must contain a letter.
@@ -78,9 +84,10 @@
 
   function Filter(text) {
     // The game reads each row with everything from // stripped, then trimmed.
-    var lines = text.split(/\r?\n/).map(function (l) { return l.split('//')[0].trim(); });
+    var raw = text.split(/\r?\n/);
+    var lines = raw.map(function (l) { return l.split('//')[0].trim(); });
     this.aliases = {};
-    this.rules = [];
+    this.rules = []; // [condition, output, 1-based line number, raw line]
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
       var am = line.match(/^Alias\[([^\]]+)\]:\s?(.*)$/);
@@ -90,7 +97,7 @@
       }
       if (line.indexOf('ItemDisplay[') === 0) {
         var end = line.indexOf(']:');
-        if (end > 0) this.rules.push([line.substring(12, end), line.substring(end + 2)]);
+        if (end > 0) this.rules.push([line.substring(12, end), line.substring(end + 2), i + 1, raw[i].trim()]);
       }
     }
     this.levels = levelNames(lines);
@@ -133,8 +140,9 @@
 
   // Returns {lines: [[{text, color}]], shown}, lines top to bottom as drawn in game.
   // Lines are built in string order; the game draws them bottom-up (each new line pushes
-  // the earlier text up), so the result is reversed at the end.
-  Filter.prototype.label = function (item, filtlvl) {
+  // the earlier text up), so the result is reversed at the end. trace, if an array, gets
+  // {lineNum, raw, continued} for every rule that matched, in order.
+  Filter.prototype.label = function (item, filtlvl, trace) {
     var ctx = new Context(item, filtlvl);
     var base = COLORS[itemColor(item)];
     // runewords: the base name sits under the runeword name
@@ -146,8 +154,10 @@
       if (!ctx.evaluate(this.cond(rule[0]))) continue;
       matched = true;
       var labelText = stripTooltip(this.out(rule[1]));
+      var cont = labelText.indexOf('%CONTINUE%') !== -1;
+      if (trace) trace.push({ lineNum: rule[2], raw: rule[3], continued: cont });
       name = renderLabel(labelText, name, ctx, item);
-      if (labelText.indexOf('%CONTINUE%') === -1) break;
+      if (!cont) break;
     }
     name = trimLabel(resolveConditionals(name));
     return { lines: name.slice().reverse(), shown: !matched || name.length > 0 };
@@ -264,18 +274,18 @@
     var toks = tokenize(text);
     var pos = 0;
     function peek() { return pos < toks.length ? toks[pos] : null; }
-    function pOr() {
-      var terms = [pAnd()];
-      while (peek() === 'OR') { pos++; terms.push(pAnd()); }
-      return terms.length === 1 ? terms[0] : { op: 'or', terms: terms };
-    }
-    function pAnd() {
-      var terms = [pNot()];
-      while (peek() !== null && peek() !== 'OR' && peek() !== ')') {
-        if (peek() === 'AND') { pos++; continue; }
-        terms.push(pNot());
+    // Like BH's shunting-yard parser: AND (also implied between terms) and OR have equal
+    // precedence and apply left to right, so "A OR B C" is "(A OR B) AND C"; "!" binds to the
+    // next term or parenthesised group.
+    function pExpr() {
+      var left = pNot();
+      while (peek() !== null && peek() !== ')') {
+        var op = 'and';
+        if (peek() === 'OR') { op = 'or'; pos++; } else if (peek() === 'AND') { pos++; }
+        if (peek() === null || peek() === ')') break;
+        left = { op: op, terms: [left, pNot()] };
       }
-      return terms.length === 1 ? terms[0] : { op: 'and', terms: terms };
+      return left;
     }
     function pNot() {
       if (peek() === '!') { pos++; return { op: 'not', term: pNot() }; }
@@ -285,14 +295,14 @@
       var t = peek();
       pos++;
       if (t === '(') {
-        var v = pOr();
+        var v = pExpr();
         if (peek() === ')') pos++;
         return v;
       }
       if (t === null || t === ')') return { op: 'const', value: true };
       return { op: 'atom', atom: t };
     }
-    return toks.length ? pOr() : { op: 'const', value: true };
+    return toks.length ? pExpr() : { op: 'const', value: true };
   }
 
   function Context(item, filtlvl) {
@@ -551,6 +561,10 @@
         push(item.runeName || '');
       } else if (tok === 'BASENAME') {
         push(item.base || item.name);
+      } else if (tok === 'GEMTYPE') {
+        push(GEM_TYPES[ctx.value('GEMTYPE')] || '');
+      } else if (tok === 'CODE') {
+        push(item.code);
       } else if (VALUE_TOKENS[tok] || /^(STAT|CHARSTAT|SK|TABSK|CLSK)\d+$/.test(tok)) {
         push(fmt(ctx.value(tok)));
       }
