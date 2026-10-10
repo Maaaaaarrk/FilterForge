@@ -56,6 +56,11 @@
       <div class="compare-toolbar">
         <button type="button" class="btn-cta btn-cta-primary" id="compare-copy">Copy link</button>
         <button type="button" class="btn-cta" id="compare-reset">Reset</button>
+        <div class="compare-zoom" role="group" aria-label="Zoom">
+          <button type="button" class="btn-cta compare-zoom-btn" id="compare-zoom-out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="btn-cta compare-zoom-level" id="compare-zoom-reset" aria-label="Reset zoom" title="Reset zoom (Ctrl + mouse wheel zooms)">100%</button>
+          <button type="button" class="btn-cta compare-zoom-btn" id="compare-zoom-in" aria-label="Zoom in">+</button>
+        </div>
       </div>
 
       <div class="compare-hidden" id="compare-hidden" hidden>
@@ -64,7 +69,7 @@
       </div>
 
       <p class="compare-status" id="compare-status" role="status"><span class="ff-spinner" aria-hidden="true"></span> Loading filters...</p>
-      <div class="compare-scroll" tabindex="0" aria-label="Filter comparison table">
+      <div class="compare-scroll" id="compare-scroll" tabindex="0" aria-label="Filter comparison table: drag to pan, Ctrl + mouse wheel to zoom">
         <table class="compare-table" id="compare-table"></table>
       </div>
       <p class="compare-footnote text-muted">Labels are evaluated in your browser from each filter's latest file on GitHub, at character level 86 in Hell. Unique and set samples follow <a href="https://github.com/Maaaaaarrk/HiimFilter-PD2-Filter/blob/main/builderfilter/data/unique-set-tiers.json" target="_blank" rel="noopener">HiimFilter's star tiers</a>. Sounds, map icons and tooltips aren't shown.</p>

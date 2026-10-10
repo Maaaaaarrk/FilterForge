@@ -69,7 +69,7 @@
     for (var i = 0; i < lines.length; i++) {
       var m = lines[i].match(/^ItemDisplayFilterName\s*\[\s*(\d*)\s*\]\s*:\s*(.+)/);
       if (!m) continue;
-      var raw = m[2].replace(/\s*\/\/.*$/, '').replace(/ÿc./g, '').trim();
+      var raw = m[2].replace(/ÿc./g, '').trim();
       if (m[1]) names[parseInt(m[1], 10)] = raw;
       else names[seq++] = raw;
     }
@@ -77,7 +77,8 @@
   }
 
   function Filter(text) {
-    var lines = text.split(/\r?\n/);
+    // The game reads each row with everything from // stripped, then trimmed.
+    var lines = text.split(/\r?\n/).map(function (l) { return l.split('//')[0].trim(); });
     this.aliases = {};
     this.rules = [];
     for (var i = 0; i < lines.length; i++) {
