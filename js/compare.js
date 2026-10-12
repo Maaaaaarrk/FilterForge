@@ -67,18 +67,48 @@
     return s;
   }
 
-  function loadFilter(file) {
-    if (!filterCache[file.url]) {
-      filterCache[file.url] = fetch(file.url)
+  // While an author runs a beta, their launcher definitions list a file_name_beta next to
+  // each file; Compare shows that file so the previews follow the current season. Without
+  // definitions (or if they fail to load) the listed file is used.
+  var betaCache = {};
+  function betaFiles(group) {
+    if (!group.definitionsUrl) return Promise.resolve({});
+    if (!betaCache[group.slug]) {
+      betaCache[group.slug] = fetch(group.definitionsUrl)
+        .then(function (res) { return res.ok ? res.json() : {}; })
+        .then(function (defs) {
+          var out = {};
+          var info = (defs && defs.filter_info) || {};
+          Object.keys(info).forEach(function (k) {
+            if (info[k].file_name && info[k].file_name_beta) out[info[k].file_name] = info[k].file_name_beta;
+          });
+          return out;
+        })
+        .catch(function () { return {}; });
+    }
+    return betaCache[group.slug];
+  }
+
+  // The URL to download for a column's file: its beta twin when the author lists one.
+  function fileUrl(group, file) {
+    return betaFiles(group).then(function (beta) {
+      var name = beta[file.name];
+      return name ? { url: file.url.replace(/[^/]+$/, name), beta: name } : { url: file.url, beta: null };
+    });
+  }
+
+  function loadFilter(url) {
+    if (!filterCache[url]) {
+      filterCache[url] = fetch(url)
         .then(function (res) {
           if (!res.ok) throw new Error('HTTP ' + res.status);
           return res.arrayBuffer();
         })
         .then(function (buf) { return Engine.parse(Engine.decode(buf)); });
       // let a failed download be retried
-      filterCache[file.url].catch(function () { delete filterCache[file.url]; });
+      filterCache[url].catch(function () { delete filterCache[url]; });
     }
-    return filterCache[file.url];
+    return filterCache[url];
   }
 
   // ---- state <-> URL --------------------------------------------------------------
@@ -362,11 +392,15 @@
     if (col.levelSelect) levelOptions(col.levelSelect, col);
     if (col.stateEl) {
       col.stateEl.textContent = '';
+      col.stateEl.removeAttribute('title');
       if (col.error) {
         col.stateEl.textContent = 'Could not load this filter.';
       } else if (!col.filter) {
         col.stateEl.appendChild(spinner());
         col.stateEl.appendChild(document.createTextNode(' Loading…'));
+      } else if (col.beta) {
+        col.stateEl.textContent = 'Beta file';
+        col.stateEl.title = col.beta;
       }
       if (col.th) col.th.setAttribute('aria-busy', String(!col.filter && !col.error));
     }
@@ -375,10 +409,14 @@
 
   function load(col) {
     var file = col.file;
+    col.beta = null;
     refreshColumn(col);
-    loadFilter(file).then(function (flt) {
+    fileUrl(col.group, file).then(function (src) {
+      return loadFilter(src.url).then(function (flt) { return { flt: flt, beta: src.beta }; });
+    }).then(function (res) {
       if (col.file !== file) return; // switched while downloading
-      col.filter = flt;
+      col.filter = res.flt;
+      col.beta = res.beta;
       refreshColumn(col);
     }, function () {
       if (col.file !== file) return;
@@ -516,7 +554,7 @@
       return (ia < 0 ? FIRST.length : ia) - (ib < 0 ? FIRST.length : ib);
     });
     groups = data.map(function (a) {
-      return { slug: slugOf(a.author), author: a.author, name: a.name, files: a.files };
+      return { slug: slugOf(a.author), author: a.author, name: a.name, files: a.files, definitionsUrl: a.definitionsUrl };
     });
     categories = Samples.categories(res[1]);
     columns = columnsFromUrl() || defaultColumns();
