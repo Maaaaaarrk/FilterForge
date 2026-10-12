@@ -248,6 +248,10 @@
     var eth = pick(data.uniques, function (e) { return ub[e.code].eth === '4' && ub[e.code].noneth !== '4'; });
     if (eth) out.push(sample(eth, ['UNI', 'ETH'], 'Unid ETH unique ' + eth.name));
     out.push({ code: 'rin', name: 'Ring', flags: ['UNI', 'JEWELRY'], legend: 'Unid unique ring' });
+    // Grail: the engine treats every item as discovered and owned; this one is neither.
+    out.push({ code: 'dgr', name: 'Dagger', flags: ['UNI'],
+      grail: { ANYDISCOVERED: false, ALLDISCOVERED: false, ANYOWNED: false, ALLOWNED: false },
+      legend: 'Grail: unid unique Gull, not yet discovered or owned' });
     SET_SCALE.forEach(function (tier) {
       var e = pick(data.sets, function (x) { return sb[x.code] === tier; });
       if (e) out.push(sample(e, ['SET'], 'Unid set ' + e.name));

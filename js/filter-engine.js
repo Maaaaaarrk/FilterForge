@@ -52,6 +52,9 @@
   var GEM_TYPES = ['', 'Amethyst', 'Diamond', 'Emerald', 'Ruby', 'Sapphire', 'Topaz', 'Skull'];
   // QTY is only set on stackable samples (runes, gem / skull stacks); other items have none.
   var DEFAULTS = { CLVL: 86, DIFF: 2, MAPID: 2, ILVL: 85, ALVL: 85, LVLREQ: 60, CHARSTAT12: 90 };
+  // Grail tracking: previews assume a finished grail (every item discovered and owned).
+  // An item can set any of these to false in `grail` (e.g. an undiscovered unique).
+  var GRAIL_FLAGS = { ANYDISCOVERED: true, ALLDISCOVERED: true, ANYOWNED: true, ALLOWNED: true };
 
   var TOKEN_RE = /%([A-Za-z0-9_]+)(?:-([0-9A-Fa-f]+))?%/g;
   // Alias names may start with a digit (4_STAR_UNIQUE) but must contain a letter.
@@ -310,8 +313,9 @@
     this.flags = {};
     var flags = (item.flags || []).concat(['GROUND']);
     for (var f = 0; f < flags.length; f++) this.flags[flags[f]] = true;
-    var num = { FILTLVL: filtlvl };
     var k;
+    for (k in GRAIL_FLAGS) this.flags[k] = k in (item.grail || {}) ? !!item.grail[k] : GRAIL_FLAGS[k];
+    var num = { FILTLVL: filtlvl };
     for (k in DEFAULTS) num[k] = DEFAULTS[k];
     for (k in item.num || {}) num[k] = item.num[k];
     if (item.rune) num.RUNE = item.rune;
