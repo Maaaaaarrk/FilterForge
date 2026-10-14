@@ -44,9 +44,9 @@
   var RARES = [
     { code: 'ci2', name: 'Tiara', flags: ['RARE', 'ARMOR', 'CIRC', 'EQ7', 'EXC'], legend: 'Unid rare circlet' },
     { code: 'utp', name: 'Archon Plate', flags: ['RARE', 'ARMOR', 'CHEST', 'EQ2', 'ELT'],
-      num: { ILVL: 85, ALVL: 75 }, legend: 'Unid rare body armor, ilvl 85, alvl 75' },
+      num: { ILVL: 85, ALVL: 75, MAXSOCKETS: 4 }, legend: 'Unid rare body armor, ilvl 85, alvl 75' },
     { code: 'utp', name: 'Archon Plate', flags: ['RARE', 'ARMOR', 'CHEST', 'EQ2', 'ELT'],
-      num: { ILVL: 85, ALVL: 85 }, legend: 'Unid rare body armor, ilvl 85, alvl 85' }
+      num: { ILVL: 85, ALVL: 85, MAXSOCKETS: 4 }, legend: 'Unid rare body armor, ilvl 85, alvl 85' }
   ];
 
   var CONSUMABLES = [
