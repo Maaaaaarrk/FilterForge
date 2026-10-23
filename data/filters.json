@@ -5,11 +5,6 @@
     "author": "Wolfie"
   },
   {
-    "name": "Kryszard's PD2 Loot Filter",
-    "url": "https://api.github.com/repos/Kryszard-POD/Kryszard-s-PD2-Loot-Filter/contents",
-    "author": "Kryszard"
-  },
-  {
     "name": "Kassahi's PD2 Filter",
     "url": "https://api.github.com/repos/Maaaaaarrk/HiimFilter-PD2-Filter/contents/filtergroups/kassahi",
     "author": "Kassahi"
@@ -60,11 +55,6 @@
     "author": "Sven"
   },
   {
-    "name": "PiLLLa Filter",
-    "url": "https://api.github.com/repos/PiLLLaa/pd2/contents",
-    "author": "PiLLLa"
-  },
-  {
     "name": "Roofoo's Filter",
     "url": "https://api.github.com/repos/RoofooEvazan/Roofoo-s-PD2-Loot-Filter/contents",
     "author": "Roofoo"
@@ -85,8 +75,8 @@
     "author": "Philanthropy777"
   },
   {
-    "name": "THE MATRIX ARCHITECT",
-    "url": "https://api.github.com/repos/huns1313/THE-MATRIX-ARCHITECT/contents",
-    "author": "huns1313"
+    "name": "Olverius' Treasure Filter",
+    "url": "https://api.github.com/repos/olveriusfisto/oli_pd2_filter/contents",
+    "author": "Olverius"
   }
 ]
