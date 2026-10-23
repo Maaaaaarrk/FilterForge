@@ -6170,10 +6170,6 @@
       {name:"combined.filter",url:"https://raw.githubusercontent.com/WolfieeifloW/pd2filter/main/combined.filter",size:507457},
       {name:"template.filter",url:"https://raw.githubusercontent.com/WolfieeifloW/pd2filter/main/template.filter",size:23553}
     ]},
-    {name:"Kryszard's PD2 Loot Filter",author:"Kryszard",repo:"Kryszard-POD/Kryszard-s-PD2-Loot-Filter",files:[
-      {name:"futureal.filter",url:"https://raw.githubusercontent.com/Kryszard-POD/Kryszard-s-PD2-Loot-Filter/main/futureal.filter",size:782847},
-      {name:"item.filter",url:"https://raw.githubusercontent.com/Kryszard-POD/Kryszard-s-PD2-Loot-Filter/main/item.filter",size:779513}
-    ]},
     {name:"Kassahi's PD2 Filter",author:"Kassahi",repo:"Maaaaaarrk/HiimFilter-PD2-Filter",
       definitionsUrl:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/filtergroups/kassahi/filter_definitions.json",
       files:[
@@ -6277,14 +6273,6 @@
     {name:"Sven's Filter",author:"Sven",repo:"StandInTheRiver/Sven-s-Filter",files:[
       {name:"Revised.filter",url:"https://raw.githubusercontent.com/StandInTheRiver/Sven-s-Filter/main/Revised.filter",size:465807}
     ]},
-    {name:"PiLLLa Filter",author:"PiLLLa",repo:"PiLLLaa/pd2",files:[
-      {name:"S13_Blank.filter",url:"https://raw.githubusercontent.com/PiLLLaa/pd2/main/S13_Blank.filter",size:1768723},
-      {name:"S13_Hype.filter",url:"https://raw.githubusercontent.com/PiLLLaa/pd2/main/S13_Hype.filter",size:1768245},
-      {name:"S13_Hype_POEsound.filter",url:"https://raw.githubusercontent.com/PiLLLaa/pd2/main/S13_Hype_POEsound.filter",size:1542714},
-      {name:"S13_NoBlank.filter",url:"https://raw.githubusercontent.com/PiLLLaa/pd2/main/S13_NoBlank.filter",size:1743741},
-      {name:"S13_PurpleGold_hide.filter",url:"https://raw.githubusercontent.com/PiLLLaa/pd2/main/S13_PurpleGold_hide.filter",size:1733604},
-      {name:"S13_Starter.filter",url:"https://raw.githubusercontent.com/PiLLLaa/pd2/main/S13_Starter.filter",size:1693388}
-    ]},
     {name:"Roofoo's Filter",author:"Roofoo",repo:"RoofooEvazan/Roofoo-s-PD2-Loot-Filter",files:[
       {name:"Roofoo.filter",url:"https://raw.githubusercontent.com/RoofooEvazan/Roofoo-s-PD2-Loot-Filter/main/Roofoo.filter",size:732171},
       {name:"RoofooMystery.filter",url:"https://raw.githubusercontent.com/RoofooEvazan/Roofoo-s-PD2-Loot-Filter/main/RoofooMystery.filter",size:734910},
@@ -6324,8 +6312,8 @@
       {name:"Kassahi_Mystery_Phil777_Crafting_Paladin_Focused.filter",displayName:"Mystery \u2014 Class \u2014 Paladin",description:"Mystery class filter tuned for Paladin with the philanthropy777 visual theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/filtergroups/phil777/Kassahi_Mystery_Phil777_Crafting_Paladin_Focused.filter",size:944627},
       {name:"Kassahi_Mystery_Phil777_Crafting_Sorceress_Focused.filter",displayName:"Mystery \u2014 Class \u2014 Sorceress",description:"Mystery class filter tuned for Sorceress with the philanthropy777 visual theme.",url:"https://raw.githubusercontent.com/Maaaaaarrk/HiimFilter-PD2-Filter/main/filtergroups/phil777/Kassahi_Mystery_Phil777_Crafting_Sorceress_Focused.filter",size:944032}
     ]},
-    {name:"THE MATRIX ARCHITECT",author:"huns1313",repo:"huns1313/THE-MATRIX-ARCHITECT",files:[
-      {name:"MATRIX.filter",url:"https://raw.githubusercontent.com/huns1313/THE-MATRIX-ARCHITECT/main/MATRIX.filter",size:41028}
+    {name:"Olverius' Treasure Filter",author:"Olverius",repo:"olveriusfisto/oli_pd2_filter",files:[
+      {name:"olverius_treasure.filter",url:"https://raw.githubusercontent.com/olveriusfisto/oli_pd2_filter/main/olverius_treasure.filter",size:888158}
     ]}
   ];
   var authorFilters = [];

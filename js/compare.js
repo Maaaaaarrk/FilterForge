@@ -22,17 +22,15 @@
     'Kassahi': { file: 'Kassahi.filter', level: 6 },
     'Philanthropy777': { file: 'Kassahi_Phil777.filter', level: 6 },
     'Wolfie': { file: 'combined.filter', level: 4 },
-    'Kryszard': { file: 'item.filter', level: 5 },
     'eqN': { file: 'eqN-All-In-One.filter', level: 6 },
     'Erazure': { file: 'Erazure-Main.filter', level: 6 },
     'ADevDH': { file: 'dark.filter', level: 4 },
     'Dauracul': { file: 'dauracul.filter', level: 3 },
     'Sven': { file: 'Revised.filter', level: 6 },
-    'PiLLLa': { file: 'S13_Starter.filter', level: 7 },
     'Roofoo': { file: 'Roofoo.filter', level: 5 },
     'Phyx10n': { file: 'main.filter', level: 3 },
     'Vylens': { file: 'Vylens.filter', level: 5 },
-    'huns1313': { file: 'MATRIX.filter', level: 1 }
+    'Olverius': { file: 'olverius_treasure.filter', level: 2 }
   };
   // Hiim and the Kassahi family first, then everyone else in data order.
   var FIRST = ['HiimFilter', 'Hiim - Hyper', 'Hiim - TalRasha', 'Hiim - Vanilla+', 'Kassahi', 'Philanthropy777'];
