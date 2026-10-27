@@ -324,6 +324,8 @@
       if (k in num && !(key in num)) num[key] = num[k];
       else if (key in num && !(k in num)) num[k] = num[key];
     }
+    // ED reads whichever of EDEF / EDAM the item has (defense on armor, damage on weapons).
+    if (!('ED' in num) && (num.EDEF || num.EDAM)) num.ED = num.EDEF || num.EDAM;
     var res = ['FRES', 'CRES', 'LRES', 'PRES'].map(function (r) { return num[r] || 0; });
     if (!('RES' in num) && Math.min.apply(null, res) > 0) num.RES = Math.min.apply(null, res);
     if (!('SOCKETS' in num)) num.SOCKETS = num.SOCK || 0;
