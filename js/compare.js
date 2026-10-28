@@ -22,7 +22,7 @@
     'Kassahi': { file: 'Kassahi.filter', level: 6 },
     'Philanthropy777': { file: 'Kassahi_Phil777.filter', level: 6 },
     'Wolfie': { file: 'combined.filter', level: 4 },
-    'eqN': { file: 'eqN-All-In-One.filter', level: 6 },
+    'eqN': { file: 'eqN-All-In-One.filter', level: 3 },
     'Erazure': { file: 'Erazure-Main.filter', level: 6 },
     'ADevDH': { file: 'dark.filter', level: 4 },
     'Dauracul': { file: 'dauracul.filter', level: 3 },
