@@ -144,6 +144,8 @@
     if (nav) offset = nav.getBoundingClientRect().bottom + 12;
     var bar = document.getElementById('generated-panel');
     if (bar && getComputedStyle(bar).position === 'sticky') offset += bar.offsetHeight;
+    var find = document.getElementById('editor-find');
+    if (find && !find.hidden) offset += find.offsetHeight;
     return Math.max(0, offset);
   }
 
@@ -5981,7 +5983,19 @@
       });
     });
 
-    return items;
+    return items.map(withItemBaseFlags);
+  }
+
+  // Generated entries only know ARMOR / WEAPON; the game's base flags add the type and group codes
+  // (BOOTS, GLOVES, BELT, HELM, SWORD, 1H, ...) that category rules match on.
+  function withItemBaseFlags(item) {
+    if (item.hasFullData) return item;
+    var base = window.FF && window.FF.SampleItems ? window.FF.SampleItems.baseFlags(item.code) : [];
+    if (!base.length) return item;
+    var generic = base.indexOf('WEAPON') !== -1 ? 'ARMOR' : base.indexOf('ARMOR') !== -1 ? 'WEAPON' : null;
+    var flags = item.flags.filter(function (f) { return f !== generic; });
+    base.forEach(function (f) { if (flags.indexOf(f) === -1) flags.push(f); });
+    return Object.assign({}, item, { flags: flags });
   }
 
   var ALL_ITEMS_CACHE = null;
@@ -6588,6 +6602,34 @@
     var caseSensitive = false;
     var matches = [];
     var currentIdx = -1;
+    var marker = document.createElement('div');
+    marker.className = 'editor-find-marker';
+    marker.hidden = true;
+    codeEditor.parentElement.appendChild(marker);
+
+    function lineOf(offset) {
+      var lineIdx = 0;
+      for (var i = 0; i < offset; i++) {
+        if (codeEditor.value.charCodeAt(i) === 10) lineIdx++;
+      }
+      return lineIdx;
+    }
+
+    function markLine(lineIdx) {
+      var padTop = parseFloat(getComputedStyle(codeEditor).paddingTop) || 0;
+      marker.style.top = (padTop + lineIdx * getLineHeight()) + 'px';
+      marker.style.height = getLineHeight() + 'px';
+      marker.hidden = false;
+    }
+
+    // Pin the bar under the nav (and the Generated Rule bar when that one is pinned to the top)
+    function pinBar() {
+      var nav = document.querySelector('.nav');
+      var top = nav ? nav.getBoundingClientRect().bottom : 0;
+      var generated = document.getElementById('generated-panel');
+      if (generated && getComputedStyle(generated).position === 'sticky') top += generated.offsetHeight;
+      bar.style.top = Math.max(0, top) + 'px';
+    }
 
     function escapeRegex(str) {
       return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -6628,23 +6670,18 @@
 
     // The editor is full-length and the page scrolls (not .code-editor-wrap),
     // so scroll the window like goToLine does
-    function scrollMatchIntoView(match) {
-      var lineIdx = 0;
-      for (var i = 0; i < match.start; i++) {
-        if (codeEditor.value.charCodeAt(i) === 10) lineIdx++;
-      }
-      scrollEditorLineIntoView(lineIdx, true);
-    }
-
+    // Focus stays in the find box, so keystrokes keep going there; the marker shows the match's
+    // line and the selection is ready for when the bar closes.
     function selectMatch(idx) {
-      if (matches.length === 0) { updateCount(); return; }
+      if (matches.length === 0) { marker.hidden = true; updateCount(); return; }
       if (idx < 0) idx = matches.length - 1;
       if (idx >= matches.length) idx = 0;
       currentIdx = idx;
       var m = matches[currentIdx];
-      codeEditor.focus({ preventScroll: true });
       codeEditor.setSelectionRange(m.start, m.end);
-      scrollMatchIntoView(m);
+      var lineIdx = lineOf(m.start);
+      markLine(lineIdx);
+      scrollEditorLineIntoView(lineIdx, true);
       updateCount();
     }
 
@@ -6662,6 +6699,7 @@
 
     function openFind() {
       bar.hidden = false;
+      pinBar();
       var caret = codeEditor.selectionStart;
       var sel = codeEditor.value.substring(codeEditor.selectionStart, codeEditor.selectionEnd);
       if (sel && sel.length < 200 && sel.indexOf('\n') === -1) {
@@ -6683,6 +6721,7 @@
 
     function closeFind() {
       bar.hidden = true;
+      marker.hidden = true;
       input.classList.remove('no-match');
       codeEditor.focus();
     }
@@ -6691,7 +6730,9 @@
       computeMatches();
       currentIdx = -1;
       if (matches.length > 0) selectMatch(0);
+      else marker.hidden = true;
     });
+    window.addEventListener('resize', function () { if (!bar.hidden) pinBar(); });
 
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
