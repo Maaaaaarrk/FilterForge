@@ -661,6 +661,9 @@ html[data-theme='modern'] .editor-tab:focus-visible {
 }
 
 .editor-find {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--nav-bar-edge));
+  z-index: 6;
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -668,6 +671,16 @@ html[data-theme='modern'] .editor-tab:focus-visible {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
+
+.editor-find-marker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: var(--accent-soft, rgba(255, 210, 60, 0.18));
+  pointer-events: none;
+}
+
+.editor-find-marker[hidden] { display: none; }
 
 .editor-find[hidden] { display: none; }
 

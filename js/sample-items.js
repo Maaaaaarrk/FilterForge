@@ -285,5 +285,8 @@
   }
 
   window.FF = window.FF || {};
-  window.FF.SampleItems = { TIERS_URL: TIERS_URL, categories: categories, starSamples: starSamples };
+  window.FF.SampleItems = {
+    TIERS_URL: TIERS_URL, categories: categories, starSamples: starSamples,
+    baseFlags: function (code) { return (BASE_FLAGS[code] || []).slice(); }
+  };
 })();
