@@ -227,15 +227,15 @@
   // ==========================================
   var PREVIEW_ITEMS = {
     // Runes (stacked — r##s format, QTY=1 means stacked)
-    'rune-zod': { code: 'r33s', name: 'Zod Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 33, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-ber': { code: 'r30s', name: 'Ber Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 30, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-jah': { code: 'r31s', name: 'Jah Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 31, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-lo': { code: 'r28s', name: 'Lo Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 28, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-vex': { code: 'r26s', name: 'Vex Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 26, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-ist': { code: 'r24s', name: 'Ist Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 24, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-lem': { code: 'r20s', name: 'Lem Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 20, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-sol': { code: 'r12s', name: 'Sol Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 12, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
-    'rune-el': { code: 'r01s', name: 'El Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 1, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-zod': { code: 'r33', name: 'Zod Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 33, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-ber': { code: 'r30', name: 'Ber Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 30, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-jah': { code: 'r31', name: 'Jah Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 31, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-lo': { code: 'r28', name: 'Lo Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 28, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-vex': { code: 'r26', name: 'Vex Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 26, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-ist': { code: 'r24', name: 'Ist Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 24, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-lem': { code: 'r20', name: 'Lem Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 20, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-sol': { code: 'r12', name: 'Sol Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 12, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
+    'rune-el': { code: 'r01', name: 'El Rune', flags: ['GROUND', 'MISC'], values: { RUNE: 1, QTY: 1, ILVL: 1, SOCKETS: 0, GOLD: 0, GEM: 0 } },
     // Unique items (!ID — unidentified, %NAME% shows base type name)
     'uni-shako': { code: 'uap', name: 'Shako', flags: ['GROUND', 'UNI', 'ELT', 'HELM', 'ARMOR', 'EQ1'], values: { ILVL: 69, DEF: 141, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, MAXSOCKETS: 2, REQLVL: 43, REQSTR: 50 } },
     'uni-griffon': { code: 'ci3', name: 'Diadem', flags: ['GROUND', 'UNI', 'ELT', 'CIRC', 'EQ7', 'ARMOR'], values: { ILVL: 85, DEF: 50, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0, WIDTH: 2, HEIGHT: 2, AREA: 4, MAXSOCKETS: 3, REQLVL: 64 } },
@@ -299,9 +299,9 @@
     'id-scroll': { code: 'isc', name: 'Scroll of Identify', flags: ['GROUND', 'NMAG', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'key': { code: 'key', name: 'Key', flags: ['GROUND', 'NMAG', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     // Gems
-    'gem-perf-ame': { code: 'gpvs', name: 'Perfect Amethyst', flags: ['GROUND', 'MISC'], values: { GEM: 5, GEMLEVEL: 5, GEMTYPE: 1, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
-    'gem-flaw-dia': { code: 'glws', name: 'Flawless Diamond', flags: ['GROUND', 'MISC'], values: { GEM: 4, GEMLEVEL: 4, GEMTYPE: 2, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
-    'gem-chip-ruby': { code: 'gcrs', name: 'Chipped Ruby', flags: ['GROUND', 'MISC'], values: { GEM: 1, GEMLEVEL: 1, GEMTYPE: 4, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
+    'gem-perf-ame': { code: 'gpv', name: 'Perfect Amethyst', flags: ['GROUND', 'MISC'], values: { GEM: 5, GEMLEVEL: 5, GEMTYPE: 1, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
+    'gem-flaw-dia': { code: 'glw', name: 'Flawless Diamond', flags: ['GROUND', 'MISC'], values: { GEM: 4, GEMLEVEL: 4, GEMTYPE: 2, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
+    'gem-chip-ruby': { code: 'gcr', name: 'Chipped Ruby', flags: ['GROUND', 'MISC'], values: { GEM: 1, GEMLEVEL: 1, GEMTYPE: 4, ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0 } },
     // PD2 Special
     'pd2-wss': { code: 'wss', name: 'Worldstone Shard', flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
     'pd2-pbox': { code: 'lbox', name: "Larzuk's Puzzlebox", flags: ['GROUND', 'MISC'], values: { ILVL: 1, SOCKETS: 0, RUNE: 0, GOLD: 0, GEM: 0 } },
@@ -1672,7 +1672,7 @@
       {code:'xrn',name:'Crown of Thieves'}
     ],
     'Body Armor': [
-      {code:'uar',name:"Tyrael's Might"},{code:'uui',name:"Ormus' Robes"},
+      {code:'uar',name:"Tyrael's Might"},{code:'uui',name:"Ormus' Robes"},{code:'urs',name:'Spectral Plate'},
       {code:'xlt',name:'Guardian Angel'},{code:'utu',name:"Gladiator's Bane"},{code:'uar',name:"Templar's Might"},
       {code:'uul',name:'Steel Carapace'},{code:'xrs',name:"Duriel's Shell"},{code:'xpl',name:"Skullder's Ire"},
       {code:'upl',name:"Arkaine's Valor"},{code:'xui',name:'The Spirit Shroud'},{code:'xea',name:'Skin of the Vipermagi'},
@@ -5167,22 +5167,45 @@
   // ==========================================
   var ITEM_CODES = {
     runes: [
-      ['r01s','El'],['r02s','Eld'],['r03s','Tir'],['r04s','Nef'],['r05s','Eth'],['r06s','Ith'],['r07s','Tal'],['r08s','Ral'],['r09s','Ort'],['r10s','Thul'],
-      ['r11s','Amn'],['r12s','Sol'],['r13s','Shael'],['r14s','Dol'],['r15s','Hel'],['r16s','Io'],['r17s','Lum'],['r18s','Ko'],['r19s','Fal'],['r20s','Lem'],
-      ['r21s','Pul'],['r22s','Um'],['r23s','Mal'],['r24s','Ist'],['r25s','Gul'],['r26s','Vex'],['r27s','Ohm'],['r28s','Lo'],['r29s','Sur'],['r30s','Ber'],
-      ['r31s','Jah'],['r32s','Cham'],['r33s','Zod']
+      ['r01','El'],['r02','Eld'],['r03','Tir'],['r04','Nef'],['r05','Eth'],['r06','Ith'],['r07','Tal'],['r08','Ral'],['r09','Ort'],['r10','Thul'],
+      ['r11','Amn'],['r12','Sol'],['r13','Shael'],['r14','Dol'],['r15','Hel'],['r16','Io'],['r17','Lum'],['r18','Ko'],['r19','Fal'],['r20','Lem'],
+      ['r21','Pul'],['r22','Um'],['r23','Mal'],['r24','Ist'],['r25','Gul'],['r26','Vex'],['r27','Ohm'],['r28','Lo'],['r29','Sur'],['r30','Ber'],
+      ['r31','Jah'],['r32','Cham'],['r33','Zod'],
+      // Season 13 rune stacks, renamed "(old)" in Season 14 and no longer dropped
+      ['r01s','El (old)'],['r02s','Eld (old)'],['r03s','Tir (old)'],['r04s','Nef (old)'],['r05s','Eth (old)'],['r06s','Ith (old)'],['r07s','Tal (old)'],['r08s','Ral (old)'],['r09s','Ort (old)'],['r10s','Thul (old)'],
+      ['r11s','Amn (old)'],['r12s','Sol (old)'],['r13s','Shael (old)'],['r14s','Dol (old)'],['r15s','Hel (old)'],['r16s','Io (old)'],['r17s','Lum (old)'],['r18s','Ko (old)'],['r19s','Fal (old)'],['r20s','Lem (old)'],
+      ['r21s','Pul (old)'],['r22s','Um (old)'],['r23s','Mal (old)'],['r24s','Ist (old)'],['r25s','Gul (old)'],['r26s','Vex (old)'],['r27s','Ohm (old)'],['r28s','Lo (old)'],['r29s','Sur (old)'],['r30s','Ber (old)'],
+      ['r31s','Jah (old)'],['r32s','Cham (old)'],['r33s','Zod (old)']
     ],
     pd2: [
       ['wss','Worldstone Shard'],['lbox','Larzuk\'s Puzzlebox'],['lpp','Larzuk\'s Puzzlepiece'],['rkey','Skeleton Key'],
       ['tes','Twisted Essence of Suffering'],['ceh','Charged Essence of Hatred'],['bet','Burning Essence of Terror'],['fed','Festering Essence of Destruction'],
       ['toa','Token of Absolution'],['pk1','Key of Terror'],['pk2','Key of Hate'],['pk3','Key of Destruction'],
       ['mbr','Mephisto\'s Brain'],['dhn','Diablo\'s Horn'],['bey','Baal\'s Eye'],['std','Standard of Heroes'],
-      ['dcho','Dclone Heart'],['dcso','Dclone Soul'],['dcbl','Dclone Blood'],['dcma','Dclone Matter'],
-      ['rtmo','Rathma Material 1'],['rtmv','Rathma Material 2'],['cwss','Corrupted WSS'],['rid','Rathma ID'],['rtp','Rathma TP'],
-      ['jewf','Jewel Fragment'],['crfb','Blood Craft Infusion'],['crfc','Caster Craft Infusion'],['crfs','Safety Craft Infusion'],
+      ['dcho','Black Soulstone'],['dcso','Prime Evil Soul'],['dcbl','Pure Demonic Essence'],['dcma','Vision of Terror'],
+      ['rtmo','Trang-Oul\'s Jawbone'],['rtmv','Splinter of the Void'],['cwss','Tainted Worldstone Shard'],['rid','Horadric Almanac'],['rtp','Horadric Navigator'],
+      ['jewf','Jewel Fragments'],['crfb','Blood Craft Infusion'],['crfc','Caster Craft Infusion'],['crfs','Safety Craft Infusion'],
       ['crfh','Hitpower Craft Infusion'],['crfv','Vampiric Craft Infusion'],['crfu','Bountiful Craft Infusion'],['crfp','Brilliant Craft Infusion'],
-      ['scou','Map Scout'],['scrb','Map Scroll B'],['iwss','Imbued WSS'],['upmp','Map Upgrade'],['fort','Fortify Orb'],
-      ['rera','Reroll Area Orb'],['imra','Imbue Rare Orb'],['upma','Upgrade Map Orb'],['imma','Imbue Magic Orb']
+      ['scou','Orb of Destruction'],['scrb','Horadrim Scarab'],['iwss','Catalyst Shard'],['upmp','Cartographer\'s Orb'],['fort','Orb of Fortification'],
+      ['rera','Horadrim Orb'],['imra','Zakarum Orb'],['upma','Angelic Orb'],['imma','Arcane Orb'],
+      // Season 14 orbs, infusions, keys and ears
+      ['imrn','Demonic Cube'],['irma','Infused Arcane Orb'],['irrn','Infused Demonic Cube'],['irra','Infused Zakarum Orb'],
+      ['rrra','Infused Horadrim Orb'],['urma','Infused Angelic Orb'],['lmal','Larzuk\'s Malus'],['cm2f','Hellfire Ashes'],
+      ['lucb','Demonic Insignia'],['lucc','Talisman of Transgression'],['lucd','Flesh of Malic'],['ubaa','Sigil of Madawc'],
+      ['ubab','Sigil of Talic'],['ubac','Sigil of Korlic'],['uba','Relic of the Ancients'],['ubtm','Pandemonium Talisman'],
+      ['ivea','Corrupted Assassin\'s Ear'],['ivez','Corrupted Amazon\'s Ear'],['iveb','Corrupted Barbarian\'s Ear'],['ived','Corrupted Druid\'s Ear'],
+      ['iven','Corrupted Necromancer\'s Ear'],['ivep','Corrupted Paladin\'s Ear'],['ives','Corrupted Sorceress\'s Ear'],
+      // Maps (tier 1-3, tier 4 dungeons, unique maps)
+      ['t11','Ruins of Viz-Jun Map'],['t13','Bastion Keep Map'],['t14','Sanatorium Map'],['t15','Royal Crypts Map'],
+      ['t16','Ruined Cistern Map'],['t17','Halls of Torture Map'],['t18','Poisoned Well Map'],['t21','Phlegethon Map'],
+      ['t22','Torajan Jungle Map'],['t23','Arreat Battlefield Map'],['t24','Tomb of Zoltun Kulle Map'],['t25','Sewers of Harrogath Map'],
+      ['t26','Shadows of Westmarch Map'],['t27','Demon Road Map'],['t28','Skovos Stronghold Map'],['t29','Fortress of Aranoch Map'],
+      ['t2a','Descent from Mount Arreat Map'],['t31','River of Blood Map'],['t32','Throne of Insanity Map'],['t33','Lost Temple Map'],
+      ['t34','Ancestral Trial Map'],['t35','Blood Moon Map'],['t36','Fall of Caldeum Map'],['t37','Pandemonium Citadel Map'],
+      ['t38','Canyon of Sescheron Map'],['t39','Kehjistan Marketplace Map'],['t3a','Ashen Plains Map'],['t3b','Kyovashad Map'],
+      ['t41','Cathedral of Light Map'],['t42','Plains of Torment Map'],['t43','Sanctuary of Sin Map'],['t44','Steppes of Daken-Shar Map'],
+      ['t51','Zhar\'s Sanctum Map'],['t52','Stygian Caverns Map'],['t53','Fallen Gardens Map'],['t54','Imperial Palace Map'],
+      ['t55','Outer Void Map'],['t56','City of Ureh Map'],['t57','Djinn\'s Domain Map'],['t58','Na-Krul\'s Abyss Map']
     ],
     norm: [
       ['cap','Cap'],['skp','Skull Cap'],['hlm','Helm'],['fhl','Full Helm'],['msk','Mask'],['bhm','Bone Helm'],['ghm','Great Helm'],['crn','Crown'],['ci0','Circlet'],['ci1','Coronet'],
@@ -5341,7 +5364,7 @@
       ['ukp','Hydraskull (No Unique for this base)'],['ula','Scarab Husk (No Unique for this base)'],['ulb','Merman\'s Sprocket - Wyrmhide Boots'],['ulc','Arachnid Mesh - Spiderweb Sash'],['uld','Leviathan - Kraken Shell'],
       ['ulg','Titans Grip - Bramble Mitts'],['ulm','Steel Shade - Armet'],['ult','Hellforge Plate (No Unique for this base)'],['umb','Marrowwalk - Boneweave Boots'],['umc','Verdungos Hearty Cord - Mithril Coil'],
       ['umg','Soul Drainer - Vambraces'],['uml','Blackoak Shield - Luna'],['ung','Wraithskin - Diamond Mail'],['uow','Medusas Gaze - Aegis'],['upk','Spike Thorn - Blade Barrier'],
-      ['upl','Arkaines Valor - Balrog Skin'],['urg','Twilights Reflection - Hyperion'],['urn','Crown of Ages - Corona'],['urs','Great Hauberk (No Unique for this base)'],['ush','Head Hunters Glory - Troll Nest'],
+      ['upl','Arkaines Valor - Balrog Skin'],['urg','Twilights Reflection - Hyperion'],['urn','Crown of Ages - Corona'],['urs','Spectral Plate - Great Hauberk'],['ush','Head Hunters Glory - Troll Nest'],
       ['usk','Andariels Visage - Demonhead'],['utb','Itheraels Path'],['utc','Band of Skulls'],['utg','Occultist - Crusader Gauntlets'],['uth','Dark Abyss'],
       ['utp','Purgatory - Archon Plate'],['uts','Spirit Ward'],['utu','The Gladiators Bane - Wire Fleece'],['uuc','Heater (No Unique for this base)'],['uui','Ormus Robes - Dusk Shroud'],
       ['uul','Steel Carapace - Shadow Plate'],['uvb','Sandstorm Trek - Scarabshell Boots'],['uvc','Nosferatus Coil - Vampirefang Belt'],['uvg','Draculs Grasp - Vampirebone Gloves'],['vbl','Snakecord - Light Belt'],
@@ -5413,13 +5436,21 @@
       ['hp1','Minor Healing'],['hp2','Light Healing'],['hp3','Healing'],['hp4','Greater Healing'],['hp5','Super Healing'],
       ['mp1','Minor Mana'],['mp2','Light Mana'],['mp3','Mana'],['mp4','Greater Mana'],['mp5','Super Mana'],
       ['rvs','Rejuv (35%)'],['rvl','Full Rejuv (65%)'],['yps','Antidote'],['wms','Thawing'],['vps','Stamina'],['pvpp','PvP Mana'],
-      ['gcvs','Chipped Amethyst'],['gfvs','Flawed Amethyst'],['gsvs','Amethyst'],['gzvs','Flawless Amethyst'],['gpvs','Perfect Amethyst'],
-      ['gcws','Chipped Diamond'],['gfws','Flawed Diamond'],['gsws','Diamond'],['glws','Flawless Diamond'],['gpws','Perfect Diamond'],
-      ['gcgs','Chipped Emerald'],['gfgs','Flawed Emerald'],['gsgs','Emerald'],['glgs','Flawless Emerald'],['gpgs','Perfect Emerald'],
-      ['gcrs','Chipped Ruby'],['gfrs','Flawed Ruby'],['gsrs','Ruby'],['glrs','Flawless Ruby'],['gprs','Perfect Ruby'],
-      ['gcbs','Chipped Sapphire'],['gfbs','Flawed Sapphire'],['gsbs','Sapphire'],['glbs','Flawless Sapphire'],['gpbs','Perfect Sapphire'],
-      ['gcys','Chipped Topaz'],['gfys','Flawed Topaz'],['gsys','Topaz'],['glys','Flawless Topaz'],['gpys','Perfect Topaz'],
-      ['skcs','Chipped Skull'],['skfs','Flawed Skull'],['skus','Skull'],['skls','Flawless Skull'],['skzs','Perfect Skull'],
+      ['gcv','Chipped Amethyst'],['gfv','Flawed Amethyst'],['gsv','Amethyst'],['gzv','Flawless Amethyst'],['gpv','Perfect Amethyst'],
+      ['gcw','Chipped Diamond'],['gfw','Flawed Diamond'],['gsw','Diamond'],['glw','Flawless Diamond'],['gpw','Perfect Diamond'],
+      ['gcg','Chipped Emerald'],['gfg','Flawed Emerald'],['gsg','Emerald'],['glg','Flawless Emerald'],['gpg','Perfect Emerald'],
+      ['gcr','Chipped Ruby'],['gfr','Flawed Ruby'],['gsr','Ruby'],['glr','Flawless Ruby'],['gpr','Perfect Ruby'],
+      ['gcb','Chipped Sapphire'],['gfb','Flawed Sapphire'],['gsb','Sapphire'],['glb','Flawless Sapphire'],['gpb','Perfect Sapphire'],
+      ['gcy','Chipped Topaz'],['gfy','Flawed Topaz'],['gsy','Topaz'],['gly','Flawless Topaz'],['gpy','Perfect Topaz'],
+      ['skc','Chipped Skull'],['skf','Flawed Skull'],['sku','Skull'],['skl','Flawless Skull'],['skz','Perfect Skull'],
+      // Season 13 gem and skull stacks, renamed "(old)" in Season 14
+      ['gcvs','Chipped Amethyst (old)'],['gfvs','Flawed Amethyst (old)'],['gsvs','Amethyst (old)'],['gzvs','Flawless Amethyst (old)'],['gpvs','Perfect Amethyst (old)'],
+      ['gcws','Chipped Diamond (old)'],['gfws','Flawed Diamond (old)'],['gsws','Diamond (old)'],['glws','Flawless Diamond (old)'],['gpws','Perfect Diamond (old)'],
+      ['gcgs','Chipped Emerald (old)'],['gfgs','Flawed Emerald (old)'],['gsgs','Emerald (old)'],['glgs','Flawless Emerald (old)'],['gpgs','Perfect Emerald (old)'],
+      ['gcrs','Chipped Ruby (old)'],['gfrs','Flawed Ruby (old)'],['gsrs','Ruby (old)'],['glrs','Flawless Ruby (old)'],['gprs','Perfect Ruby (old)'],
+      ['gcbs','Chipped Sapphire (old)'],['gfbs','Flawed Sapphire (old)'],['gsbs','Sapphire (old)'],['glbs','Flawless Sapphire (old)'],['gpbs','Perfect Sapphire (old)'],
+      ['gcys','Chipped Topaz (old)'],['gfys','Flawed Topaz (old)'],['gsys','Topaz (old)'],['glys','Flawless Topaz (old)'],['gpys','Perfect Topaz (old)'],
+      ['skcs','Chipped Skull (old)'],['skfs','Flawed Skull (old)'],['skus','Skull (old)'],['skls','Flawless Skull (old)'],['skzs','Perfect Skull (old)'],
       ['key','Key'],['tsc','TP Scroll'],['isc','ID Scroll'],['tbk','TP Tome'],['ibk','ID Tome'],['gold','Gold'],
       ['ear','Ear'],['leg','Wirt\'s Leg'],['ass','Book of Skill'],['toa','Token of Absolution']
     ]
@@ -5794,9 +5825,14 @@
           flags.push('WEAPON');
         } else if (codeCat === 'misc') {
           flags.push('MISC');
-          if (code.match(/^g[cfglps][a-z]s$/) || code.match(/^sk[cfulz]s$/)) {
-            var gemLevelMap = { c: 1, f: 2, s: 3, l: 4, p: 5 };
-            values.GEM = gemLevelMap[code[1]] || 1;
+          var gemCode = code.match(/^g([cfslzp])([vwgrby])s?$/) || code.match(/^sk([cfulz])()s?$/);
+          if (gemCode) {
+            var gemLevelMap = { c: 1, f: 2, s: 3, u: 3, l: 4, z: gemCode[2] ? 4 : 5, p: 5 };
+            var gemTypeMap = { v: 1, w: 2, g: 3, r: 4, b: 5, y: 6 };
+            values.GEM = gemLevelMap[gemCode[1]] || 1;
+            values.GEMLEVEL = values.GEM;
+            values.GEMTYPE = gemTypeMap[gemCode[2]] || 7;
+            values.QTY = 1;
             cat = 'runesgems';
             values.ILVL = 1;
           } else if (isCharm) {
